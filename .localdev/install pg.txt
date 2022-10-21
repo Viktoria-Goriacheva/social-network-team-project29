@@ -1,0 +1,24 @@
+Установка и докера с pg:
+docker run --name socialnet_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=passWd123 -e POSTGRES_DB=postgres -d postgres
+
+Установить плагин DB Navigator
+Появится новый пункт в меню "DB Navigator" > Settings
+Заполняем поля:
+-Host:localhost
+-Port:5432
+-Database:postgres
+-Authentication:User/Password
+-User:admin
+-Password:passWd123
+
+Смотреть docker-контейнеры:
+docker ps -a
+
+Запустить docker-контейнер:
+docker start [name/id]
+
+Остановить docker-контейнер:
+docker stop [name/id]
+
+Удалить контейнер:
+docker rm [name/id]
