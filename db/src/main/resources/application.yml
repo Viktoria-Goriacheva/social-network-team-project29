@@ -1,0 +1,16 @@
+spring:
+  application:
+  name: socialNet
+
+server:
+  port: 8081
+
+datasource:
+  url: jdbc:postgresql://localhost:5455/postgres
+  username: admin
+  password: passWd123
+
+jpa:
+  properties:
+    hibernate:
+      ddl-auto: update

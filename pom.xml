@@ -21,6 +21,7 @@
     </properties>
     <modules>
         <module>core</module>
+        <module>db</module>
     </modules>
 
 
