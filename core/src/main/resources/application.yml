@@ -1,2 +1,4 @@
 server:
-  port:8082
+  port: 8082
+
+frontHost: http://localhost:8098
