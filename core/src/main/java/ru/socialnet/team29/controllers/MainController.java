@@ -10,7 +10,7 @@ public class MainController {
 
     @GetMapping("/")
     @ResponseBody
-    public String getWelcome(){
+    public String getWelcome() {
         return "Welcome!";
     }
 
