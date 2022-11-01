@@ -1,5 +1,8 @@
 server:
   port: 8086
 
+  db:
+    port: http://localhost:8081
+
 frontend:
-  host: http://localhost:8098
+    host: http://localhost:8098
