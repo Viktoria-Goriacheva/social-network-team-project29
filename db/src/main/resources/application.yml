@@ -1,16 +1,19 @@
-spring:
-  application:
-  name: socialNet
-
 server:
   port: 8081
 
-datasource:
-  url: jdbc:postgresql://localhost:5455/postgres
-  username: admin
-  password: passWd123
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5455/socialnet
+    username: admin
+    password: passWd123
 
-jpa:
-  properties:
+  jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:liquibase/changelog.xml
+    enabled: true
