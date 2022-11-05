@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_table_person" author="Nedovizin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="person"/>
+            </not>
+        </preConditions>
+        <createTable tableName="person" schemaName="socialnet" remarks="Пользователь соц. сети">
+            <column autoIncrement="true" name="id" type="integer" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(64)" remarks="Имя" />
+            <column name="last_name" type="varchar(64)" remarks="Фамилия" />
+            <column name="reg_date" type="datetime" remarks="Дата и время регистрации" />
+            <column name="birth_date" type="date" remarks="Дата рождения" />
+            <column name="e_mail" type="varchar(64)" remarks="Электронная почта" />
+            <column name="phone" type="varchar(20)" remarks="Телефон" />
+            <column name="password" type="varchar(20)" remarks="Пароль" />
+            <column name="photo" type="varchar(200)" remarks="Ссылка на изображение" />
+            <column name="about" type="text" remarks="Текст о себе" />
+            <column name="town" type="varchar(64)" remarks="Страна и город проживания" />
+            <column name="confirmation_code" type="varchar(64)" remarks="Код восстановления пароля / подтверждения регистрации" />
+            <column name="is_approved" type="boolean" remarks="Подтверждена ли регистрация" />
+            <column name="messages_permission" type="varchar(20)" remarks="Разрешение на получение сообщений" />
+            <column name="last_online_time" type="datetime" remarks="Время последнего пребывания онлайн" />
+            <column name="is_blocked" type="boolean" remarks="Блокировка пользователя" />
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
