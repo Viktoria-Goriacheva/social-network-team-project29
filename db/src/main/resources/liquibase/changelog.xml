@@ -8,5 +8,5 @@
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
    <include file="structure/create_schema.xml" relativeToChangelogFile="true"/>
-
+   <include file="structure/create_post2tag_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

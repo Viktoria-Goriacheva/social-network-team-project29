@@ -1,0 +1,25 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+  <changeSet id="create_table_post2tag" author="Goriacheva">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists schemaName="socialnet" tableName="post2tag"/>
+      </not>
+    </preConditions>
+    <createTable tableName="post2tag" schemaName="socialnet" remarks="Связи тэгов с постами">
+      <column autoIncrement="true" name="id" type="integer" remarks="Идентификатор">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="post_id" type="integer" remarks="Идентификатор поста">
+        <constraints nullable="true"/>
+      </column>
+      <column name="tag_id" type="integer" remarks="Идентификатор тэга">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
