@@ -9,7 +9,7 @@
     
     <changeSet id="create_schema" author="Nedovizin">
         <sql dbms="postgresql">
-            CREATE SCHEMA socialnet;
+            CREATE SCHEMA IF NOT EXISTS socialnet;
         </sql>
     </changeSet>
 </databaseChangeLog>

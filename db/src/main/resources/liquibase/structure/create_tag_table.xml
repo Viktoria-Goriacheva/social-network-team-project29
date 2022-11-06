@@ -1,0 +1,20 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+  <changeSet id="create_table_tag" author="Goriacheva">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists schemaName="socialnet" tableName="tag"/>
+      </not>
+    </preConditions>
+    <createTable tableName="tag" schemaName="socialnet" remarks="Тэги">
+      <column autoIncrement="true" name="id" type="integer" remarks="Идентификатор">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="tag" type="varchar(64)" remarks="Имя тэга"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
