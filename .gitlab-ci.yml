@@ -16,12 +16,13 @@ stages:          # List of stages for jobs, and their order of execution
 build:
   image: openjdk:17-jdk-slim
   services:
-    - name: maven:3.8.3-openjdk-17
-    - name: postgresql:14
+    - maven:3.8.3-openjdk-17
+    - postgres:14.3
   variables:
     POSTGRES_USER: socialnet
     POSTGRES_PASSWORD: 123
     POSTGRES_DB: socialnet    
+    POSTGRES_HOST_AUTH_METHOD: trust
     # This job runs in the build stage, which runs first.
   stage: build
   script:
