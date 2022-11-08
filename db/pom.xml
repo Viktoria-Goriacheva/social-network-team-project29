@@ -18,8 +18,26 @@
         <junit.version>4.13.2</junit.version>
         <jooq.version>3.17.5</jooq.version>
         <jooq.config>src/main/resources/jooq-config.xml</jooq.config>
+        <db.postgres.host>postgres</db.postgres.host>
+        <db.postgres.name>${postgres_db}</db.postgres.name>
+        <db.postgres.username>${postgres_password}</db.postgres.username>
+        <db.postgres.password>${postgres_user}</db.postgres.password>
+        <db.postgres.url>jdbc:postgresql://${db.postgres.host}/${db.postgres.name}</db.postgres.url>
     </properties>
     <artifactId>db</artifactId>
+
+    <profiles>
+        <profile>
+            <id>localhost</id>
+            <properties>
+                <db.postgres.host>localhost</db.postgres.host>
+                <db.postgres.name>socialnet</db.postgres.name>
+                <db.postgres.username>admin</db.postgres.username>
+                <db.postgres.password>passWd123</db.postgres.password>
+                <db.postgres.url>jdbc:postgresql://${db.postgres.host}:5455/${db.postgres.name}</db.postgres.url>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -63,14 +81,13 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-
                 <configuration>
                     <changeLogDirectory>src/main/resources</changeLogDirectory>
                     <changeLogFile>liquibase/changelog.xml</changeLogFile>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5455/socialnet</url>
-                    <username>admin</username>
-                    <password>passWd123</password>
+                    <url>${db.postgres.url}</url>
+                    <username>${db.postgres.username}</username>
+                    <password>${db.postgres.password}</password>
                 </configuration>
                 <executions>
                     <execution>
@@ -85,7 +102,6 @@
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>${jooq.version}</version>
-
                 <executions>
                     <execution>
                         <id>jooq-codegen</id>
@@ -95,18 +111,32 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <dependencies>
                      <dependency>
                             <groupId>org.postgresql</groupId>
                             <artifactId>postgresql</artifactId>
                             <version>${postgresql.version}</version>
                      </dependency>
-
                 </dependencies>
-
                 <configuration>
-                    <configurationFile>${jooq.config}</configurationFile>
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${db.postgres.url}</url>
+                        <user>${db.postgres.username}</user>
+                        <password>${db.postgres.password}</password>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <excludes>databasechangelog|databasechangeloglock</excludes>
+                            <inputSchema>socialnet</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>jooq</packageName>
+                            <directory>target/generated-sources</directory>
+                        </target>
+                    </generator>
                 </configuration>
             </plugin>
         </plugins>
