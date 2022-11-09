@@ -6,3 +6,4 @@ server:
 
 frontend:
     host: http://localhost:8098
+
