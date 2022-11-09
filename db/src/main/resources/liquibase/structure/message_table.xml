@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+
+    <changeSet id="message_table" author="Kolokolnin_Pavel">
+
+        <preConditions>
+            <not>
+                <tableExists schemaName="message" tableName="message_table"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="message_table">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="time" type="TIMESTAMP WITHOUT TIME ZONE">
+            </column>
+
+            <column name="author_id" type="BIGINT">
+            </column>
+
+            <column name="recipient_id" type="BIGINT">
+            </column>
+
+            <column name="message_text" type="text">
+            </column>
+
+            <column name="read_status" type="varchar(25)" value="READ,SENT">
+            </column>
+
+        </createTable>
+
+        <addPrimaryKey columnNames="id" constraintName="message_table_pkey" tableName="message_table"/>
+
+    </changeSet>
+
+</databaseChangeLog>
