@@ -9,4 +9,6 @@
 
    <include file="structure/create_schema.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_post2tag_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/create_tag_table.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
