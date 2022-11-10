@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create_table_friendship" author="Pokhilko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="friendship"/>
+            </not>
+        </preConditions>
+        <createTable tableName="friendship" schemaName="socialnet" remarks="Дружба">
+            <column autoIncrement="true" name="id" type="bigserial" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status_id" type="varchar(64)" remarks="Статус связи"/>
+            <column name="src_person_id" type="varchar(64)" remarks="Пользователь, запросивший дружбу"/>
+            <column name="dst_person_id" type="varchar(20)" remarks="Польлзователь, получивший вопрос"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

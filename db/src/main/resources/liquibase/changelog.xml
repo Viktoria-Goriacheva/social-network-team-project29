@@ -15,4 +15,6 @@
    <include file="structure/post_table.xml" relativeToChangelogFile="true"/>
 
 
+   <include file="structure/create_table_friendship.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
