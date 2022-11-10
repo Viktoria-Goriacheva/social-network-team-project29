@@ -30,7 +30,7 @@ public class SimpleCorsFilter implements Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "content-type");
         filterChain.doFilter(servletRequest, servletResponse);
 
     }

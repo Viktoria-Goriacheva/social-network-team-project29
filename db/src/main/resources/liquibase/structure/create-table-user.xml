@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create_table_user" author="Pokhilko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user" schemaName="socialnet" remarks="Модераторы и администраторы">
+            <column autoIncrement="true" name="id" type="bigserial" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(64)" remarks="Имя пользователя"/>
+            <column name="email" type="varchar(64)" remarks="Email"/>
+            <column name="password" type="varchar(20)" remarks="Пароль"/>
+            <column name="type" type="varchar(10)" remarks="Тип пользователя: MODERATOR, ADMIN"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
