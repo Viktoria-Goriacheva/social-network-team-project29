@@ -10,5 +10,9 @@
    <include file="structure/create_schema.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_post2tag_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_tag_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/friendship_status_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/message_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/post_table.xml" relativeToChangelogFile="true"/>
+
 
 </databaseChangeLog>
