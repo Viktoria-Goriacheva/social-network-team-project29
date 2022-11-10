@@ -1,0 +1,23 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+  <changeSet id="create_table_post_file" author="Goriacheva">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists schemaName="socialnet" tableName="post_file"/>
+      </not>
+    </preConditions>
+    <createTable tableName="post_file" schemaName="socialnet"
+      remarks="Файлы, прикреплённые к постам">
+      <column autoIncrement="true" name="id" type="integer" remarks="Идентификатор">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="post_id" type="integer" remarks="Идентификатор поста"/>
+      <column name="name" type="varchar(64)" remarks="Имя файла"/>
+      <column name="path" type="varchar(200)" remarks="Путь к файлу в хранилище"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
