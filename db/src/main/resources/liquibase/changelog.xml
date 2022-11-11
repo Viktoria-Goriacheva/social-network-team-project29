@@ -16,5 +16,6 @@
    <include file="structure/create_table_friendship.xml" relativeToChangelogFile="true"/>
    <include file="liquibase/structure/create-table-user.xml"/>
    <include file="structure/create_post_file_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/create_table_block_history.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
