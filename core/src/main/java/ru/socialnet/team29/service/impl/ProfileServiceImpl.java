@@ -23,8 +23,8 @@ public class ProfileServiceImpl implements ProfileService {
         return responseProfile;
     }
 
-    public ProfileResponse createDefaultProfile(){
-        ProfileResponse profileResponse = ProfileResponse.builder()
+    public ProfileResponse createDefaultProfile() {
+        return ProfileResponse.builder()
                 .error("string")
                 .timestamp(LocalDateTime.now())
                 .person(Person.builder()
@@ -37,14 +37,14 @@ public class ProfileServiceImpl implements ProfileService {
                         .phone("89100000000")
                         .photo("https://...../photos/image123.jpg")
                         .about("Родился в небольшой, но честной семье")
-                        .city(new City(1L,"Москва"))
-                        .country(new Country(1L,"Россия"))
+                        .city(new City(1L, "Москва"))
+                        .country(new Country(1L, "Россия"))
                         .messagesPermission(MessagePermission.ALL)
                         .lastOnlineTime(LocalDateTime.now())
                         .isBlocked(BlockStatus.UNBLOCKED)
                         .build())
                 .build();
-        return profileResponse;
+
     }
 
 }

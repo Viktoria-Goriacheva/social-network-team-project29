@@ -6,10 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "server.db")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class ServerDb {
 

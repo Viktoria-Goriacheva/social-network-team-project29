@@ -2,6 +2,7 @@ package ru.socialnet.team29.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
