@@ -18,7 +18,7 @@
    <include file="structure/create_post_file_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_table_block_history.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_table_person.xml" relativeToChangelogFile="true"/>
-   <include file="structure/create_table_post_like.xml" relativeToChangelogFile="true"/>
-   <include file="structure/create_table_post_comment.xml" relativeToChangelogFile="true"/>
+   <include file="structure/post_like_table.xml" relativeToChangelogFile="true"/>
+   <include file="structure/post_comment_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
