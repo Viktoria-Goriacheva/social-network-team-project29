@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="post_comment_table" author="Alice">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="post_comment"/>
+            </not>
+        </preConditions>
+        <createTable tableName="post_comment" schemaName="socialnet">
+            <column autoIncrement="true" name="id" type="integer" remarks="идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="time" type="timestamp" remarks="время, когда был оставлен комментарий"/>
+            <column name="post_id" type="integer" remarks="идентификатор поста"/>
+            <column name="parent_id" type="integer"
+                    remarks="Родительский комментарий (если ответ на комментарий к посту)"/>
+            <column name="author_id" type="integer" remarks="идентификатор автора"/>
+            <column name="comment_text" type="text" remarks="комментарий"/>
+            <column name="is_blocked" type="boolean" remarks="комментарий заблокирован"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

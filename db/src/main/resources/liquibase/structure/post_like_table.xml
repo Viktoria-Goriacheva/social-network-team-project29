@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="post_like_table" author="Alice">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="post_like"/>
+            </not>
+        </preConditions>
+        <createTable tableName="post_like" schemaName="socialnet">
+            <column autoIncrement="true" name="id" type="integer" remarks="идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="time" type="timestamp" remarks="время"/>
+            <column name="person_id" type="integer" remarks="идентификатор человека"/>
+            <column name="post_id" type="integer" remarks="идентификатор поста"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
