@@ -1,4 +1,4 @@
-package ru.socialnet.team29.exeption;
+package ru.socialnet.team29.exception;
 
 import lombok.*;
 
