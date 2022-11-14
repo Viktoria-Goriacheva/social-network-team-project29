@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.socialnet.team29.dto.PersonLoginDTO;
-import ru.socialnet.team29.exeption.ErrorResponse;
+import ru.socialnet.team29.exception.ErrorResponse;
 import ru.socialnet.team29.model.LogoutResponse;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.ProfileResponse;

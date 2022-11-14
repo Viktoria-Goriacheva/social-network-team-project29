@@ -1,10 +1,10 @@
 package ru.socialnet.team29;
 
-import ru.socialnet.team29.mappers.PostMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.socialnet.team29.mappers.PostMapper;
 import ru.socialnet.team29.testcase.Post;
 import ru.socialnet.team29.testcase.PostDto;
 

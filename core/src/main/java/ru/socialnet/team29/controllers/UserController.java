@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.socialnet.team29.exeption.ErrorResponse;
+import ru.socialnet.team29.exception.ErrorResponse;
 import ru.socialnet.team29.model.ProfileResponse;
 import ru.socialnet.team29.serviceInterface.ProfileService;
 
