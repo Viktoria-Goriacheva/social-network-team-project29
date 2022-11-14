@@ -133,8 +133,8 @@
                             <inputSchema>socialnet</inputSchema>
                         </database>
                         <target>
-                            <packageName>jooq</packageName>
-                            <directory>target/generated-sources</directory>
+                            <packageName>ru.socialnet.team29.domain</packageName>
+                            <directory>target/generated-sources/jooq</directory>
                         </target>
                     </generator>
                 </configuration>

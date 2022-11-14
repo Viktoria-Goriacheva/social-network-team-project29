@@ -1,9 +1,12 @@
 package ru.socialnet.team29.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -12,7 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class ProfileResponse {
-    public String error;
-    public LocalDateTime timestamp;
-    public Person person;
+    private String error;
+    private Long timestamp;
+    @JsonProperty(value = "data")
+    private Person person;
 }

@@ -1,4 +1,4 @@
-package ru.socialnet.team29.service.impl;
+package ru.socialnet.team29.service;
 
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.dto.PersonLoginDTO;
@@ -20,22 +20,19 @@ public class LoginServiceImpl implements LoginService {
     public ProfileResponse getPersonProfile() {
         return ProfileResponse.builder()
                 .error("string")
-                .timestamp(LocalDateTime.now())
+                .timestamp(System.currentTimeMillis())
                 .person(Person.builder()
-                        .id(1L)
+                        .id(1)
                         .firstName("Фёкла")
                         .lastName("Петрович")
-                        .registrationDate(LocalDateTime.now())
-                        .birthDate(LocalDateTime.now())
+                        .registrationDate(System.currentTimeMillis())
+                        .birthDate(System.currentTimeMillis())
                         .email("petr@mail.ru")
                         .phone("89100000000")
                         .photo("https://...../photos/image123.jpg")
                         .about("Родился в небольшой, но честной семье")
                         .city(new City(1L, "Москва"))
                         .country(new Country(1L, "Россия"))
-                        .messagesPermission(MessagePermission.ALL)
-                        .lastOnlineTime(LocalDateTime.now())
-                        .isBlocked(BlockStatus.UNBLOCKED)
                         .build())
                 .build();
     }

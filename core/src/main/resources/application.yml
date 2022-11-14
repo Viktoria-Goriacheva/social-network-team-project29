@@ -1,5 +1,11 @@
+auth:
+  secret: socialnet
+
 server:
   port: 8086
+  servlet:
+    session:
+      tracking-modes: cookie
 
   db:
     port: http://localhost:8081

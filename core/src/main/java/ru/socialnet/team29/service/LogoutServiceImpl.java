@@ -1,4 +1,4 @@
-package ru.socialnet.team29.service.impl;
+package ru.socialnet.team29.service;
 
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.model.LogoutResponse;
