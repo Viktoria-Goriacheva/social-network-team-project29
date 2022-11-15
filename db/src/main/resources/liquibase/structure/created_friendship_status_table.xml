@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+
+    <changeSet id="create_friendship_status_table" author="Kolokolnin_Pavel">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="friendship_status_table"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="friendship_status_table" schemaName="socialnet" remarks="Связи с друзьями">
+
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="time" type="timestamptz" remarks="Дата">
+            </column>
+
+            <column name="name" type="varchar(255)" remarks="Имя пользователя">
+            </column>
+
+            <column name="code" type="varchar(25)" remarks="Статус: (REQUEST, DECLINED, FRIEND, SUBSCRIBED, BLOCKED)">
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
