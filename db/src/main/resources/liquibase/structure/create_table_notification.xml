@@ -1,0 +1,26 @@
+﻿<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+  <changeSet id="create_table_notification" author="Goriacheva">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists schemaName="socialnet" tableName="notification"/>
+      </not>
+    </preConditions>
+    <createTable tableName="notification" schemaName="socialnet" remarks="Оповещения">
+      <column autoIncrement="true" name="id" type="integer" remarks="Идентификатор">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="type_id" type="integer" remarks="Тип оповещения"/>
+      <column name="sent_time" type="datetime" remarks="Время отправки"/>
+      <column name="person_id" type="integer" remarks="Кому отправлено"/>
+      <column name="entity_id" type="integer"
+        remarks="Идентификатор сущности, относительно которой отправлено оповещение (комментарий, друг, пост или сообщение)"/>
+      <column name="contact" type="varchar(64)"
+        remarks="Куда отправлено оповещение (конкретный e-mail или телефон)"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
