@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+
+    <changeSet id="create_message_table" author="Kolokolnin_Pavel">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="message_table"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="message_table" schemaName="socialnet" remarks="Сообщения">
+
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="time" type="timestamptz" remarks="Время"/>
+
+
+            <column name="author_id" type="BIGINT" remarks="Идентификатор автора"/>
+
+
+            <column name="recipient_id" type="BIGINT" remarks="Идентификатор получателя">
+            </column>
+
+            <column name="message_text" type="text" remarks="Текст сообщения">
+            </column>
+
+            <column name="read_status" type="varchar(25)"  remarks="Статус прочтения(READ,SENT)">
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

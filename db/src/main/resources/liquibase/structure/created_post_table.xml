@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="create_post_table" author="Kolokolnin_Pavel">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="socialnet" tableName="post_table"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="post_table" schemaName="socialnet" remarks="Посты" >
+
+            <column name="id" type="bigint" autoIncrement="true" remarks="Идентификатор">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="time" type="timestamptz" remarks="Время">
+            </column>
+
+            <column name="author_id" type="BIGINT" remarks="Идентификатор автора">
+            </column>
+
+            <column name="title" type="text" remarks="Оглавление">
+            </column>
+
+            <column name="post_text" type="text" remarks="Текст Поста">
+            </column>
+
+            <column name="is_blocked" type="boolean" remarks="Статус: is_blocked">
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
