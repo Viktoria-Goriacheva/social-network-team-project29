@@ -1,0 +1,20 @@
+<configuration>
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5455/socialnet</url>
+        <user>admin</user>
+        <password>passWd123</password>
+    </jdbc>
+
+    <generator>
+        <database>
+            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+            <includes>.*</includes>
+            <inputSchema>socialnet</inputSchema>
+        </database>
+        <target>
+            <packageName>jooq</packageName>
+            <directory>target/generated-sources</directory>
+        </target>
+    </generator>
+</configuration>
