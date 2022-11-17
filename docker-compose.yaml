@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    hostname: postgres
+    container_name: socialnet_db
+    environment:
+     POSTGRES_DB: socialnet
+     POSTGRES_USER: admin
+     POSTGRES_PASSWORD: passWd123
+    ports:
+    - "5455:5432"
+    restart: unless-stopped
+
+  frontend:
+    image: 'test4test2022/frontend:latest'
+    container_name: frontend
+    ports:
+      - "8099:80"
+      - "8098:80"
+      - "8097:80"
+    restart: unless-stopped
