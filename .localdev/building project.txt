@@ -1,7 +1,7 @@
 Run -> Edit Configuration.
 Далее в левом верхнем углу нажимаем "+"(Add new Configuration). Из списка выбираем Maven.
 В поле Name прописываем "build"(не обязательно)
-В поле RUN пишем clean install
+В поле RUN пишем clean install -P localhost
 Working directory проверьте что бы была от корня проекта.
 Нажимаем OK
 Запускаем!
