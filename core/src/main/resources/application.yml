@@ -11,5 +11,5 @@ server:
     port: http://localhost:8081
 
 frontend:
-    host: http://localhost:8098
+    host: http://localhost:8098, http://localhost:8088
 

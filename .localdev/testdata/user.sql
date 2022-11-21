@@ -1,4 +1,4 @@
-﻿insert INTO socialnet."user"(name,email,password,type)
+insert INTO socialnet."user"(name,email,password,type)
 VALUES('Катя Калинина','kati.k@yandex.ru','00000000','MODERATOR'),
 ('Ольга Матроскина','prostokvahino@yandex.ru','11111111','ADMIN'),
 ('Игорь Кружалин','krug@yandex.ru','22222222','ADMIN'),
