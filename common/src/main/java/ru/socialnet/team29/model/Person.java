@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.socialnet.team29.model.enums.BlockStatus;
 import ru.socialnet.team29.model.enums.MessagePermission;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,21 +16,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
-    public Long id;
-    public String firstName;
-    public String lastName;
-    public LocalDateTime registrationDate;
-    public LocalDateTime birthDate;
-    public String email;
-    public String phone;
+    private Integer id;
+    @JsonProperty(value = "first_name")
+    private String firstName;
+    @JsonProperty(value = "last_name")
+    private String lastName;
+    @JsonProperty(value = "reg_date")
+    private Long registrationDate;
+    @JsonProperty(value = "birth_date")
+    private Long birthDate;
+
+    private String email;
+    private String phone;
     @JsonProperty(value = "confirmation-code")
-    public String confirmationCode;
-    public String password;
-    public String photo;
-    public String about;
-    public City city;
-    public Country country;
-    public MessagePermission messagesPermission;
-    public LocalDateTime lastOnlineTime;
-    public BlockStatus isBlocked;
+    private String confirmationCode;
+    private String password;
+    private String photo;
+    private String about;
+    private City city;
+    private Country country;
+
 }

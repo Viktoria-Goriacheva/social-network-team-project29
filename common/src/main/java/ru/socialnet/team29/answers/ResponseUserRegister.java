@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ResponseUserRegister implements CommonAnswer {
 
     private String error;
-    private LocalDateTime localDateTime;
+    private Long timestamp;
     @JsonProperty(value = "data")
     private MessageAnswer messageAnswer;
 

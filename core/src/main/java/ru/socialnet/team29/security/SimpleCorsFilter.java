@@ -1,22 +1,17 @@
-package ru.socialnet.team29.filters;
+package ru.socialnet.team29.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.socialnet.team29.config.FrontConfig;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 @Component
-public class SimpleCorsFilter implements Filter {
-
+@RequiredArgsConstructor
+public class SimpleCorsFilter implements Filter
+{
     private final FrontConfig frontConfig;
-
-    @Autowired
-    public SimpleCorsFilter(FrontConfig frontConfig) {
-        this.frontConfig = frontConfig;
-    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

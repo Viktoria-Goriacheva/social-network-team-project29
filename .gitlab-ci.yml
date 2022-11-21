@@ -5,7 +5,7 @@ stages:
 Check-on:
   image: maven:latest
   services:
-    - postgres:14.3
+    - postgres:latest
   variables:
     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
     MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
