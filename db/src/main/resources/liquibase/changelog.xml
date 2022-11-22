@@ -23,5 +23,6 @@
    <include file="structure/created_message_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/created_post_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_table_notification_type.xml" relativeToChangelogFile="true"/>
+   <include file="structure/change_table_person.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

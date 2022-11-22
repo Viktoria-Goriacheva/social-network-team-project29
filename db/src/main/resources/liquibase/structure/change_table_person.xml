@@ -1,0 +1,58 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="change-table-person" author="Pokhilko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="person"/>
+            </not>
+        </preConditions>
+        <addColumn schemaName="socialnet"
+                   tableName="person">
+            <column name="country"
+                    type="varchar(255)"/>
+            <column name="token"
+                    type="varchar(255)"/>
+            <column name="status_code"
+                    type="varchar(255)"/>
+
+            <column name="is_online"
+                    type="boolean"/>
+            <column name="is_deleted"
+                    type="boolean"/>
+            <column name="photo_id"
+                    type="varchar(255)"/>
+            <column name="photo_name"
+                    type="varchar(255)"/>
+            <column name="role"
+                    type="varchar(255)"/>
+            <column name="created_on"
+                    type="datetime"/>
+            <column name="updated_on"
+                    type="datetime"/>
+        </addColumn>
+        <renameColumn columnDataType="character varying(64)"
+                      newColumnName="email"
+                      oldColumnName="e_mail"
+                      remarks="Rename e_mail to email "
+                      schemaName="socialnet"
+                      tableName="person"/>
+        <renameColumn columnDataType="character varying(64)"
+                      newColumnName="city"
+                      oldColumnName="town"
+                      remarks="Rename town to city "
+                      schemaName="socialnet"
+                      tableName="person"/>
+        <dropColumn columnName="is_approved"
+                    schemaName="socialnet"
+                    tableName="person">
+        </dropColumn>
+        <dropColumn columnName="confirmation_code"
+                    schemaName="socialnet"
+                    tableName="person">
+        </dropColumn>
+    </changeSet>
+</databaseChangeLog>

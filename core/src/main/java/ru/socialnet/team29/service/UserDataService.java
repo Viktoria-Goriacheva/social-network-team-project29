@@ -37,7 +37,6 @@ public class UserDataService {
                     .firstName(payload.getFirstName())
                     .lastName(payload.getLastName())
                     .password(payload.getPasswd1())
-                    .confirmationCode(payload.getCode())
                     .build();
             try {
                 feignInterface.savePerson(person);
