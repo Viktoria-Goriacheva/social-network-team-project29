@@ -25,14 +25,14 @@ public class LoginServiceImpl implements LoginService {
                         .id(1)
                         .firstName("Фёкла")
                         .lastName("Петрович")
-                        .registrationDate(System.currentTimeMillis())
-                        .birthDate(System.currentTimeMillis())
+
+                        .birthDate(LocalDateTime.now())
                         .email("petr@mail.ru")
                         .phone("89100000000")
                         .photo("https://...../photos/image123.jpg")
                         .about("Родился в небольшой, но честной семье")
-                        .city(new City(1L, "Москва"))
-                        .country(new Country(1L, "Россия"))
+                        .city("Москва")
+                        .country("Россия")
                         .build())
                 .build();
     }

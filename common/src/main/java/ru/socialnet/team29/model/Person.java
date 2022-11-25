@@ -5,35 +5,47 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.socialnet.team29.model.enums.BlockStatus;
-import ru.socialnet.team29.model.enums.MessagePermission;
+import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class Person {
     private Integer id;
-    @JsonProperty(value = "first_name")
-    private String firstName;
-    @JsonProperty(value = "last_name")
-    private String lastName;
-    @JsonProperty(value = "reg_date")
-    private Long registrationDate;
-    @JsonProperty(value = "birth_date")
-    private Long birthDate;
 
     private String email;
     private String phone;
-    @JsonProperty(value = "confirmation-code")
-    private String confirmationCode;
-    private String password;
     private String photo;
     private String about;
-    private City city;
-    private Country country;
+    private String city;
+    private String country;
+    private String token;
+    private String statusCode;
+    @JsonProperty(value = "firstName")
+    private String firstName;
+    @JsonProperty(value = "lastName")
+    private String lastName;
+    @JsonProperty(value = "regDate")
+    private LocalDateTime regDate;
+    @JsonProperty(value = "birthDate")
+    private LocalDateTime birthDate;
 
+    private String messagesPermission;
+
+    private LocalDateTime lastOnlineTime;
+
+    private Boolean isOnline;
+    private Boolean isBlocked;
+    private Boolean isDeleted;
+
+    private String photoId;
+    private String photoName;
+    private String role;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
+    private String password;
 }
