@@ -1,21 +1,23 @@
 package ru.socialnet.team29.service;
 
 import org.springframework.stereotype.Service;
+import ru.socialnet.team29.answers.MessageAnswer;
 import ru.socialnet.team29.dto.PersonLoginDTO;
-import ru.socialnet.team29.model.*;
-import ru.socialnet.team29.model.enums.BlockStatus;
-import ru.socialnet.team29.model.enums.MessagePermission;
+import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.model.ProfileResponse;
 import ru.socialnet.team29.serviceInterface.LoginService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @Service
 public class LoginServiceImpl implements LoginService {
     @Override
     public ProfileResponse getProfile(PersonLoginDTO personLoginDTO) {
-        var loginProfile = getPersonProfile();
-        return loginProfile;
+        return getPersonProfile();
     }
+
 
     public ProfileResponse getPersonProfile() {
         return ProfileResponse.builder()
@@ -25,7 +27,6 @@ public class LoginServiceImpl implements LoginService {
                         .id(1)
                         .firstName("Фёкла")
                         .lastName("Петрович")
-
                         .birthDate(LocalDateTime.now())
                         .email("petr@mail.ru")
                         .phone("89100000000")
@@ -35,5 +36,12 @@ public class LoginServiceImpl implements LoginService {
                         .country("Россия")
                         .build())
                 .build();
+    }
+    @Override
+    public void setCookieToAnswer(HttpServletResponse response, MessageAnswer answer)
+    {
+        Cookie cookie = new Cookie("token", answer.getMessage());
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }

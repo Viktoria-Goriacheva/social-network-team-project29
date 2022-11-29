@@ -21,9 +21,9 @@ public class UserRegister {
 
 
     public MessageAnswer jwtLogin(PersonLoginDTO payload) {
-        log.info(this.getClass().getSimpleName() + ": " + "Проводим аутентификацию перед выдачей токена " + payload.getEmail());
+        log.info("Проводим аутентификацию перед выдачей токена " + payload.getEmail());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getEmail(), payload.getPassword()));
-        log.info(this.getClass().getSimpleName() + ": " + " Аутентификация прошла успешно. " +
+        log.info(" Аутентификация прошла успешно. " +
                 "Теперь запрос в БД для формирования токена по пользователю " + payload.getEmail());
         CoreUserDetails userDetails = (CoreUserDetails) coreUserDetailsService.loadUserByUsername(payload.getEmail());
         String jwtToken = jwtUtil.generateToken(userDetails, payload.getEmail());

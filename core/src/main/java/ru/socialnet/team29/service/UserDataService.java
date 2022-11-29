@@ -61,9 +61,7 @@ public class UserDataService {
     }
 
     public Person getPersonByEmail(String email) throws IOException {
-//        log.info(this.getClass().getSimpleName() + ": " + "Отправили запрос на БД. Для получения информации о person" + email);
         Person result = feignInterface.getPersonByEmail(email);
-//        log.info(this.getClass().getSimpleName() + ": " + "Получили персон из БД." + email);
         result.setPassword(passwordEncoder.encode(result.getPassword()));//TODO Убрать, когда в базу данных будут сохраняться пароли с BcryptEncoder
         return result;
     }
