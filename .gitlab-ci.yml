@@ -22,3 +22,19 @@ Check-on:
     - 'mvn $MAVEN_CLI_OPTS clean install'
     - echo "$CI_JOB_STAGE was successful"
     - echo "build number $CI_PIPELINE_ID"
+  artifacts:
+    paths:
+      - core/target/core-1.0-SNAPSHOT.jar
+      - db/target/db-1.0-SNAPSHOT.jar
+
+Deploy:
+  image: docker:latest
+  stage: deploy
+  script:
+    - docker login -u $docker_user -p $docker_password
+    - docker build -f dockerfile-core -t $repository-core:latest .
+    - docker push $repository-core
+    - docker build -f dockerfile-db -t $repository-db:latest .
+    - docker push $repository-db:latest
+  only:
+    - master

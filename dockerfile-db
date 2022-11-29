@@ -1,0 +1,6 @@
+FROM openjdk:19
+
+ARG JAR_FILE=db/target/db-1.0-SNAPSHOT.jar
+COPY ${JAR_FILE} db.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar","/db.jar"]

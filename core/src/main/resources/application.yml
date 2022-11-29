@@ -8,7 +8,7 @@ server:
       tracking-modes: cookie
 
   db:
-    port: http://localhost:8081
+    port: http://host.docker.internal:8081
 
 frontend:
     host: http://localhost:8098, http://localhost:8088

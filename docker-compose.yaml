@@ -22,7 +22,14 @@ services:
       - "8097:80"
     restart: unless-stopped
 
-  my-runner:
-    container_name: gitlab-runner
-    image: 'gitlab/gitlab-runner:latest'
-    restart: always
+  core:
+    image: 'kohgutepdev/team29socialnet-core:latest'
+    container_name: core_service
+    ports:
+      - "8086:8086"
+
+  db:
+    image: 'kohgutepdev/team29socialnet-db:latest'
+    container_name: db_service
+    ports:
+      - "8081:8081"
