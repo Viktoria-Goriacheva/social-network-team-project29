@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.MessageAnswer;
@@ -14,7 +15,6 @@ import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +62,12 @@ public class UserDataService {
         return responseUserRegister;
     }
 
-    public Person getPersonByEmail(String email) throws IOException {
-        Person result = feignInterface.getPersonByEmail(email);
-        return result;
+    public Person getPersonByEmail(String email) {
+        return feignInterface.getPersonByEmail(email);
+    }
+
+    public Person getCurrentAccount(){
+        return feignInterface.getPersonByEmail(
+                SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

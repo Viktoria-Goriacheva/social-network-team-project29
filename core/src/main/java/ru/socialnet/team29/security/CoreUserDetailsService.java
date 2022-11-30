@@ -21,12 +21,8 @@ public class CoreUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person;
-        try {
-            log.info(this.getClass().getSimpleName()+ ": " + "Отправляем запрос на БД " + username);
-            person = userDataService.getPersonByEmail(username);
-        } catch (IOException e) {
-            throw new RuntimeException("User Not found");
-        }
+        log.info(this.getClass().getSimpleName()+ ": " + "Отправляем запрос на БД " + username);
+        person = userDataService.getPersonByEmail(username);
         return new CoreUserDetails(person) {
         };
     }

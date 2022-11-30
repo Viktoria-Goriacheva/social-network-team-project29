@@ -1,4 +1,4 @@
-﻿insert INTO socialnet.person(id,first_name,last_name,reg_date,birth_date,e_mail,
+﻿insert INTO socialnet.person(id,first_name,last_name,reg_date,birth_date,email,
 phone,password,photo,about,town,confirmation_code,is_approved,
 messages_permission,last_online_time,is_blocked)
 VALUES(1,'Катя','Калинина','2010-10-19 14:54:22','1971-07-13','kati.k@yandex.ru','+79197714372','00000000','/upload/ht/iph,ky.jpeg','Красивая дама','Омск','28d679d049fd42','true','FRIENDS','2014-11-10 11:20:51','true'),

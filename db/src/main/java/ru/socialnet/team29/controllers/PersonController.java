@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.services.PersonService;
 
@@ -16,7 +20,6 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping("/person")
-    @ResponseBody
     public Person getPersonByEmail(@RequestParam("email") String email){
       log.info("Получили запрос от core - Найти персон по email " + email);
         return personService.getPersonByEmail(email);

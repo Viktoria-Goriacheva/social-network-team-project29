@@ -44,12 +44,11 @@ public class PersonRepository {
                 .execute() == 200;
     }
 
-    public List<PersonRecord> findPersonByEmail(String email) {
+    public PersonRecord findPersonByEmail(String email) {
         initDsl();
         return dsl.selectFrom(Person.PERSON)
                 .where(Person.PERSON.EMAIL.equalIgnoreCase(email))
-                .fetch()
-                .into(PersonRecord.class);
+                .fetchOne();
     }
 
     private void initDsl() {

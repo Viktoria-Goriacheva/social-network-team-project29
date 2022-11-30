@@ -14,10 +14,15 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: 'test4test2022/frontend:latest'
+    image: 'skillgroup25/frontend:latest'
     container_name: frontend
     ports:
       - "8099:80"
       - "8098:80"
       - "8097:80"
     restart: unless-stopped
+
+  my-runner:
+    container_name: gitlab-runner
+    image: 'gitlab/gitlab-runner:latest'
+    restart: always
