@@ -1,4 +1,4 @@
-package ru.socialnet.team29;
+package ru.socialnet.team29.repository;
 
 
 import lombok.RequiredArgsConstructor;
@@ -19,13 +19,12 @@ public class PersonRepository {
     private static DSLContext dsl;
 
 
-    public PersonRecord insert(PersonRecord person) {
+    public PersonRecord insert(PersonRecord personRecord) {
       initDsl();
         return dsl.insertInto(Person.PERSON)
-                .set(dsl.newRecord(Person.PERSON, person))
+                .set(dsl.newRecord(Person.PERSON, personRecord))
                 .returning()
-                .fetchOne()
-                .into(PersonRecord.class);
+                .fetchOne();
     }
 
 

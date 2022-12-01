@@ -1,6 +1,5 @@
 package ru.socialnet.team29.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Component
 public class Person {
-    private Integer id;
 
+    private Integer id;
     private String email;
     private String phone;
     private String photo;
@@ -24,14 +23,13 @@ public class Person {
     private String city;
     private String country;
     private String token;
+    private String password;
     private String statusCode;
-    @JsonProperty(value = "firstName")
     private String firstName;
-    @JsonProperty(value = "lastName")
+
     private String lastName;
-    @JsonProperty(value = "regDate")
+
     private LocalDateTime regDate;
-    @JsonProperty(value = "birthDate")
     private LocalDateTime birthDate;
 
     private String messagesPermission;
@@ -47,5 +45,4 @@ public class Person {
     private String role;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
-    private String password;
 }
