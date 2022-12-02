@@ -37,7 +37,15 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
-		</dependency>	</dependencies>
+		</dependency>
+<!--		for captcha-->
+		<dependency>
+			<groupId>com.github.cage</groupId>
+			<artifactId>cage</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
