@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class ContactConfirmationPayload {
-
-    private String code;
     private String email;
     private String firstName;
     private String lastName;
-    private String passwd1;
-    private String passwd2;
+    private String password1;
+    private String password2;
+    private String token;
+    private String code;
 }
