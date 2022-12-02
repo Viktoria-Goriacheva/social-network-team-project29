@@ -13,18 +13,10 @@ import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.service.PersonServiceImpl;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
     private final PersonServiceImpl personService;
 
-    @GetMapping("/v1/account/me")
-    @ApiOperation(value = "Получение текущего пользователя")
-    @ApiResponses({@ApiResponse(code = 200, message = "Успешное получение текущего пользователя"),
-            @ApiResponse(code = 401, message = "unauthorized", response = ErrorResponse.class)})
-    @ResponseBody
-    public Person getProfile()  {
-        return personService.createNewTestPerson();
 
-    }
 }

@@ -5,15 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerWithTwoTokens;
 import ru.socialnet.team29.answers.MessageAnswer;
 import ru.socialnet.team29.answers.ResponseUserRegister;
+import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.dto.PersonLoginDTO;
+import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.security.jwt.UserRegister;
+import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.LoginService;
 import ru.socialnet.team29.serviceInterface.LogoutService;
 
@@ -29,12 +29,17 @@ public class AuthController {
     private final UserRegister userRegister;
     private final LoginService loginService;
     private final LogoutService logoutService;
+    private final UserDataService userDataService;
 
+    @PostMapping("/register")
+    public ResponseEntity<CommonAnswer> handlerRegisterNewUser(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
+        return new ResponseEntity<>( userDataService.saveNewUserInDb(contactConfirmationPayload), HttpStatus.OK);
+    }
 
     @PostMapping(value = "/login")
     public ResponseEntity<AnswerWithTwoTokens> loginPage(@RequestBody PersonLoginDTO person,
                                                          HttpServletResponse response) {
-        log.info(person.getEmail() + " пытается войти.");
+        log.info("Попытка входа {}", person.getEmail());
         MessageAnswer answer = userRegister.jwtLogin(person);
         loginService.setCookieToAnswer(response, answer);
         return new ResponseEntity<>(new AnswerWithTwoTokens(answer.getMessage(), ""), HttpStatus.OK);
@@ -43,7 +48,7 @@ public class AuthController {
 
     @PostMapping(value = "/logout")
     public ResponseUserRegister handlerLogout(HttpServletRequest request) {
-        log.info("Попытка выхода: " + SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("Попытка выхода  {}", SecurityContextHolder.getContext().getAuthentication().getName());
         logoutService.logout(request);
         return new ResponseUserRegister("", System.currentTimeMillis(), new MessageAnswer("ok"));
     }

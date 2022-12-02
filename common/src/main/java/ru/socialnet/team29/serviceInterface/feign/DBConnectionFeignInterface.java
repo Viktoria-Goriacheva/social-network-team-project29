@@ -14,6 +14,6 @@ public interface DBConnectionFeignInterface {
     Person savePerson(@RequestBody Person person);
 
     @GetMapping(value = "/person")
-    Person getPersonByEmail(@RequestParam String email);
+    Person getPersonByEmail (@RequestParam String email);
 
 }

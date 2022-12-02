@@ -43,4 +43,8 @@ public class PersonServiceImpl implements PersonService {
 
         return person;
     }
+
+    public Person getPersonByEmail(String email){
+        return person;
+    }
 }

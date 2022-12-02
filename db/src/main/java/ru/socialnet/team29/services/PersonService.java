@@ -9,8 +9,6 @@ import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.mappers.PersonMapper;
 import ru.socialnet.team29.model.Person;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -19,10 +17,9 @@ public class PersonService {
     private final PersonMapper personMapper;
 
     public Person getPersonByEmail(String email) {
-        List<PersonRecord> persons = personRepository.findPersonByEmail(email);
-
-        if (persons.size() != 0) {
-            return personMapper.PersonRecordToPerson(persons.get(0));
+        PersonRecord person = personRepository.findPersonByEmail(email);
+        if (person != null) {
+            return personMapper.PersonRecordToPerson(person);
         } else {
             throw new NoDataFoundException("No users found such email");
         }
