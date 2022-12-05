@@ -1,0 +1,20 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="change-table-person2" author="Kolokolnin_Pavel">
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="password" newDataType="text" />
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="updated_on" remarks="Обновлено"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="created_on" remarks="Создано"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="role" remarks="Роль"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="photo_name" remarks="Имя_Фото"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="photo_id" remarks="Идентифекатор_Фото"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="is_deleted" remarks="Удалено"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="is_online" remarks="Онлайн"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="status_code" remarks="Код_Статуса"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="token" remarks="Токен"/>
+        <setColumnRemarks tableName="person" schemaName="socialnet" columnName="country" remarks="Город"/>
+    </changeSet>
+</databaseChangeLog>
