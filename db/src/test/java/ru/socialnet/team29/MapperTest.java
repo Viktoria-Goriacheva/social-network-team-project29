@@ -8,11 +8,15 @@ import ru.socialnet.team29.mappers.PostMapper;
 import ru.socialnet.team29.testcase.Post;
 import ru.socialnet.team29.testcase.PostDto;
 
+import javax.sql.DataSource;
+
 @SpringBootTest(classes = {SocialNetDatabaseApp.class})
 class MapperTest {
+
+    static DataSource datasource;
+
     @Autowired
     private PostMapper postMapperTest;
-
 
     @Test
     void shouldProperlyMapModelToDto() {
