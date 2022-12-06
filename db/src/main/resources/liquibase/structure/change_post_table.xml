@@ -1,0 +1,29 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+  <changeSet id="change-post-table" author="Goriacheva">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="post_table"/>
+      </not>
+    </preConditions>
+    <addColumn schemaName="socialnet" tableName="post_table">
+      <column name="is_delete" type="boolean" remarks="Удален ли пост"/>
+    </addColumn>
+    <addColumn schemaName="socialnet" tableName="post_table">
+      <column name="type" type="text" remarks="POSTED-опубликовано или QUEUED-в очереди,отложено"/>
+    </addColumn>
+    <addColumn schemaName="socialnet" tableName="post_table">
+      <column name="timeChanged" type="datetime" remarks="Время изменения поста при редактировании"/>
+    </addColumn>
+    <addColumn schemaName="socialnet" tableName="post_table">
+      <column name="publishDate" type="datetime" remarks="Время публикации поста при ее откладывании"/>
+    </addColumn>
+    <modifyDataType columnName="id" newDataType="integer" schemaName="socialnet"
+      tableName="post_table"/>
+    <modifyDataType columnName="author_id" newDataType="integer" schemaName="socialnet"
+      tableName="post_table"/>
+    <modifyDataType columnName="time" newDataType="datetime" schemaName="socialnet"
+      tableName="post_table"/>
+  </changeSet>
+</databaseChangeLog>

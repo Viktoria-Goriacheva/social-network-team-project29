@@ -24,5 +24,6 @@
    <include file="structure/created_post_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_table_notification_type.xml" relativeToChangelogFile="true"/>
    <include file="structure/change_table_person.xml" relativeToChangelogFile="true"/>
+   <include file="structure/change_post_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
