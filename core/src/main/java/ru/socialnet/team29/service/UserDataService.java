@@ -22,6 +22,7 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 public class UserDataService {
 
     private final DBConnectionFeignInterface feignInterface;
+    private final CaptchaService captchaService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -45,8 +46,11 @@ public class UserDataService {
             } catch (Exception e) {
                 return getAnswer("invalid_request", "Во время сохранения произошла ошибка.");
             }
-            return getAnswer("", "");
+            if (captchaService.checkCaptcha(payload.getToken())) {
+                return getAnswer("", "");
+            }
         }
+        return getAnswer("invalid_request", "captcha введена неверно");
     }
 
     private CommonAnswer getAnswer(String error, String description) {
@@ -66,7 +70,7 @@ public class UserDataService {
         return feignInterface.getPersonByEmail(email);
     }
 
-    public Person getCurrentAccount(){
+    public Person getCurrentAccount() {
         return feignInterface.getPersonByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
     }

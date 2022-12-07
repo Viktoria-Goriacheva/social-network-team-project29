@@ -12,7 +12,9 @@ import ru.socialnet.team29.answers.ResponseUserRegister;
 import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.dto.PersonLoginDTO;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
+import ru.socialnet.team29.responses.CaptchaResponse;
 import ru.socialnet.team29.security.jwt.UserRegister;
+import ru.socialnet.team29.service.CaptchaService;
 import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.LoginService;
 import ru.socialnet.team29.serviceInterface.LogoutService;
@@ -29,12 +31,8 @@ public class AuthController {
     private final UserRegister userRegister;
     private final LoginService loginService;
     private final LogoutService logoutService;
+    private final CaptchaService captchaService;
     private final UserDataService userDataService;
-
-    @PostMapping("/register")
-    public ResponseEntity<CommonAnswer> handlerRegisterNewUser(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
-        return new ResponseEntity<>( userDataService.saveNewUserInDb(contactConfirmationPayload), HttpStatus.OK);
-    }
 
     @PostMapping(value = "/login")
     public ResponseEntity<AnswerWithTwoTokens> loginPage(@RequestBody PersonLoginDTO person,
@@ -51,5 +49,16 @@ public class AuthController {
         log.info("Попытка выхода  {}", SecurityContextHolder.getContext().getAuthentication().getName());
         logoutService.logout(request);
         return new ResponseUserRegister("", System.currentTimeMillis(), new MessageAnswer("ok"));
+    }
+
+    @PostMapping("/register")
+    @ResponseBody
+    public CommonAnswer handlerRegisterNewUser(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
+        return userDataService.saveNewUserInDb(contactConfirmationPayload);
+    }
+
+    @GetMapping(value = "/captcha")
+    public ResponseEntity<CaptchaResponse> getCaptcha() {
+        return ResponseEntity.ok(captchaService.getCaptchaCode());
     }
 }
