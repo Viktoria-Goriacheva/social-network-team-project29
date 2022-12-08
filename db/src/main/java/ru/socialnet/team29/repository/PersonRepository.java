@@ -44,6 +44,14 @@ public class PersonRepository {
                 .execute() == 200;
     }
 
+  public Integer findPersonIdByEmail(String email) {
+    initDsl();
+    return dsl.selectFrom(Person.PERSON)
+        .where(Person.PERSON.EMAIL.equalIgnoreCase(email))
+        .fetchOne()
+        .getId();
+  }
+
     public PersonRecord findPersonByEmail(String email) {
         initDsl();
         return dsl.selectFrom(Person.PERSON)
