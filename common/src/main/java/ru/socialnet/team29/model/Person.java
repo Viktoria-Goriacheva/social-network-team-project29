@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,16 +29,11 @@ public class Person {
     private String password;
     private String statusCode;
     private String firstName;
-
     private String lastName;
-
     private LocalDateTime regDate;
     private LocalDateTime birthDate;
-
     private String messagesPermission;
-
     private LocalDateTime lastOnlineTime;
-
     private Boolean isOnline;
     private Boolean isBlocked;
     private Boolean isDeleted;

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+import ru.socialnet.team29.domain.Keys;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.services.DslContextCustom;
@@ -20,25 +21,25 @@ public class PersonRepository {
 
 
     public PersonRecord insert(PersonRecord personRecord) {
-      initDsl();
-        return dsl.insertInto(Person.PERSON)
+        initDsl();
+         return dsl.insertInto(Person.PERSON)
                 .set(dsl.newRecord(Person.PERSON, personRecord))
+                 .onDuplicateKeyUpdate()
+                 .set(dsl.newRecord(Person.PERSON, personRecord))
                 .returning()
                 .fetchOne();
     }
 
-
     public List<PersonRecord> findAll(Condition condition) {
-      initDsl();
+        initDsl();
         return dsl.selectFrom(Person.PERSON)
                 .where(condition)
                 .fetch()
                 .into(PersonRecord.class);
     }
 
-
     public Boolean delete(Integer id) {
-     initDsl();
+        initDsl();
         return dsl.deleteFrom(Person.PERSON)
                 .where(Person.PERSON.ID.eq(id))
                 .execute() == 200;

@@ -53,8 +53,8 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseBody
-    public CommonAnswer handlerRegisterNewUser(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
-        return userDataService.saveNewUserInDb(contactConfirmationPayload);
+    public ResponseEntity<CommonAnswer> handlerRegisterNewUser(@RequestBody ContactConfirmationPayload contactConfirmationPayload) {
+        return new ResponseEntity<>(userDataService.saveNewUserInDb(contactConfirmationPayload), HttpStatus.OK);
     }
 
     @GetMapping(value = "/captcha")
