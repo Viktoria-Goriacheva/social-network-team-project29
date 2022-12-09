@@ -27,6 +27,7 @@
         <junit_jupiter.version>1.17.4</junit_jupiter.version>
 
     </properties>
+
     <artifactId>db</artifactId>
 
     <profiles>
@@ -88,6 +89,9 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+
+
+
     </dependencies>
 
     <build>

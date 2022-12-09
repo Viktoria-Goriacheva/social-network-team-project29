@@ -30,6 +30,15 @@ public class PersonService implements PersonInterfaceDB {
         }
     }
 
+    public Person getPersonByToken(String token) {
+        PersonRecord person = personRepository.findPersonByToken(token);
+        if (person != null) {
+            return personMapper.PersonRecordToPerson(person);
+        } else {
+            throw new NoDataFoundException("No users found such token");
+        }
+    }
+
     @Override
     public String findEmailByPersonId(String id) {
         return String.valueOf(personRepository.findEmailByPersonId(id));
@@ -41,6 +50,12 @@ public class PersonService implements PersonInterfaceDB {
         log.info("Отработал метод - personRepository.insert(personMapper.PersonToPersonRecord(person))! Данные попали в Базу Данных! ");
         return person;
     }
+
+    public Person update(Person person) {
+        personRepository.update(personMapper.PersonToPersonRecord(person));
+        log.info("Отработал метод - update Данные попали в Базу Данных! ");
+        return person;
+}}
 
     public List<PersonRecord> findAll(Condition condition) {
         return personRepository.findAll(condition);

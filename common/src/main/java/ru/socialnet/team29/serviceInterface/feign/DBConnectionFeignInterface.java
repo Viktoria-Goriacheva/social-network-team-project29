@@ -17,6 +17,13 @@ public interface DBConnectionFeignInterface {
     @GetMapping(value = "/person")
     Person getPersonByEmail(@RequestParam String email);
 
+    @GetMapping(value = "/personToken")
+    Person getPersonByToken(@RequestParam String token);
+
+
+    @PostMapping(value = "/personUpdate")
+    Person updatePerson(@RequestBody Person person);
+
     @GetMapping(value = "/posts")
     List<PostDto> getPostDto(@RequestParam String email);
 

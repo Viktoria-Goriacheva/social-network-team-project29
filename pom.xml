@@ -37,6 +37,11 @@
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <liquibase.version>4.17.2</liquibase.version>
+        <spring-boot-starter-mail.version>3.0.0</spring-boot-starter-mail.version>
+        <spring-context-support.version>6.0.2</spring-context-support.version>
+        <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+
     </properties>
 
     <modules>
@@ -145,8 +150,28 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
+        <!--		for send email-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>${spring-boot-starter-mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring-context-support.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>${jakarta.activation-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>${jakarta.mail.version}</version>
+        </dependency>
     </dependencies>
-
 
     <build>
         <plugins>

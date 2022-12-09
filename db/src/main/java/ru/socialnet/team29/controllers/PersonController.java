@@ -25,11 +25,24 @@ public class PersonController {
         return personService.getPersonByEmail(email);
     }
 
+    @GetMapping("/personToken")
+    public Person getPersonByToken(@RequestParam("token") String token){
+        log.info("Получили запрос от core - Найти персон по token " + token);
+        return personService.getPersonByToken(token);
+    }
+
     @PostMapping("/person")
     @ResponseBody
     public ResponseEntity<Person> savePerson(@RequestBody Person person) {
         log.info("Получили запрос на сохранение {}",person);
         return new ResponseEntity<>( personService.savePerson(person), HttpStatus.OK);
+    }
+
+    @PostMapping("/personUpdate")
+    @ResponseBody
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
+        log.info("Получили запрос на сохранение {}", person);
+        return new ResponseEntity<>( personService.update(person), HttpStatus.OK);
     }
 
 }
