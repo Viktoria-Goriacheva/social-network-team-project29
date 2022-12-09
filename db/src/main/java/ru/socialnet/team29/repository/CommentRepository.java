@@ -26,6 +26,7 @@ public class CommentRepository {
     }
 
 
+    @Deprecated
     public List<PostCommentRecord> findAll(Condition condition) {
         return dsl.selectFrom(PostComment.POST_COMMENT)
                 .where(condition)

@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.PostLike;
 import ru.socialnet.team29.services.DslContextCustom;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
-public class PostLikeRepository {
+public class PostLikeRepository extends AbstractRepository<PostLike> {
 
   private final DSLContext dsl;
 
@@ -24,4 +26,23 @@ public class PostLikeRepository {
   }
 
 
+  @Override
+  public int insert(PostLike postLike) {
+    return 0;
+  }
+
+  @Override
+  public PostLike findById(int id) {
+    return null;
+  }
+
+  @Override
+  public boolean update(PostLike postLike) {
+    return false;
+  }
+
+  @Override
+  public boolean delete(int id) {
+    return false;
+  }
 }

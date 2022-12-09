@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://host.docker.internal:5455/socialnet
-    username: admin
-    password: passWd123
+    url:
+    username:
+    password:
 
   liquibase:
     change-log: classpath:liquibase/changelog.xml
