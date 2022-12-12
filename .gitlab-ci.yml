@@ -13,7 +13,7 @@ Check-on:
     POSTGRES_PASSWORD: $postgres_password
     POSTGRES_DB: $postgres_db
     POSTGRES_HOST_AUTH_METHOD: trust
-    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+    TESTCONTAINERS_HOST_OVERRIDE: $testcontainers_host_override
   cache:
     paths:
       - .m2/repository
