@@ -7,4 +7,5 @@ public interface PersonService
 {
 
     Person createNewTestPerson();
+    Integer getIdPersonFromSecurityContext();
 }

@@ -7,6 +7,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
+import ru.socialnet.team29.services.DslContextCustom;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class PersonRepository {
     public PersonRecord insert(PersonRecord personRecord) {
         return dsl.insertInto(Person.PERSON)
                 .set(dsl.newRecord(Person.PERSON, personRecord))
-                .onDuplicateKeyUpdate()
-                .set(dsl.newRecord(Person.PERSON, personRecord))
+                 .onDuplicateKeyUpdate()
+                 .set(dsl.newRecord(Person.PERSON, personRecord))
                 .returning()
                 .fetchOne();
     }
@@ -58,5 +59,12 @@ public class PersonRepository {
                 .returning()
                 .fetchOne()
                 .into(ru.socialnet.team29.model.Person.class)) != null;
+    }
+
+    public Integer findEmailByPersonId(String id) {
+        return dsl.selectFrom(Person.PERSON)
+                .where(Person.PERSON.ID.equalIgnoreCase(id))
+                .fetchOne()
+                .getId();
     }
 }
