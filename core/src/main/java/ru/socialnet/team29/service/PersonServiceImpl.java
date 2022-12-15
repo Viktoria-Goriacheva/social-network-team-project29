@@ -55,5 +55,4 @@ public class PersonServiceImpl implements PersonService {
         return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson().getId();
 
     }
-
 }
