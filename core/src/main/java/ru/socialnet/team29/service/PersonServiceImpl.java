@@ -1,8 +1,10 @@
 package ru.socialnet.team29.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.security.CoreUserDetails;
 import ru.socialnet.team29.serviceInterface.PersonService;
 
 import java.time.LocalDateTime;
@@ -47,4 +49,11 @@ public class PersonServiceImpl implements PersonService {
     public Person getPersonByEmail(String email){
         return person;
     }
+
+    @Override
+    public Integer getIdPersonFromSecurityContext() {
+        return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson().getId();
+
+    }
+
 }
