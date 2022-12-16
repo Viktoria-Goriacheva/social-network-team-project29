@@ -2,12 +2,8 @@ package ru.socialnet.team29.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.socialnet.team29.model.City;
-import ru.socialnet.team29.model.Country;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.ProfileResponse;
-import ru.socialnet.team29.model.enums.BlockStatus;
-import ru.socialnet.team29.model.enums.MessagePermission;
 import ru.socialnet.team29.serviceInterface.ProfileService;
 
 import java.time.LocalDateTime;

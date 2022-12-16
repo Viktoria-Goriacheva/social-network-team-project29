@@ -24,6 +24,7 @@ public class UserDataService {
 
     private final DBConnectionFeignInterface feignInterface;
     private final CaptchaService captchaService;
+    private final EmailService emailService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -45,6 +46,8 @@ public class UserDataService {
             try {
                 log.info("Заполняем данные пользователя при регистрации {}", person);
                 feignInterface.savePerson(person);
+                emailService.sendEmail("Регистрация нового пользователя", "Регистрация прошла успешно", person.getEmail());
+                log.info("Письмо было отправлено.");
             } catch (Exception e) {
                 return getAnswer("invalid_request", "Во время сохранения произошла ошибка.");
             }

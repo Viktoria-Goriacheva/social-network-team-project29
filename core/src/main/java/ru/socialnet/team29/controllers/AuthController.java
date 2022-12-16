@@ -1,5 +1,6 @@
 package ru.socialnet.team29.controllers;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,8 +14,11 @@ import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.dto.PersonLoginDTO;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.responses.CaptchaResponse;
+import ru.socialnet.team29.responses.EmailResponse;
+import ru.socialnet.team29.responses.PasswordResponse;
 import ru.socialnet.team29.security.jwt.UserRegister;
 import ru.socialnet.team29.service.CaptchaService;
+import ru.socialnet.team29.service.EmailService;
 import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.LoginService;
 import ru.socialnet.team29.serviceInterface.LogoutService;
@@ -33,6 +37,8 @@ public class AuthController {
     private final LogoutService logoutService;
     private final CaptchaService captchaService;
     private final UserDataService userDataService;
+    private final EmailService mailService;
+
 
     @PostMapping(value = "/login")
     public ResponseEntity<AnswerWithTwoTokens> loginPage(@RequestBody PersonLoginDTO person,
@@ -42,7 +48,6 @@ public class AuthController {
         loginService.setCookieToAnswer(response, answer);
         return new ResponseEntity<>(new AnswerWithTwoTokens(answer.getMessage(), ""), HttpStatus.OK);
     }
-
 
     @PostMapping(value = "/logout")
     public ResponseUserRegister handlerLogout(HttpServletRequest request) {
@@ -60,5 +65,20 @@ public class AuthController {
     @GetMapping(value = "/captcha")
     public ResponseEntity<CaptchaResponse> getCaptcha() {
         return ResponseEntity.ok(captchaService.getCaptchaCode());
+    }
+
+    @PostMapping(value = "/password/recovery/")
+    public ResponseEntity<HttpStatus> recoverPassword(@RequestBody EmailResponse emailResponse) throws Exception {
+        log.info(emailResponse.getEmail() + " email from auth controller");
+        mailService.generateResetTokenEmail(emailResponse.getEmail());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/password/recovery/{token}") // данные с формы восстановления пароля (старый/новый пароль)
+    public ResponseEntity<HttpStatus> ResetPassword(@PathVariable String token, @RequestBody PasswordResponse password) {
+        if (mailService.isTokenExist(token, password)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
