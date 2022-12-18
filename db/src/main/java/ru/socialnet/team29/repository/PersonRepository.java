@@ -1,7 +1,6 @@
 package ru.socialnet.team29.repository;
 
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -9,6 +8,8 @@ import org.jooq.exception.DataAccessException;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
+
+import java.util.List;
 
 
 @Repository

@@ -8,6 +8,7 @@ import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.mappers.FriendMapperImpl;
+import ru.socialnet.team29.model.enums.FriendshipStatus;
 import ru.socialnet.team29.repository.FriendRepository;
 
 import java.util.ArrayList;
@@ -34,9 +35,9 @@ public class FriendService {
         boolean isExistsFriendship = friendRepository.friendsByIdExists(id, friendId);
         long newFriendshipId;
         if (isExistsFriendship) {
-            newFriendshipId = friendRepository.updateFriendship(id, friendId, "REQUEST");
+            newFriendshipId = friendRepository.updateFriendship(id, friendId, "REQUEST_TO");
         } else {
-            newFriendshipId = friendRepository.insertFriendship(id, friendId, "REQUEST");
+            newFriendshipId = friendRepository.insertFriendship(id, friendId, "REQUEST_TO");
         }
         return newFriendshipId > 0;
     }
@@ -47,11 +48,11 @@ public class FriendService {
             return false;
         }
         boolean isExistsFriendship = false;
-        String statusRequestId = friendRepository.getFriendshipStatusRecord("REQUEST").getId().toString();
+        FriendshipStatus statusRequest = FriendshipStatus.valueOf("REQUEST_TO");
         try {
-            isExistsFriendship = friendRepository.getFriendshipStatusIdByIdAndFriendId(id, friendId).equals(statusRequestId);
+            isExistsFriendship = friendRepository.getFriendshipStatusByIdAndFriendId(friendId, id).equals(statusRequest);
         } catch (NullPointerException ex) {
-            log.info("Не найден друг с id(" + friendId + ") и статусом 'REQUEST'");
+            log.info("Не найден друг с id(" + friendId + ") и статусом 'REQUEST_TO'");
             return false;
         }
         Long newFriendshipId = 0L;
