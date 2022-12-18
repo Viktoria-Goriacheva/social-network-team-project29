@@ -1,12 +1,11 @@
 package ru.socialnet.team29.serviceInterface.feign;
 
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
-
-import java.util.List;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
@@ -47,4 +46,16 @@ public interface DBConnectionFeignInterface {
 
     @GetMapping("/friends/count")
     Integer getCountOfFriends(@RequestParam Integer id);
+
+    @PostMapping(value = "/post")
+    Boolean savePost(@RequestBody PostDto postDto);
+
+    @GetMapping(value = "/post")
+    PostDto getPostById(@RequestParam Integer id);
+
+    @PutMapping(value = "/post")
+    Boolean updatePost(@RequestBody PostDto postDto);
+
+    @DeleteMapping(value = "/post")
+    Boolean deletePost(@RequestParam Integer id);
 }

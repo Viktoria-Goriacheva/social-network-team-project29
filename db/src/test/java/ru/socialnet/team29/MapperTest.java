@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 import ru.socialnet.team29.mappers.PostMapper;
 import ru.socialnet.team29.testcase.Post;
 import ru.socialnet.team29.testcase.PostDto;
@@ -17,6 +20,18 @@ class MapperTest {
 
     @Autowired
     private PostMapper postMapperTest;
+
+    @Container
+    final static PostgreSQLContainer postgresContainer;
+
+    static {
+        postgresContainer = new PostgreSQLContainer(DockerImageName.parse("postgres:latest"));
+        postgresContainer.start();
+
+        System.setProperty("spring.datasource.url", postgresContainer.getJdbcUrl());
+        System.setProperty("spring.datasource.username", postgresContainer.getUsername());
+        System.setProperty("spring.datasource.password", postgresContainer.getPassword());
+    }
 
     @Test
     void shouldProperlyMapModelToDto() {

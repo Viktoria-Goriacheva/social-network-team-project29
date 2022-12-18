@@ -1,17 +1,13 @@
 package ru.socialnet.team29.serviceInterface.feign.connections;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
-import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
-
-import java.util.List;
-
 
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {
@@ -70,6 +66,26 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public Integer getCountOfFriends(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Boolean savePost(PostDto postDto) {
+        return null;
+    }
+
+    @Override
+    public PostDto getPostById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Boolean updatePost(PostDto postDto) {
+        return null;
+    }
+
+    @Override
+    public Boolean deletePost(Integer id) {
         return null;
     }
 }

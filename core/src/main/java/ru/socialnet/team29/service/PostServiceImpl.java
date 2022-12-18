@@ -1,5 +1,6 @@
 package ru.socialnet.team29.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import ru.socialnet.team29.answers.PagePostResponse;
 import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.model.Sort;
+import ru.socialnet.team29.model.enums.PostType;
+import ru.socialnet.team29.payloads.PostPayload;
 import ru.socialnet.team29.serviceInterface.PostService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
@@ -19,6 +22,65 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 public class PostServiceImpl implements PostService {
 
   private final DBConnectionFeignInterface feignInterface;
+  private final UserDataService userDataService;
+
+  @Override
+  public Boolean addPost(PostPayload postPayload) {
+    log.info("Запрос от фронта - добавить пост title={}", postPayload.getTitle());
+    int authorId = userDataService.getCurrentAccount().getId();
+    PostDto postDto = PostDto.builder()
+            .authorId(authorId)
+            .title(postPayload.getTitle())
+            .postText(postPayload.getPostText())
+            .tags(postPayload.getTags())
+            .imagePath(postPayload.getImagePath())
+            .time(LocalDateTime.now())
+            .timeChanged(LocalDateTime.now())
+            .publishDate(postPayload.getPublishDate())
+            .type(postPayload.getPublishDate()==null ? PostType.POSTED : PostType.QUEUED)
+            .isBlocked(false)
+            .isDeleted(false)
+            .commentsCount(0)
+            .likeAmount(0)
+            .myLike(false)
+            .build();
+    return feignInterface.savePost(postDto);
+  }
+
+  @Override
+  public PostDto findPostById(Integer id) {
+    log.info("Запрос от фронта - найти пост id={}", id);
+    return feignInterface.getPostById(id);
+  }
+
+  @Override
+  public Boolean updatePost(Integer postId, PostPayload postPayload) {
+    log.info("Запрос от фронта - обновить пост postId={}", postId);
+    PostDto oldPost = findPostById(postId);
+    PostDto newPost = PostDto.builder()
+            .id(postId)
+            .title(postPayload.getTitle())
+            .postText(postPayload.getPostText())
+            .tags(postPayload.getTags())
+            .imagePath(postPayload.getImagePath())
+            .time(oldPost.getTime())
+            .timeChanged(LocalDateTime.now())
+            .publishDate(oldPost.getPublishDate())
+            .type(oldPost.getType())
+            .isBlocked(oldPost.isBlocked()) // не уверен, что посты с этими полями == true
+            .isDeleted(oldPost.isDeleted()) // будут вообще редактироваться
+            .commentsCount(oldPost.getCommentsCount())
+            .likeAmount(oldPost.getLikeAmount())
+            .myLike(oldPost.isMyLike())
+            .build();
+    return feignInterface.updatePost(newPost);
+  }
+
+  @Override
+  public Boolean deletePost(Integer id) {
+    log.info("Запрос от фронта - удалить пост id={}", id);
+    return feignInterface.deletePost(id);
+  }
 
   @Override
   public PagePostResponse getPosts(boolean withFriends, String sort, boolean isDelete,
