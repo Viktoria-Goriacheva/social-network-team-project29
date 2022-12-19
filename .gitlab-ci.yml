@@ -1,9 +1,8 @@
 stages:
-  - winbuild
-  - linbuild
+  - build
   - deploy
 
-.check-on:
+Check-on:
   image: maven:latest
   services:
     - postgres:latest
@@ -14,9 +13,11 @@ stages:
     POSTGRES_PASSWORD: $postgres_password
     POSTGRES_DB: $postgres_db
     POSTGRES_HOST_AUTH_METHOD: trust
+    TESTCONTAINERS_HOST_OVERRIDE: $testcontainers_host_override
   cache:
     paths:
       - .m2/repository
+  stage: build
   script:
     - 'mvn $MAVEN_CLI_OPTS clean install'
     - echo "$CI_JOB_STAGE was successful"
@@ -25,18 +26,6 @@ stages:
     paths:
       - core/target/core-1.0-SNAPSHOT.jar
       - db/target/db-1.0-SNAPSHOT.jar
-job 1:
-  variables:
-    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
-  extends: .check-on
-  stage: winbuild
-  allow_failure: true
-job 2:
-  variables:
-    TESTCONTAINERS_HOST_OVERRIDE: "172.17.0.1"
-  extends: .check-on
-  stage: linbuild
-  when: on_failure
 
 Deploy:
   image: docker:latest
