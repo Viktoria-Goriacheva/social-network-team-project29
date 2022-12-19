@@ -11,18 +11,6 @@ import ru.socialnet.team29.model.PostDto;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
-    @PostMapping(value = "/person")
-    Person savePerson(@RequestBody Person person);
-
-    @GetMapping(value = "/person")
-    Person getPersonByEmail(@RequestParam String email);
-
-    @GetMapping(value = "/personToken")
-    Person getPersonByToken(@RequestParam String token);
-
-
-    @PostMapping(value = "/personUpdate")
-    Person updatePerson(@RequestBody Person person);
 
     @GetMapping(value = "/posts")
     List<PostDto> getPostDto(@RequestParam String email);

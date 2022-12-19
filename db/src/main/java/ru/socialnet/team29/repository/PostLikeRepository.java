@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.PostLike;
-import ru.socialnet.team29.services.DslContextCustom;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class PostLikeRepository extends AbstractRepository<PostLike> {
+public class PostLikeRepository implements CrudRepository<PostLike> {
 
   private DSLContext dsl;
 
@@ -43,8 +40,8 @@ public class PostLikeRepository extends AbstractRepository<PostLike> {
   }
 
   @Override
-  public boolean update(PostLike postLike) {
-    return false;
+  public PostLike update(PostLike postLike) {
+    return null;
   }
 
   @Override

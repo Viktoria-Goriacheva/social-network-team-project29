@@ -13,6 +13,7 @@ import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.model.Sort;
 import ru.socialnet.team29.model.enums.PostType;
 import ru.socialnet.team29.payloads.PostPayload;
+import ru.socialnet.team29.serviceInterface.PersonService;
 import ru.socialnet.team29.serviceInterface.PostService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
@@ -22,12 +23,12 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 public class PostServiceImpl implements PostService {
 
   private final DBConnectionFeignInterface feignInterface;
-  private final UserDataService userDataService;
+  private final PersonService personService;
 
   @Override
   public Boolean addPost(PostPayload postPayload) {
     log.info("Запрос от фронта - добавить пост title={}", postPayload.getTitle());
-    int authorId = userDataService.getCurrentAccount().getId();
+    int authorId = personService.getMyId();
     PostDto postDto = PostDto.builder()
             .authorId(authorId)
             .title(postPayload.getTitle())

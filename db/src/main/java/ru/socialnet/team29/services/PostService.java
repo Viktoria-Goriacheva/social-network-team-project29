@@ -61,7 +61,7 @@ public class PostService {
   public boolean updatePost(PostDto postDto) {
     post2TagService.updateTags(postDto);
     postFileService.updateImagePath(postDto);
-    return postRepository.update(postTableMapper.PostDtoToPostTableRecord(postDto));
+    return postRepository.update(postTableMapper.PostDtoToPostTableRecord(postDto)) != null;
   }
 
   public boolean deletePost(Integer id) {
@@ -77,7 +77,7 @@ public class PostService {
   public void checkPublishDate(Integer id) {
     PostTableRecord post = postRepository.findById(id);
     if (post.getType().equals(PostType.QUEUED.name())
-            && post.getPublishdate().isBefore(OffsetDateTime.now().now())){
+            && post.getPublishdate().isBefore(OffsetDateTime.now())){
       post.setType(PostType.POSTED.name());
       post.setPublishdate(null);
       postRepository.update(post);

@@ -22,6 +22,7 @@ import ru.socialnet.team29.service.EmailService;
 import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.LoginService;
 import ru.socialnet.team29.serviceInterface.LogoutService;
+import ru.socialnet.team29.serviceInterface.PersonService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +40,8 @@ public class AuthController {
     private final UserDataService userDataService;
     private final EmailService mailService;
 
+    private final PersonService personService;
+
 
     @PostMapping(value = "/login")
     public ResponseEntity<AnswerWithTwoTokens> loginPage(@RequestBody PersonLoginDTO person,
@@ -46,12 +49,14 @@ public class AuthController {
         log.info("Попытка входа {}", person.getEmail());
         MessageAnswer answer = userRegister.jwtLogin(person);
         loginService.setCookieToAnswer(response, answer);
+//        personService.setOnLine(person.getEmail());
         return new ResponseEntity<>(new AnswerWithTwoTokens(answer.getMessage(), ""), HttpStatus.OK);
     }
 
     @PostMapping(value = "/logout")
     public ResponseUserRegister handlerLogout(HttpServletRequest request) {
         log.info("Попытка выхода  {}", SecurityContextHolder.getContext().getAuthentication().getName());
+//        personService.setOffLine(personService.getMyId());
         logoutService.logout(request);
         return new ResponseUserRegister("", System.currentTimeMillis(), new MessageAnswer("ok"));
     }

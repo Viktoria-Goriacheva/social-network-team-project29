@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepository extends AbstractRepository<PostTableRecord> {
+public class PostRepository implements CrudRepository<PostTableRecord> {
 
     private DSLContext dsl;
 
@@ -37,11 +37,12 @@ public class PostRepository extends AbstractRepository<PostTableRecord> {
     }
 
     @Override
-    public boolean update(PostTableRecord post) {
+    public PostTableRecord update(PostTableRecord post) {
         return dsl.update(PostTable.POST_TABLE)
                 .set(PostTable.POST_TABLE.from(post))
                 .where(PostTable.POST_TABLE.ID.eq(post.getId()))
-                .execute() == 1;
+                .returning()
+                .fetchOne();
     }
 
     @Override

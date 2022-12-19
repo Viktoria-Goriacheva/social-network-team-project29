@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class TagRepository extends AbstractRepository<TagRecord> {
+public class TagRepository implements CrudRepository<TagRecord> {
 
     private DSLContext dsl;
 
@@ -36,8 +36,8 @@ public class TagRepository extends AbstractRepository<TagRecord> {
     }
 
     @Override
-    public boolean update(TagRecord tagRecord) {
-        return false;
+    public TagRecord update(TagRecord tagRecord) {
+        return null;
     }
 
 

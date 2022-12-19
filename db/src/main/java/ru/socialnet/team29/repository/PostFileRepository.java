@@ -10,7 +10,7 @@ import ru.socialnet.team29.domain.tables.records.PostFileRecord;
 
 @Repository
 @RequiredArgsConstructor
-public class PostFileRepository extends AbstractRepository<PostFileRecord> {
+public class PostFileRepository implements CrudRepository<PostFileRecord> {
 
     private DSLContext dsl;
 
@@ -36,11 +36,12 @@ public class PostFileRepository extends AbstractRepository<PostFileRecord> {
     }
 
     @Override
-    public boolean update(PostFileRecord postFileRecord) {
+    public PostFileRecord update(PostFileRecord postFileRecord) {
         return dsl.update(PostFile.POST_FILE)
                 .set(PostFile.POST_FILE.from(postFileRecord))
                 .where(PostFile.POST_FILE.ID.eq(postFileRecord.getId()))
-                .execute() == 1;
+                .returning()
+                .fetchOne();
     }
 
 

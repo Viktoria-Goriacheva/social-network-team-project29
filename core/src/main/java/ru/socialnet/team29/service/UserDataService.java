@@ -14,6 +14,7 @@ import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
+import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.time.OffsetDateTime;
 
@@ -22,7 +23,7 @@ import java.time.OffsetDateTime;
 @Slf4j
 public class UserDataService {
 
-    private final DBConnectionFeignInterface feignInterface;
+    private final DBConnectionFeignInterfacePerson feignInterface;
     private final CaptchaService captchaService;
     private final EmailService emailService;
     private PasswordEncoder passwordEncoder;
@@ -42,6 +43,10 @@ public class UserDataService {
                     .password(passwordEncoder.encode(payload.getPassword1()))
                     .email(payload.getEmail())
                     .regDate(OffsetDateTime.now())
+                    .createdOn(OffsetDateTime.now())
+                    .isDeleted(false)
+                    .isOnline(false)
+                    .isBlocked(false)
                     .build();
             try {
                 log.info("Заполняем данные пользователя при регистрации {}", person);

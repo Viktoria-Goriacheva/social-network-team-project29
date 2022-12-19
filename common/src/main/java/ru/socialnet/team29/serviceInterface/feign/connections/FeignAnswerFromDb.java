@@ -13,25 +13,6 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {
     @Override
-    public Person savePerson(Person person) {
-        return null;
-    }
-
-    @Override
-    public Person getPersonByEmail(String email) {
-        return null;
-    }
-    @Override
-    public Person getPersonByToken(@RequestParam String token) {
-        return null;
-    };
-
-    @Override
-    public Person updatePerson(@RequestBody Person person) {
-        return null;
-    }
-
-    @Override
     public List<PostDto> getPostDto(@RequestParam String email) {
         return null;
     }
