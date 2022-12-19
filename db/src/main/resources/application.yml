@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://host.docker.internal:5455/socialnet
+    url: jdbc:postgresql://socialnet-db:5432/socialnet
     username: admin
     password: passWd123
 
