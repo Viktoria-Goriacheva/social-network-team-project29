@@ -4,7 +4,7 @@ services:
   postgres:
     image: 'postgres:latest'
     hostname: postgres
-    container_name: socialnet_db
+    container_name: socialnet-db
     environment:
      POSTGRES_DB: socialnet
      POSTGRES_USER: admin
@@ -22,12 +22,12 @@ services:
 
   core:
     image: 'kohgutepdev/team29socialnet-core:latest'
-    container_name: core_service
+    container_name: core-service
     ports:
       - "8086:8086"
 
   db:
     image: 'kohgutepdev/team29socialnet-db:latest'
-    container_name: db_service
+    container_name: db-service
     ports:
       - "8081:8081"

@@ -8,10 +8,10 @@ server:
       tracking-modes: cookie
 
   db:
-    port: http://host.docker.internal:8081
+    port: http://db-service:8081
 
 frontend:
-    host: http://localhost:8098, http://localhost:8088
+    host: http://frontend:8098
 
 spring:
   mail:
@@ -20,7 +20,7 @@ spring:
     username: noreplaycomand28@gmail.com
     password: svsbxajrmngmshhs
     port: 587
-    url: http://localhost:8097/change-password/
+    url: http://frontend:8098/change-password/
     properties:
       mail:
         smtp:
