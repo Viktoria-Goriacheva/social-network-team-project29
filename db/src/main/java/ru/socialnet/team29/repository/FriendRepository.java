@@ -6,10 +6,8 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.domain.tables.Friendship;
-import ru.socialnet.team29.domain.tables.FriendshipStatusTable;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
-import ru.socialnet.team29.domain.tables.records.FriendshipStatusTableRecord;
-import ru.socialnet.team29.services.DslContextCustom;
+import ru.socialnet.team29.model.enums.FriendshipStatus;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,14 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class FriendRepository {
 
-    private final DslContextCustom dslContextCustom;
-    private static DSLContext dsl;
-
-    private void initDsl() {
-        if (dsl == null) {
-            dsl = dslContextCustom.initDslContext();
-        }
-    }
+    private final DSLContext dsl;
 
     /**
      * Обновить статус дружеского отношения
@@ -36,11 +27,10 @@ public class FriendRepository {
      * @return идентификатор измененного отношения
      */
     public Long updateFriendship(Integer id, Integer friendId, String statusName) {
-        initDsl();
-        FriendshipStatusTableRecord status = getFriendshipStatusRecord(statusName);
+        var status = FriendshipStatus.valueOf(statusName);
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.update(friendship)
-                .set(friendship.STATUS_ID, status.getId().toString())
+                .set(friendship.STATUS_ID, status.getNumber().toString())
                 .where(friendship.SRC_PERSON_ID.eq(id.toString()), friendship.DST_PERSON_ID.eq(friendId.toString()))
                 .returningResult(friendship.ID)
                 .fetchOne()
@@ -55,11 +45,10 @@ public class FriendRepository {
      * @return идентификатор нового отношения
      */
     public Long insertFriendship(Integer id, Integer friendId, String statusName) {
-        initDsl();
-        FriendshipStatusTableRecord status = getFriendshipStatusRecord(statusName);
+        var status = FriendshipStatus.valueOf(statusName);
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.insertInto(friendship)
-                .set(friendship.STATUS_ID, status.getId().toString())
+                .set(friendship.STATUS_ID, status.getNumber().toString())
                 .set(friendship.SRC_PERSON_ID, id.toString())
                 .set(friendship.DST_PERSON_ID, friendId.toString())
                 .returningResult(friendship.ID)
@@ -68,33 +57,20 @@ public class FriendRepository {
     }
 
     /**
-     * Получить идентификатор статуса дружбы по идентификаторам персоны и друга
+     * Получить статус дружбы по идентификаторам персоны и друга
      * @param id идентификатор персоны
      * @param friendId идентификатор друга
-     * @return идентификатор статуса
+     * @return статус
      */
-     public String getFriendshipStatusIdByIdAndFriendId(Integer id, Integer friendId) {
-        initDsl();
+     public FriendshipStatus getFriendshipStatusByIdAndFriendId(Integer id, Integer friendId) {
         Friendship friendship = Friendship.FRIENDSHIP;
-        return Objects.requireNonNull(dsl.selectFrom(friendship)
+        String statusId =  Objects.requireNonNull(dsl.selectFrom(friendship)
                 .where(
                     friendship.SRC_PERSON_ID.eq(id.toString())
                         .and(friendship.DST_PERSON_ID.eq(friendId.toString())))
                 .fetchOne())
             .getStatusId();
-    }
-
-    /**
-     * Получение объекта статус отношений по его представлению
-     * @param statusName представление статуса
-     * @return объект БД статуса
-     */
-    public FriendshipStatusTableRecord getFriendshipStatusRecord(String statusName) {
-        initDsl();
-        return Objects.requireNonNull(dsl.selectFrom(FriendshipStatusTable.FRIENDSHIP_STATUS_TABLE)
-                        .where(FriendshipStatusTable.FRIENDSHIP_STATUS_TABLE.NAME.eq(statusName))
-                        .fetchOne())
-                .into(FriendshipStatusTableRecord.class);
+        return FriendshipStatus.getEnum(statusId);
     }
 
     /**
@@ -108,13 +84,12 @@ public class FriendRepository {
             Integer id,
             String statusName,
             AnswerListFriendsForPerson.FriendPageable pageable) {
-        initDsl();
         try {
-            FriendshipStatusTableRecord statusFRIEND = getFriendshipStatusRecord(statusName);
+            var statusFRIEND = FriendshipStatus.valueOf(statusName);
             Friendship friendship = Friendship.FRIENDSHIP;
             return dsl.selectFrom(friendship)
                     .where(
-                            friendship.STATUS_ID.eq(statusFRIEND.getId().toString())
+                            friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString())
                                     .and(friendship.SRC_PERSON_ID.eq(id.toString())))
                     .orderBy(friendship.DST_PERSON_ID)
                     .limit(pageable.getPageSize())
@@ -133,7 +108,6 @@ public class FriendRepository {
      * @return true - в случае успеха
      */
     public Boolean deleteFriendship(Integer id, Integer friendId) {
-        initDsl();
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.deleteFrom(friendship)
                 .where(
@@ -149,7 +123,6 @@ public class FriendRepository {
      * @return true - в случае успеха
      */
     public Boolean friendsByIdExists(Integer id, Integer friendId) {
-        initDsl();
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
@@ -165,14 +138,14 @@ public class FriendRepository {
      * @return количество друзей персоны
      */
     public Integer getCountOfFriends(Integer id, String statusName) {
-        initDsl();
-        FriendshipStatusTableRecord statusFRIEND = getFriendshipStatusRecord(statusName);
+        var statusFRIEND = FriendshipStatus.valueOf(statusName);
         Friendship friendship = Friendship.FRIENDSHIP;
-        return dsl.selectCount()
+        return dsl.select()
             .from(friendship)
             .where(
                 friendship.SRC_PERSON_ID.eq(id.toString())
-                    .and(friendship.STATUS_ID.eq(String.valueOf(statusFRIEND.getId()))))
-            .execute();
+                    .and(friendship.STATUS_ID.eq(String.valueOf(statusFRIEND.getNumber()))))
+            .fetch()
+            .size();
     }
 }
