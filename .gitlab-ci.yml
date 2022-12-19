@@ -37,4 +37,5 @@ Deploy:
     - docker build -f dockerfile-db -t $repository-db:latest .
     - docker push $repository-db:latest
   only:
+    - develop
     - master
