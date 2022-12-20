@@ -3,7 +3,6 @@ package ru.socialnet.team29.answers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.socialnet.team29.model.FriendForFront;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Builder
-public class AnswerListFriendsForPerson {
+public class AnswerListFriendsForPerson<T> {
     @Builder.Default
-    private List<FriendForFront> content = new ArrayList<>();
+    private List<T> content = new ArrayList<>();
     @Builder.Default
     private Boolean empty = true;
     @Builder.Default

@@ -7,7 +7,9 @@ import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
+import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.mappers.FriendMapperImpl;
+import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.enums.FriendshipStatus;
 import ru.socialnet.team29.repository.FriendRepository;
 
@@ -39,6 +41,13 @@ public class FriendService {
         } else {
             newFriendshipId = friendRepository.insertFriendship(id, friendId, "REQUEST_TO");
         }
+
+        isExistsFriendship = friendRepository.friendsByIdExists(friendId, id);
+        if (isExistsFriendship) {
+            newFriendshipId += friendRepository.updateFriendship(friendId, id, "REQUEST_FROM");
+        } else {
+            newFriendshipId += friendRepository.insertFriendship(friendId, id, "REQUEST_FROM");
+        }
         return newFriendshipId > 0;
     }
 
@@ -47,22 +56,24 @@ public class FriendService {
         if (!isExistsFriend) {
             return false;
         }
-        boolean isExistsFriendship = false;
-        FriendshipStatus statusRequest = FriendshipStatus.valueOf("REQUEST_TO");
+        boolean isExistsFriendship;
+        FriendshipStatus statusRequest = FriendshipStatus.valueOf("REQUEST_FROM");
         try {
             isExistsFriendship = friendRepository.getFriendshipStatusByIdAndFriendId(friendId, id).equals(statusRequest);
         } catch (NullPointerException ex) {
-            log.info("Не найден друг с id(" + friendId + ") и статусом 'REQUEST_TO'");
+            log.info("Не найден друг с id(" + friendId + ") и статусом 'REQUEST_FROM'");
             return false;
         }
         Long newFriendshipId = 0L;
         if (isExistsFriendship) {
-            newFriendshipId = friendRepository.updateFriendship(id, friendId, "FRIEND");
+            // Делаем зеркальные дружеские отношения
+            newFriendshipId = friendRepository.updateFriendship(friendId, id, "FRIEND");
+            friendRepository.updateFriendship(id, friendId, "FRIEND");
         }
         return newFriendshipId > 0;
     }
 
-    public AnswerListFriendsForPerson getFriendsByIdPerson(
+    public AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(
             Integer id,
             String statusName,
             AnswerListFriendsForPerson.FriendPageable pageable) {
@@ -72,15 +83,16 @@ public class FriendService {
             return null;
         }
         List<PersonRecord> personRecords = new ArrayList<>();
+        List<Integer> friendIds;
         if (!statusName.equals("")) {
-            List<Integer> friendIds = friendRecords.stream()
+            friendIds = friendRecords.stream()
                     .map(rec -> Integer.valueOf(rec.getDstPersonId())).toList();
             personRecords = personService.findAll(Person.PERSON.ID.in(friendIds));
         }
         var result = friendMapper.PersonRecordToFriendForFront(personRecords)
                 .stream().peek(friend -> friend.setStatusCode(statusName)).collect(Collectors.toList());
         int lastPageNumber = (int) Math.ceil(totalFriendshipRecords / pageable.getPageSize());
-        return AnswerListFriendsForPerson.builder()
+        return AnswerListFriendsForPerson.<FriendForFront>builder()
                 .totalElements(totalFriendshipRecords)
                 .totalPages(lastPageNumber)
                 .content(result)
@@ -93,7 +105,11 @@ public class FriendService {
     }
 
     public Boolean deleteFriend(Integer id, Integer friendId) {
-        return friendRepository.deleteFriendship(id, friendId);
+        Boolean result = friendRepository.deleteFriendship(id, friendId);
+        if (friendsByIdExists(friendId, id)) {
+            result = result && friendRepository.deleteFriendship(friendId, id);
+        }
+        return result;
     }
 
     public Boolean friendsByIdExists(Integer id, Integer friendId) {
@@ -102,5 +118,30 @@ public class FriendService {
 
     public Integer getCountOfFriends(Integer id) {
         return friendRepository.getCountOfFriends(id, "FRIEND");
+    }
+
+    public Integer getCountOfRequestFrom(Integer id) {
+        return friendRepository.getCountOfFriends(id, "REQUEST_FROM");
+    }
+
+    public FriendSearchDto getAllFriendIds(Integer id) {
+        List<Integer> ids = friendRepository.getAllFriendIds(id);
+        return FriendSearchDto.builder()
+                .ids(ids)
+                .statusCode("FRIEND")
+                .build();
+    }
+
+    public Boolean toSubscribe(Integer id, Integer friendId) {
+        boolean isExistsFriend = !personService.findAll(Person.PERSON.ID.eq(friendId)).isEmpty();
+        if (!isExistsFriend) {
+            return false;
+        }
+        boolean isExistsFriendship = friendRepository.friendsByIdExists(id, friendId);
+        // Если никаких дружеских отношений не было, тогда подписываемся
+        if (!isExistsFriendship) {
+            return friendRepository.insertFriendship(id, friendId, "SUBSCRIBED") > 0;
+        }
+        return false;
     }
 }

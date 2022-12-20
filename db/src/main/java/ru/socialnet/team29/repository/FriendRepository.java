@@ -13,6 +13,7 @@ import ru.socialnet.team29.model.enums.FriendshipStatus;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -145,14 +146,32 @@ public class FriendRepository {
      * @return количество друзей персоны
      */
     public Integer getCountOfFriends(Integer id, String statusName) {
-        var statusFRIEND = FriendshipStatus.valueOf(statusName);
+        FriendshipStatus friendshipStatus = FriendshipStatus.valueOf(statusName);
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.select()
             .from(friendship)
             .where(
-                friendship.SRC_PERSON_ID.eq(id.toString())
-                    .and(friendship.STATUS_ID.eq(String.valueOf(statusFRIEND.getNumber()))))
+                    friendship.SRC_PERSON_ID.eq(id.toString())
+                    .and(friendship.STATUS_ID.eq(String.valueOf(friendshipStatus.getNumber()))))
             .fetch()
             .size();
+    }
+
+    /**
+     * Получить все идентификаторы друзей
+     * @param id идентификатор персоны
+     * @return список идентификаторов друзей персоны
+     */
+    public List<Integer> getAllFriendIds(Integer id) {
+        FriendshipStatus friendshipStatus = FriendshipStatus.valueOf("FRIEND");
+        Friendship friendship = Friendship.FRIENDSHIP;
+        return dsl.selectFrom(friendship)
+                .where(
+                        friendship.SRC_PERSON_ID.eq(id.toString())
+                        .and(friendship.STATUS_ID.eq(String.valueOf(friendshipStatus.getNumber()))))
+                .fetch(friendship.DST_PERSON_ID)
+                .stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
     }
 }

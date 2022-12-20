@@ -1,11 +1,12 @@
 package ru.socialnet.team29.controllers;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
+import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.service.FriendServiceImpl;
 
 import java.util.HashMap;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v1")
-@Slf4j
 @RequiredArgsConstructor
 public class FriendController {
 
@@ -39,12 +39,12 @@ public class FriendController {
      * Получение всех друзей
      */
     @GetMapping("/friends")
-    public ResponseEntity<AnswerListFriendsForPerson> getFriendsByIdPerson(@RequestParam HashMap<String,String> params) {
+    public ResponseEntity<AnswerListFriendsForPerson<FriendForFront>> getFriendsByIdPerson(@RequestParam HashMap<String,String> params) {
         return new ResponseEntity<>(friendService.getAllFriendsForPerson(params), HttpStatus.OK) ;
     }
 
     /**
-     * Получить количество друзей
+     * Получить количество запросов на дружбу
      */
     @GetMapping("/friends/count")
     public String friendsCount() {
@@ -65,5 +65,21 @@ public class FriendController {
     @DeleteMapping("/friends/{id}")
     public ResponseEntity<Void> deleteFriendship(@PathVariable(value = "id") Integer friendId) {
         return new ResponseEntity<>(friendService.deleteFriendship(friendId));
+    }
+
+    /**
+     * Получение всех Id друзей
+     */
+    @GetMapping("/friends/friendId")
+    public ResponseEntity<FriendSearchDto>  getAllFriendIds() {
+        return new ResponseEntity<>(friendService.getAllFriendIds(), HttpStatus.OK);
+    }
+
+    /**
+     * Подписка на участника соц. сети
+     */
+    @PostMapping("/friends/subscribe/{id}")
+    public ResponseEntity<Void> toSubscribe(@PathVariable(value = "id") Integer friendId) {
+        return new ResponseEntity<>(friendService.toSubscribe(friendId));
     }
 }
