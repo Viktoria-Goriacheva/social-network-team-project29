@@ -14,19 +14,32 @@ import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
+import ru.socialnet.team29.responses.dialog_response.*;
 import ru.socialnet.team29.model.PostDto;
+
+import java.util.Map;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
 
-    @GetMapping(value = "/posts")
-    List<PostDto> getPostDto(
-        @RequestParam String email,
-        @RequestParam Integer accountIds,
-        @RequestParam String tags,
-        @RequestParam long dateTo,
-        @RequestParam long dateFrom,
-        @RequestParam String author);
+    /* MESSAGES */
+
+    @PostMapping(value = "/message")
+    MessageDto saveMessage(@RequestBody MessageDto messageDto);
+
+    @GetMapping(value = "/message")
+    List<MessageDto> getMessageByAuthor(@RequestParam Long authorId);
+
+    @GetMapping(value = "/countUnread")
+    Map<Long, UnreadCount> getUnreadMessages(@RequestParam Long authorId);
+
+    @GetMapping(value = "/messages")
+    List<MessageDto> getFullDialogData(@RequestParam Long id, @RequestParam Long companionId);
+
+    @GetMapping(value = "/messages/set_read")
+    ShortDialogResponse<MessageDatum> setReadAllStatus(@RequestParam Long id, @RequestParam Long companionId);
+
+    /*  FRIENDS */
 
     @GetMapping("/friends/request")
     Boolean addFriendRequest(@RequestParam Integer id, @RequestParam Integer friendId);
@@ -62,6 +75,17 @@ public interface DBConnectionFeignInterface {
     @GetMapping("/friends/blockFriendId")
     FriendSearchDto getIdsBlockedFriends(@RequestParam Integer id);
 
+    /* POSTS */
+
+    @GetMapping(value = "/posts")
+    List<PostDto> getPostDto(
+            @RequestParam String email,
+            @RequestParam Integer accountIds,
+            @RequestParam String tags,
+            @RequestParam long dateTo,
+            @RequestParam long dateFrom,
+            @RequestParam String author);
+
     @PostMapping(value = "/post")
     Boolean savePost (@RequestBody PostDto postDto);
 
@@ -73,6 +97,8 @@ public interface DBConnectionFeignInterface {
 
     @DeleteMapping(value = "/post")
     Boolean deletePost (@RequestParam Integer id);
+
+    /* LIKES */
 
     @PostMapping(value = "/post/like")
     Boolean addLikeToPost(@RequestBody PostLikeDto postLikeDto);

@@ -1,8 +1,5 @@
 package ru.socialnet.team29.service;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +15,10 @@ import ru.socialnet.team29.payloads.PostPayload;
 import ru.socialnet.team29.serviceInterface.PersonService;
 import ru.socialnet.team29.serviceInterface.PostService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -140,7 +141,6 @@ public class PostServiceImpl implements PostService {
       boolean isAppendLike = feignInterface.addLikeToPost(postLikeDto);
       if (!isAppendLike) {
         log.info("The post is not liked");
-        return HttpStatus.BAD_REQUEST;
       }
     } else {
       log.info("The post id=null");
@@ -161,7 +161,6 @@ public class PostServiceImpl implements PostService {
       boolean isRemovedLike = feignInterface.deleteLikeFromPost(postLikeDto);
       if (!isRemovedLike) {
         log.info("Like is not deleted from the post");
-        return HttpStatus.BAD_REQUEST;
       }
     } else {
       log.info("The post id=null");

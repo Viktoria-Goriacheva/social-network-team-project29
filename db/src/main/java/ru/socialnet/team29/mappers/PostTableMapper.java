@@ -9,6 +9,7 @@ import ru.socialnet.team29.model.PostDto;
 @Mapper(componentModel = "spring")
 public interface PostTableMapper {
 
+  @Mapping(source = "timechanged", target = "timeChanged")
   PostDto PostTableRecordToPostDto(PostTableRecord postTableRecord);
 
   @Mapping(source = "postDto.timeChanged", target = "timechanged")

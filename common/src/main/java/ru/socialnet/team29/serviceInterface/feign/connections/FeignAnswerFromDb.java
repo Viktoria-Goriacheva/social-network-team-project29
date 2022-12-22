@@ -8,17 +8,45 @@ import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
+import ru.socialnet.team29.responses.dialog_response.*;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {
+
+    /* MESSAGE */
+
     @Override
-    public List<PostDto> getPostDto(@RequestParam String email, Integer accountIds, String tags, long dateTo, long dateFrom, String author) {
+    public MessageDto saveMessage(MessageDto messageDto) {
         return null;
     }
+
+    @Override
+    public   List<MessageDto>  getMessageByAuthor(Long authorId) {
+        return null;
+    }
+
+    @Override
+    public Map<Long, UnreadCount> getUnreadMessages(Long authorId) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<MessageDto> getFullDialogData(Long id, Long companionId) {
+        return null;
+    }
+
+    @Override
+    public ShortDialogResponse<MessageDatum> setReadAllStatus(Long id, Long companionId) {
+        return null;
+    }
+
+    /* FRIENDS */
 
     @Override
     public Boolean addFriendRequest(Integer id, Integer friendId) {
@@ -76,6 +104,8 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
         return null;
     }
 
+    /* POSTS */
+
     @Override
     public Boolean savePost(PostDto postDto) {
         return null;
@@ -83,6 +113,11 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public PostDto getPostById(Integer id, String email) {
+        return null;
+    }
+
+    @Override
+    public List<PostDto> getPostDto(@RequestParam String email, Integer accountIds, String tags, long dateTo, long dateFrom, String author) {
         return null;
     }
 
@@ -95,6 +130,8 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
     public Boolean deletePost(Integer id) {
         return null;
     }
+
+    /* LIKES */
 
     @Override
     public Boolean addLikeToPost(PostLikeDto postLikeDto) {
