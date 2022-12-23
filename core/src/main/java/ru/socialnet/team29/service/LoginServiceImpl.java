@@ -9,7 +9,7 @@ import ru.socialnet.team29.serviceInterface.LoginService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
                         .id(1)
                         .firstName("Фёкла")
                         .lastName("Петрович")
-                        .birthDate(LocalDateTime.now())
+                        .birthDate(OffsetDateTime.now())
                         .email("petr@mail.ru")
                         .phone("89100000000")
                         .photo("https://...../photos/image123.jpg")

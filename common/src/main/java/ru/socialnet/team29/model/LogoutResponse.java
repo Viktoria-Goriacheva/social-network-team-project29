@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 @Data
 @AllArgsConstructor
 @Builder
 public class LogoutResponse {
     public String error;
-    public LocalDateTime timestamp;
-    public LocalDateTime data;
+    public OffsetDateTime timestamp;
+    public OffsetDateTime data;
 }

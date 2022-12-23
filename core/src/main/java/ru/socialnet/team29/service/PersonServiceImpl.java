@@ -7,7 +7,7 @@ import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.security.CoreUserDetails;
 import ru.socialnet.team29.serviceInterface.PersonService;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +29,18 @@ public class PersonServiceImpl implements PersonService {
         person.setToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb0Bwby5jbyIsImV4cCI6MTY2OTQwNTUxNywiaW" +
                 "F0IjoxNjY5MzY5NTE3fQ.a2JkHCAvfpM0776XVMkUgtGeiBcCTptEtQEj_U8qqso");
         person.setStatusCode("FRIEND");
-        person.setRegDate(LocalDateTime.now());
-        person.setBirthDate(LocalDateTime.of(1979,9,9,0,0));
+        person.setRegDate(OffsetDateTime.now());
+        person.setBirthDate(OffsetDateTime.now());
         person.setMessagesPermission("string");
-        person.setLastOnlineTime(LocalDateTime.now());
+        person.setLastOnlineTime(OffsetDateTime.now());
         person.setIsDeleted(false);
         person.setIsBlocked(false);
         person.setIsOnline(true);
         person.setPhotoId("3");
         person.setPhotoName("my photo");
         person.setRole("USER");
-        person.setCreatedOn(LocalDateTime.now());
-        person.setUpdatedOn(LocalDateTime.now());
+        person.setCreatedOn(OffsetDateTime.now());
+        person.setUpdatedOn(OffsetDateTime.now());
         person.setPassword("Oleg1256$");
 
         return person;

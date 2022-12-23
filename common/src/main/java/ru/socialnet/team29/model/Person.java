@@ -4,12 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -30,10 +27,10 @@ public class Person {
     private String statusCode;
     private String firstName;
     private String lastName;
-    private LocalDateTime regDate;
-    private LocalDateTime birthDate;
+    private OffsetDateTime regDate;
+    private OffsetDateTime birthDate;
     private String messagesPermission;
-    private LocalDateTime lastOnlineTime;
+    private OffsetDateTime lastOnlineTime;
     private Boolean isOnline;
     private Boolean isBlocked;
     private Boolean isDeleted;
@@ -41,6 +38,6 @@ public class Person {
     private String photoId;
     private String photoName;
     private String role;
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    private OffsetDateTime createdOn;
+    private OffsetDateTime updatedOn;
 }

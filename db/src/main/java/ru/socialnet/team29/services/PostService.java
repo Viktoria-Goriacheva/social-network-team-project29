@@ -1,6 +1,7 @@
 package ru.socialnet.team29.services;
 
-import java.time.LocalDateTime;
+
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class PostService {
   public void checkPublishDate(Integer id) {
     PostTableRecord post = postRepository.findById(id);
     if (post.getType().equals(PostType.QUEUED.name())
-            && post.getPublishdate().isBefore(LocalDateTime.now())){
+            && post.getPublishdate().isBefore(OffsetDateTime.now().now())){
       post.setType(PostType.POSTED.name());
       post.setPublishdate(null);
       postRepository.update(post);

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class FriendForFront {
     private Integer id;
-    private LocalDateTime birthDate;
+    private OffsetDateTime birthDate;
     private String city;
     private String country;
     private String firstName;

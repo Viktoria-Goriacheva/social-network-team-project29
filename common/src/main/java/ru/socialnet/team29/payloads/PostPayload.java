@@ -2,7 +2,7 @@ package ru.socialnet.team29.payloads;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 @Data
@@ -11,5 +11,5 @@ public class PostPayload {
     String postText;
     ArrayList<String> tags;
     String imagePath;
-    LocalDateTime publishDate;
+    OffsetDateTime publishDate;
 }

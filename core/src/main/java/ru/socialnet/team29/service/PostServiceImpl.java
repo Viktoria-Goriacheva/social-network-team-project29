@@ -1,6 +1,6 @@
 package ru.socialnet.team29.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +34,8 @@ public class PostServiceImpl implements PostService {
             .postText(postPayload.getPostText())
             .tags(postPayload.getTags())
             .imagePath(postPayload.getImagePath())
-            .time(LocalDateTime.now())
-            .timeChanged(LocalDateTime.now())
+            .time(OffsetDateTime.now())
+            .timeChanged(OffsetDateTime.now())
             .publishDate(postPayload.getPublishDate())
             .type(postPayload.getPublishDate()==null ? PostType.POSTED : PostType.QUEUED)
             .isBlocked(false)
@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
             .tags(postPayload.getTags())
             .imagePath(postPayload.getImagePath())
             .time(oldPost.getTime())
-            .timeChanged(LocalDateTime.now())
+            .timeChanged(OffsetDateTime.now())
             .publishDate(oldPost.getPublishDate())
             .type(oldPost.getType())
             .isBlocked(oldPost.isBlocked()) // не уверен, что посты с этими полями == true

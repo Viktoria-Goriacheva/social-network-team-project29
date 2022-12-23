@@ -1,6 +1,6 @@
 package ru.socialnet.team29.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +17,8 @@ import ru.socialnet.team29.model.enums.PostType;
 public class PostDto {
 
   private Integer id;
-  private LocalDateTime time;
-  private LocalDateTime timeChanged;
+  private OffsetDateTime time;
+  private OffsetDateTime timeChanged;
   private Integer authorId;
   private String title;
   private PostType type;
@@ -30,5 +30,5 @@ public class PostDto {
   private Integer likeAmount;
   private boolean myLike;
   private String imagePath;
-  private LocalDateTime publishDate;
+  private OffsetDateTime publishDate;
 }

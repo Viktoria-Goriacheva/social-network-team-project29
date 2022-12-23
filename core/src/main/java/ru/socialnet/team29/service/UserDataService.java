@@ -15,7 +15,7 @@ import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class UserDataService {
                     .lastName(payload.getLastName())
                     .password(passwordEncoder.encode(payload.getPassword1()))
                     .email(payload.getEmail())
-                    .regDate(LocalDateTime.now())
+                    .regDate(OffsetDateTime.now())
                     .build();
             try {
                 log.info("Заполняем данные пользователя при регистрации {}", person);
