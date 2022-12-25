@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="change_tables_to_timestamptz" author="Kolokolnin_Pavel">
+        <modifyDataType   tableName="block_history" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+        <modifyDataType   tableName="notification" schemaName="socialnet" columnName="sent_time" newDataType="timestamptz" />
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="reg_date" newDataType="timestamptz" />
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="birth_date" newDataType="timestamptz" />
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="last_online_time" newDataType="timestamptz" />
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="created_on" newDataType="timestamptz" />
+        <modifyDataType   tableName="person" schemaName="socialnet" columnName="updated_on" newDataType="timestamptz" />
+        <modifyDataType   tableName="friendship_status_table" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+        <modifyDataType   tableName="message_table" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+        <modifyDataType   tableName="post_comment" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+        <modifyDataType   tableName="post_like" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+        <modifyDataType   tableName="post_table" schemaName="socialnet" columnName="timeChanged" newDataType="timestamptz" />
+        <modifyDataType   tableName="post_table" schemaName="socialnet" columnName="publishDate" newDataType="timestamptz" />
+        <modifyDataType   tableName="post_table" schemaName="socialnet" columnName="time" newDataType="timestamptz" />
+    </changeSet>
+</databaseChangeLog>
