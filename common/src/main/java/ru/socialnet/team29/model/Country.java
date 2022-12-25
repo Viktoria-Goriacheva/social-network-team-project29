@@ -8,6 +8,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class Country {
-    public Long id;
+    public Integer id;
     public String title;
 }
