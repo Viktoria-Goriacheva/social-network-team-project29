@@ -1,33 +1,70 @@
 version: '3'
-
+volumes:
+  postgres-team29-data:
 services:
   postgres:
     image: 'postgres:latest'
     hostname: postgres
     container_name: socialnet-db
     environment:
-     POSTGRES_DB: socialnet
-     POSTGRES_USER: admin
-     POSTGRES_PASSWORD: passWd123
+      POSTGRES_DB: socialnet
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: passWd123
     ports:
-    - "5455:5432"
+      - "5455:5432"
     restart: unless-stopped
+    volumes:
+      - postgres-team29-data:/var/lib/postgresql/data
+    networks:
+      - "social-net"
 
   frontend:
-    image: 'kohgutepdev/front:latest'
+    image: 'pohikoo/skillgroup29-frontend'
     container_name: frontend
     ports:
       - "8098:80"
     restart: unless-stopped
+    networks:
+      - "social-net"
 
   core:
     image: 'kohgutepdev/team29socialnet-core:latest'
     container_name: core-service
-    ports:
-      - "8086:8086"
+    environment:
+      server.db.port: http://db-service:8081
+      frontend.host: http://frontend:8098
+      spring.mail.password: svsbxajrmngmshhs
+      spring.mail.username: noreplaycomand28@gmail.com
+      spring.mail.url: http://frontend:8098/change-password/
+    networks:
+      - "social-net"
 
   db:
     image: 'kohgutepdev/team29socialnet-db:latest'
     container_name: db-service
-    ports:
-      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      spring.datasource.driver-class-name: org.postgresql.Driver
+      spring.datasource.url: jdbc:postgresql://postgres:5432/socialnet
+      spring.datasource.username: admin
+      spring.datasource.password: passWd123
+    networks:
+      - "social-net"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+networks:
+  social-net:
+    driver: "bridge"

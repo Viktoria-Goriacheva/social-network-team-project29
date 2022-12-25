@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/auth/captcha",
                         "/api/v1/auth/password/recovery/{recoveryLink}",
                         "/api/v1/auth/password/recovery/",
-                        "/api/v1/account/recovery", "/api/v1/account/me").permitAll()
+                        "/api/v1/account/recovery").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);

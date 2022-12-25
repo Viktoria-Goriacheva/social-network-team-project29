@@ -3,6 +3,8 @@ package ru.socialnet.team29.repository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.PostLike;
 import ru.socialnet.team29.services.DslContextCustom;
@@ -13,8 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostLikeRepository extends AbstractRepository<PostLike> {
 
-  private final DSLContext dsl;
+  private DSLContext dsl;
 
+  @Autowired
+  public void setDsl(@Lazy DSLContext dsl) {
+    this.dsl = dsl;
+  }
   public Integer getCountLikeByPostId(Integer id) {
     return dsl.fetchCount(DSL.selectFrom(PostLike.POST_LIKE)
         .where(PostLike.POST_LIKE.POST_ID.eq(id)));

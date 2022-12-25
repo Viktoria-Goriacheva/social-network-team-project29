@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
@@ -13,11 +15,14 @@ import java.util.List;
 
 
 @Repository
-@RequiredArgsConstructor
 public class PersonRepository {
 
-  private final DSLContext dsl;
+  private DSLContext dsl;
 
+  @Autowired
+  public void setDsl(@Lazy DSLContext dsl) {
+    this.dsl = dsl;
+  }
 
   public PersonRecord insert(PersonRecord personRecord) {
     return dsl.insertInto(Person.PERSON)
