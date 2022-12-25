@@ -52,18 +52,18 @@ services:
     networks:
       - "social-net"
 
-
-
-
-
-
-
-
-
-
-
-
-
+  oleg-liquibase:
+    container_name: oleg-liquibase
+    image: liquibase/liquibase
+    depends_on:
+      - postgres
+    command: --url=jdbc:postgresql://postgres:5432/socialnet --changeLogFile=changelog.xml --username=admin --password=passWd123 update
+    volumes:
+      - ./db/src/main/resources/liquibase/changelog.xml:/liquibase/changelog.xml
+      - ./db/src/main/resources/liquibase/structure:/liquibase/structure
+    tty: true
+    networks:
+      - "social-net"
 
 networks:
   social-net:
