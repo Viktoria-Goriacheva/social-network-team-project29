@@ -31,15 +31,14 @@ public class GeoLauncher implements CommandLineRunner {
   public void run(String... args) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    countries = mapper.readValue(new URL("https://api.hh.ru/areas"),
-        new TypeReference<>() {
-        });
     List<Node> node = mapper.readValue(new URL("https://api.hh.ru/areas"), new TypeReference<>() {
     });
     List<GeoCitiesResponse> citiesLevel1 = node.stream()
         .flatMap(y -> y.getAreas().stream()).filter(y -> y.getAreas().isEmpty())
         .map(c -> new GeoCitiesResponse(c.getId(), c.getName(), c.getParent_id()))
         .collect(Collectors.toList());
+    countries = node.stream().map(c -> new GeoCountriesResponse(c.getId(), c.getName())).collect(
+        Collectors.toList());
     List<GeoCitiesResponse> citiesLevel2 = node.stream()
         .peek(q -> i = q.getId())
         .flatMap(y -> y.getAreas().stream()
