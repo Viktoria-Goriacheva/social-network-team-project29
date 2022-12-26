@@ -30,8 +30,7 @@ spring:
     protocol: smtp
     test-connection: false
 
-
-
-
-
-
+cloudinary:
+  cloud-name:
+  api-key:
+  api-secret:

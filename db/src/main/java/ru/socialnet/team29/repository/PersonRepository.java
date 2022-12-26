@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.Person;
+import ru.socialnet.team29.domain.tables.PostTable;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 
 import java.util.List;
@@ -38,16 +39,6 @@ public class PersonRepository {
     return dsl.selectFrom(Person.PERSON)
         .where(condition)
         .fetch()
-        .into(PersonRecord.class);
-  }
-
-  public PersonRecord update(PersonRecord personRecord) {
-    return dsl.update(Person.PERSON)
-        .set(dsl.newRecord(Person.PERSON, personRecord))
-        .returning()
-        .fetchOptional()
-        .orElseThrow(
-            () -> new DataAccessException("Error updating entity: " + personRecord.getId()))
         .into(PersonRecord.class);
   }
 
@@ -90,4 +81,15 @@ public class PersonRepository {
         .fetchOne()
         .getId();
   }
+
+    public PersonRecord updatePerson(PersonRecord personRecord) {
+        return dsl.update(Person.PERSON)
+                .set(Person.PERSON.from(personRecord))
+                .where(Person.PERSON.ID.eq(personRecord.getId()))
+                .returning()
+                .fetchOptional()
+                .orElseThrow(
+                        () -> new DataAccessException("Error updating entity: " + personRecord.getId()))
+                .into(PersonRecord.class);
+    }
 }

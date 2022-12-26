@@ -9,7 +9,6 @@ import ru.socialnet.team29.model.PostDto;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
-
     @PostMapping(value = "/person")
     Person savePerson(@RequestBody Person person);
 
@@ -48,14 +47,14 @@ public interface DBConnectionFeignInterface {
     Integer getCountOfFriends(@RequestParam Integer id);
 
     @PostMapping(value = "/post")
-    Boolean savePost(@RequestBody PostDto postDto);
+    Boolean savePost (@RequestBody PostDto postDto);
 
     @GetMapping(value = "/post")
     PostDto getPostById(@RequestParam Integer id);
 
     @PutMapping(value = "/post")
-    Boolean updatePost(@RequestBody PostDto postDto);
+    Boolean updatePost (@RequestBody PostDto postDto);
 
     @DeleteMapping(value = "/post")
-    Boolean deletePost(@RequestParam Integer id);
+    Boolean deletePost (@RequestParam Integer id);
 }

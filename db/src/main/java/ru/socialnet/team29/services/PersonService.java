@@ -51,13 +51,13 @@ public class PersonService implements PersonInterfaceDB {
         return person;
     }
 
-    public Person update(Person person) {
-        personRepository.update(personMapper.PersonToPersonRecord(person));
-        log.info("Отработал метод - update Данные попали в Базу Данных! ");
-        return person;
-}
-
     public List<PersonRecord> findAll(Condition condition) {
         return personRepository.findAll(condition);
+    }
+
+    public Person updatePerson(Person person) {
+        log.info("Update Person in DB {}",person);
+        personRepository.updatePerson(personMapper.PersonToPersonRecord(person));
+        return person;
     }
 }
