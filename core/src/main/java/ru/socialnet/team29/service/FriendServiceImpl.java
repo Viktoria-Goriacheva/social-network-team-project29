@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
+import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.serviceInterface.FriendService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -56,7 +57,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public AnswerListFriendsForPerson getAllFriendsForPerson(Map<String, String> params) {
+    public AnswerListFriendsForPerson<FriendForFront> getAllFriendsForPerson(Map<String, String> params) {
         log.info("Получаем запрос от фронта на получение всех друзей для  " + SecurityContextHolder.getContext().getAuthentication().getName() + " с параметрами " + params.toString());
         String statusName = params.getOrDefault("statusCode", "");
         int pageNumber = Integer.parseInt(params.getOrDefault("page", "1"));
@@ -67,10 +68,10 @@ public class FriendServiceImpl implements FriendService {
                 .pageNumber(pageNumber)
                 .pageSize(sizePage)
                 .build();
-        AnswerListFriendsForPerson answerListFriends = feignInterfaceFriend.getFriendsByIdPerson(id, statusName, pageable);
+        AnswerListFriendsForPerson<FriendForFront> answerListFriends = feignInterfaceFriend.getFriendsByIdPerson(id, statusName, pageable);
         List<FriendForFront> listFriends = answerListFriends.getContent();
         int totalPages = (int)Math.ceil(listFriends.size() / sizePage);
-        return AnswerListFriendsForPerson.builder()
+        return AnswerListFriendsForPerson.<FriendForFront>builder()
                     .content(listFriends)
                     .empty(listFriends.size() == 0)
                     .numberOfElements(listFriends.size())
@@ -105,11 +106,11 @@ public class FriendServiceImpl implements FriendService {
             int id = personService.getIdPersonFromSecurityContext();
             boolean isExists = feignInterfaceFriend.friendsByIdExists(id, friendId);
             if (!isExists) {
-                log.info("The friend is not deleted");
+                log.info("The friend is not exists");
                 return HttpStatus.BAD_REQUEST;
             }
         } else {
-            log.info("The deleted friend id=null");
+            log.info("The friend id=null");
             return HttpStatus.BAD_REQUEST;
         }
         return HttpStatus.OK;
@@ -117,8 +118,35 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public Integer getCountOfFriends() {
-        log.info("Получаем запрос от фронта на получение количества всех друзей для  " + SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("Получаем запрос от фронта на получение количества запросов на дружбу для  " + SecurityContextHolder.getContext().getAuthentication().getName());
         int id = personService.getIdPersonFromSecurityContext();
         return feignInterfaceFriend.getCountOfFriends(id);
+    }
+
+    @Override
+    public FriendSearchDto getAllFriendIds() {
+        log.info("Получаем запрос от фронта на выдачу всех id друзей для " + SecurityContextHolder.getContext().getAuthentication().getName());
+        int id = personService.getIdPersonFromSecurityContext();
+        return feignInterfaceFriend.getAllFriendIds(id);
+    }
+
+    @Override
+    public HttpStatus toSubscribe(Integer friendId) {
+        log.info("Получаем запрос от фронта на подписку персоны "
+                + SecurityContextHolder.getContext().getAuthentication().getName()
+                + " на наблюдаемого");
+        if (friendId != null) {
+            log.info("Get friend by id=" + friendId.toString());
+            int id = personService.getIdPersonFromSecurityContext();
+            boolean isExists = feignInterfaceFriend.toSubscribe(id, friendId);
+            if (!isExists) {
+                log.info("The friend is not subscribed");
+                return HttpStatus.BAD_REQUEST;
+            }
+        } else {
+            log.info("The subscribed friend id=null");
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.OK;
     }
 }

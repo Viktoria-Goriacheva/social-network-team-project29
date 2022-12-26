@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
+import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -65,6 +66,16 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public Integer getCountOfFriends(Integer id) {
+        return null;
+    }
+
+    @Override
+    public FriendSearchDto getAllFriendIds(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Boolean toSubscribe(Integer id, Integer friendId) {
         return null;
     }
 
