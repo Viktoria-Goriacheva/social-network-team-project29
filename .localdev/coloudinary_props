@@ -1,0 +1,16 @@
+Run -> Edit Configurations... -> слева в Applications выбираем SocialNetDatabaseApp ->
+раскрываем Modify options -> Add VM options ->
+в строке VM options раскрываем расходящиеся стрелки справа -> в окошко копируем эти три строки :
+
+-Dcloudinary.cloud-name=dbjq1kufj
+-Dcloudinary.api-key=813445639385638
+-Dcloudinary.api-secret=xiSz7HlLkmr1Gw4n5bpIyxYaIXA
+
+Apply -> OK.
+
+Для входа в Cloudinary:
+1. https://cloudinary.com/users/login#gsc.tab=0
+2. Данные для входа:
+        Email:    noreplaycomand28@gmail.com
+        Password: Admin32!
+

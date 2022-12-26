@@ -11,7 +11,6 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {
-
     @Override
     public Person savePerson(Person person) {
         return null;

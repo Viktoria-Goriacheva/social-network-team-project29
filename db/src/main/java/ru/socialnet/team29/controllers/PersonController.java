@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,17 +31,15 @@ public class PersonController {
     }
 
     @PostMapping("/person")
-    @ResponseBody
     public ResponseEntity<Person> savePerson(@RequestBody Person person) {
         log.info("Получили запрос на сохранение {}",person);
         return new ResponseEntity<>( personService.savePerson(person), HttpStatus.OK);
     }
 
     @PostMapping("/personUpdate")
-    @ResponseBody
     public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
-        log.info("Получили запрос на сохранение {}", person);
-        return new ResponseEntity<>( personService.update(person), HttpStatus.OK);
+        log.info("Получили запрос на обновление данных! {}",person);
+        return new ResponseEntity<>( personService.updatePerson(person), HttpStatus.OK);
     }
 
 }

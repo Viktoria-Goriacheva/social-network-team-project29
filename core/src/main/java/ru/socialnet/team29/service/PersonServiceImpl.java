@@ -50,9 +50,13 @@ public class PersonServiceImpl implements PersonService {
         return person;
     }
 
-    @Override
     public Integer getIdPersonFromSecurityContext() {
         return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson().getId();
+
+    }
+
+    public Person getPersonFromSecurityContext() {
+        return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson();
 
     }
 }

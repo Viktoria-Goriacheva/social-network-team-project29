@@ -73,7 +73,9 @@ public class PostServiceImpl implements PostService {
             .likeAmount(oldPost.getLikeAmount())
             .myLike(oldPost.isMyLike())
             .build();
-    return feignInterface.updatePost(newPost);
+
+     return feignInterface.updatePost(newPost);
+
   }
 
   @Override
