@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class GeoCountriesResponse {
 
     private Integer id;
-    @JsonSetter("name")
     private String title;
 
 }

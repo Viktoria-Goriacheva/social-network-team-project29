@@ -8,9 +8,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class GeoCitiesResponse {
     private Integer id;
-    @JsonSetter("name")
+
     private String title;
-    @JsonSetter("parent_id")
+
     private Integer countryId;
 
 }
