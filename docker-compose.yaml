@@ -19,7 +19,7 @@ services:
       - "social-net"
 
   frontend:
-    image: 'pohikoo/skillgroup29-frontend'
+    image: 'kohgutepdev/front:latest'
     container_name: frontend
     ports:
       - "8098:80"
@@ -36,6 +36,10 @@ services:
       spring.mail.password: svsbxajrmngmshhs
       spring.mail.username: noreplaycomand28@gmail.com
       spring.mail.url: http://frontend:8098/change-password/
+      cloudinary.cloud-name: dbjq1kufj
+      cloudinary.api-key: 813445639385638
+      cloudinary.api-secret: xiSz7HlLkmr1Gw4n5bpIyxYaIXA
+    restart: unless-stopped
     networks:
       - "social-net"
 
@@ -49,11 +53,12 @@ services:
       spring.datasource.url: jdbc:postgresql://postgres:5432/socialnet
       spring.datasource.username: admin
       spring.datasource.password: passWd123
+    restart: unless-stopped
     networks:
       - "social-net"
 
-  oleg-liquibase:
-    container_name: oleg-liquibase
+  migration-liquibase:
+    container_name: migration-liquibase
     image: liquibase/liquibase
     depends_on:
       - postgres
