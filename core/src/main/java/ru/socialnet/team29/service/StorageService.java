@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.socialnet.team29.config.CloudinaryConfig;
-import ru.socialnet.team29.exception.EntityNotFoundException;
 import ru.socialnet.team29.exception.IoException;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -17,7 +16,6 @@ import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePers
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -35,44 +33,38 @@ public class StorageService {
         File uploadedFile;
         uploadedFile = convertMultiPartToFile(imageFile);
         Map uploadResult = null;
-        if (uploadedFile == null) {
-            Cloudinary cloudinary = cloudinaryConfig.initCloudinary();
-            cloudinary.url().transformation(new Transformation<>().width(100).height(100));
-            uploadResult = cloudinaryConfig.initCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
-        } else {
-            log.error("Ошибка загрузки файла!");
-            throw new EntityNotFoundException("Файл не найден");
-        }
+
+        Cloudinary cloudinary = cloudinaryConfig.initCloudinary();
+        cloudinary.url().transformation(new Transformation<>().width(100).height(100));
+        uploadResult = cloudinaryConfig.initCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
 
         Person person = personService.getPersonFromSecurityContext();
         person.setPhoto(uploadResult.get("url").toString());
+        person.setPhotoId(uploadResult.get("url").toString());
+        person.setPhotoName(uploadedFile.getName());
         feignInterface.updatePerson(person);
 
         return person;
     }
 
+
     @SneakyThrows
-    public String uploadFileToPost(MultipartFile imageFile) {
+    public String uploadFileToPost(MultipartFile imageFile) throws IoException {
         log.info("Попытка загрузить фото в пост!");
         File uploadedFile = null;
         Cloudinary cloudinary = cloudinaryConfig.initCloudinary();
-        Map uploadResult;
-        if (uploadedFile == null) {
-            log.error("Ошибка загрузки файла!");
-            throw new EntityNotFoundException("Файл не найден");
-        } else {
-            try {
-                uploadedFile = convertMultiPartToFile(imageFile);
-                cloudinary.url().transformation(new Transformation<>().width(100).height(100));
-                uploadResult = cloudinaryConfig.initCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
-            } catch (IOException e) {
-                log.error("Ошибка загрузки файла!");
-                throw new IoException("Ошибка загрузки файла!");
-            }
-            log.info("Файл загружен");
-            return uploadResult.get("url").toString();
+        Map uploadResult = null;
 
-        }
+
+        uploadedFile = convertMultiPartToFile(imageFile);
+
+        cloudinary.url().transformation(new Transformation<>().width(100).height(100));
+        uploadResult = cloudinaryConfig.initCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+
+
+        log.info("Файл загружен");
+        return uploadResult.get("url").toString();
+
     }
 
     @SneakyThrows
