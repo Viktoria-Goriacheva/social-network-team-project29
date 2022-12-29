@@ -13,6 +13,7 @@ import ru.socialnet.team29.exception.EntityNotFoundException;
 import ru.socialnet.team29.exception.IoException;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
+import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +24,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class StorageService {
-    private final DBConnectionFeignInterface feignInterface;
+    private final DBConnectionFeignInterfacePerson feignInterface;
     private final PersonServiceImpl personService;
     private final CloudinaryConfig cloudinaryConfig;
 

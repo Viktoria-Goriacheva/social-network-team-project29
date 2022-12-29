@@ -10,7 +10,7 @@ import ru.socialnet.team29.domain.tables.records.Post2tagRecord;
 
 @Repository
 @RequiredArgsConstructor
-public class Post2TagRepository extends AbstractRepository<Post2tagRecord> {
+public class Post2TagRepository implements CrudRepository<Post2tagRecord> {
 
     private DSLContext dsl;
 
@@ -34,8 +34,8 @@ public class Post2TagRepository extends AbstractRepository<Post2tagRecord> {
     }
 
     @Override
-    public boolean update(Post2tagRecord post2tagRecord) {
-        return false;
+    public Post2tagRecord update(Post2tagRecord post2tagRecord) {
+        return null;
     }
 
     @Override

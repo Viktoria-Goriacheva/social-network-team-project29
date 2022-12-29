@@ -30,6 +30,7 @@ public class UserRegister {
         MessageAnswer response = new MessageAnswer();
         response.setMessage(jwtToken);
         log.info("Для " + payload.getEmail() + " выдан токен " + response.getMessage());
+
         return response;
     }
 

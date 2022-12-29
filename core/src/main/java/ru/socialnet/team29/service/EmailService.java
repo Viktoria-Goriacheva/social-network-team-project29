@@ -12,6 +12,7 @@ import ru.socialnet.team29.config.EmailSenderConfig;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.responses.PasswordResponse;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
+import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Slf4j
 public class EmailService {
     private final EmailSenderConfig emailSenderConfig;
-    private final DBConnectionFeignInterface feignInterface;
+    private final DBConnectionFeignInterfacePerson feignInterface;
 
     public String getPersonByEmailForGetToken(String email) {
         log.info(email + "  email from emailService");
