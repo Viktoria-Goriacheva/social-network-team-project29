@@ -8,7 +8,7 @@ server:
       tracking-modes: cookie
 
   db:
-    port: http://localhost:8081
+    port: http://db-service:8081
 
 frontend:
     host: http://frontend:8098
