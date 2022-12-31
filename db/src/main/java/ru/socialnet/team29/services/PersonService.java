@@ -25,11 +25,23 @@ public class PersonService implements PersonInterfaceDB {
     @Override
     public Person getPersonByEmail(String email) {
         PersonRecord person = personRepository.findPersonByEmail(email);
-        if (person != null && !person.getIsDeleted()) {
+        if (person != null && isLegalPerson(person)) {
             return personMapper.PersonRecordToPerson(person);
         } else {
             throw new NoDataFoundException("No users found such email");
         }
+    }
+
+    private boolean isLegalPerson(PersonRecord person) {
+        return !isDeletedPerson(person) && !isBlockedPerson(person);
+    }
+
+    private boolean isBlockedPerson(PersonRecord person) {
+        return person.getIsBlocked() != null && person.getIsBlocked();
+    }
+
+    private boolean isDeletedPerson(PersonRecord person) {
+        return person.getIsDeleted() != null && person.getIsDeleted();
     }
 
     public Person getPersonByToken(String token) {
