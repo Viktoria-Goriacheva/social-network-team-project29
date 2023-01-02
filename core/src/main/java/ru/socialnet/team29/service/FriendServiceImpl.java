@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.serviceInterface.FriendService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -59,7 +60,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public AnswerListFriendsForPerson<FriendForFront> getAllFriendsForPerson(Map<String, String> params) {
         log.info("Получаем запрос от фронта на получение всех друзей для  " + SecurityContextHolder.getContext().getAuthentication().getName() + " с параметрами " + params.toString());
-        String statusName = params.getOrDefault("statusCode", "");
+        String statusName = params.getOrDefault("statusCode", "NONE");
         int pageNumber = Integer.parseInt(params.getOrDefault("page", "1"));
         int sizePage = Integer.parseInt(params.getOrDefault("size", "20"));
         int id = personService.getIdPersonFromSecurityContext();
@@ -138,8 +139,8 @@ public class FriendServiceImpl implements FriendService {
         if (friendId != null) {
             log.info("Get friend by id=" + friendId.toString());
             int id = personService.getIdPersonFromSecurityContext();
-            boolean isExists = feignInterfaceFriend.toSubscribe(id, friendId);
-            if (!isExists) {
+            boolean isSubscribed = feignInterfaceFriend.toSubscribe(id, friendId);
+            if (!isSubscribed) {
                 log.info("The friend is not subscribed");
                 return HttpStatus.BAD_REQUEST;
             }
@@ -148,5 +149,38 @@ public class FriendServiceImpl implements FriendService {
             return HttpStatus.BAD_REQUEST;
         }
         return HttpStatus.OK;
+    }
+
+    @Override
+    public List<RecommendationFriendsDto> getRecommendations() {
+        log.info("Получаем запрос от фронта на выдачу всех id рекомендованных друзей для " + SecurityContextHolder.getContext().getAuthentication().getName());
+        int id = personService.getIdPersonFromSecurityContext();
+        return feignInterfaceFriend.getRecommendations(id);
+    }
+
+    @Override
+    public HttpStatus blockFriend(Integer friendId) {
+        log.info("Получаем запрос от фронта на блокировку друга "
+                + SecurityContextHolder.getContext().getAuthentication().getName());
+        if (friendId != null) {
+            log.info("Блокируемый друг id=" + friendId);
+            int id = personService.getIdPersonFromSecurityContext();
+            boolean isBlocked = feignInterfaceFriend.blockFriend(id, friendId);
+            if (!isBlocked) {
+                log.info("Не удалось заблокировать друга id=" + friendId);
+                return HttpStatus.BAD_REQUEST;
+            }
+        } else {
+            log.info("The subscribed friend id=null");
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.OK;
+    }
+
+    @Override
+    public FriendSearchDto getIdsBlockedFriends() {
+        log.info("Получаем запрос от фронта на выдачу всех id заблокированных друзей для " + SecurityContextHolder.getContext().getAuthentication().getName());
+        int id = personService.getIdPersonFromSecurityContext();
+        return feignInterfaceFriend.getIdsBlockedFriends(id);
     }
 }

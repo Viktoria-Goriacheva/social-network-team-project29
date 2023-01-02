@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.services.FriendService;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -62,5 +65,23 @@ public class FriendController {
     Boolean toSubscribe(@RequestParam Integer id, @RequestParam Integer friendId) {
         log.info("Получили запрос от core - подписка на наблюдаемого id=" + friendId);
         return friendService.toSubscribe(id, friendId);
+    };
+
+    @GetMapping("/friends/recommendations")
+    List<RecommendationFriendsDto> getRecommendations(@RequestParam Integer id) {
+        log.info("Получили запрос от core - на выдачу рекомендованных друзей для id=" + id);
+        return friendService.getRecommendations(id);
+    };
+
+    @PutMapping("/friends/block")
+    Boolean blockFriend(@RequestParam Integer id, @RequestParam Integer friendId) {
+        log.info("Получили запрос от core - на блокировку друга id=" + friendId);
+        return friendService.blockFriend(id, friendId);
+    };
+
+    @GetMapping("/friends/blockFriendId")
+    FriendSearchDto getIdsBlockedFriends(@RequestParam Integer id) {
+        log.info("Получили запрос от core - получение id всех заблокированных друзей");
+        return friendService.getIdsBlockedFriends(id);
     };
 }

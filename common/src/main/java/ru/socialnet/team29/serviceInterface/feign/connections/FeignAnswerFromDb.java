@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -57,6 +58,21 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public Boolean toSubscribe(Integer id, Integer friendId) {
+        return null;
+    }
+
+    @Override
+    public List<RecommendationFriendsDto> getRecommendations(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Boolean blockFriend(Integer id, Integer friendId) {
+        return null;
+    }
+
+    @Override
+    public FriendSearchDto getIdsBlockedFriends(Integer id) {
         return null;
     }
 
