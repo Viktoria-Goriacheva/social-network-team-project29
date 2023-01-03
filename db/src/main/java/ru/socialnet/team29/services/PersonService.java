@@ -13,6 +13,7 @@ import ru.socialnet.team29.mappers.PersonMapper;
 import ru.socialnet.team29.model.Person;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,7 +47,7 @@ public class PersonService implements PersonInterfaceDB {
 
     public Person getPersonByToken(String token) {
         PersonRecord person = personRepository.findPersonByToken(token);
-        if (person != null) {
+        if (person != null && isLegalPerson(person)) {
             return personMapper.PersonRecordToPerson(person);
         } else {
             throw new NoDataFoundException("No users found such token");
@@ -90,12 +91,11 @@ public class PersonService implements PersonInterfaceDB {
 
     public Person findById(int id) {
         log.info("Запрос данных аккаунта id={}", id);
-        var record = personRepository.findById(id);
-        if (record.getIsDeleted()) {
-            log.info("Аккаунт удалён");
-            return null;
-        }
-        return personMapper.PersonRecordToPerson(personRepository.findById(id));
+        PersonRecord person = personRepository.findById(id);
+        if (person != null && isLegalPerson(person))
+            return personMapper.PersonRecordToPerson(personRepository.findById(id));
+        log.info("Аккаунт не найден, либо удален или заблокирован");
+        return null;
     }
 
     public List<Person> findByPageableTerm(Pageable pageable) {
@@ -105,12 +105,14 @@ public class PersonService implements PersonInterfaceDB {
 
     public List<PersonRecord> findByIdList(List<Integer> ids) {
         log.info("Запрос списка аккаунтов {}", ids);
-        return personRepository.findByIdList(ids);
+        List<PersonRecord> result = new ArrayList<>();
+        ids.forEach(id-> result.add(personRepository.findById(id)));
+        return result;
     }
 
     public boolean isExist(int id) {
         log.info("Запрос на существование профиля id={}", id);
-        return personRepository.isExist(id);
+        return findById(id) != null;
     }
 
     public void setOnline(String email) {
