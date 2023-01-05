@@ -43,8 +43,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person findMe() {
         log.info("Запрос данных моего профиля");
-        int myId = getMyId();
-        return feignInterface.getPersonById(myId);
+        return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson();
     }
 
     @Override
