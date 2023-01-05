@@ -53,4 +53,9 @@ public class FeignAnswerFromDbPerson implements DBConnectionFeignInterfacePerson
     @Override
     public void setOffline(int id) {
     }
+
+    @Override
+    public boolean isRegisteredMail(String email) {
+        return false;
+    }
 }

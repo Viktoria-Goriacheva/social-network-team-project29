@@ -37,4 +37,7 @@ public interface DBConnectionFeignInterfacePerson {
 
     @PostMapping(value = "/person/offline")
     void setOffline(@RequestParam int id);
+
+    @GetMapping(value = "/person/exist")
+    boolean isRegisteredMail(@RequestParam String email);
 }

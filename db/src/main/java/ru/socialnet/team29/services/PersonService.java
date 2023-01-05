@@ -128,4 +128,8 @@ public class PersonService implements PersonInterfaceDB {
         person.setLastOnlineTime(OffsetDateTime.now());
         personRepository.update(personMapper.PersonToPersonRecord(person));
     }
+
+    public boolean isRegisteredMail(String email) {
+        return personRepository.findPersonByEmail(email) != null;
+    }
 }

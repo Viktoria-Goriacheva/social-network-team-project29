@@ -63,4 +63,9 @@ public class PersonController {
     public void setOffline(@RequestParam int id) {
         personService.setOffline(id);
     }
+
+    @GetMapping(value = "/person/exist")
+    boolean isRegisteredMail(@RequestParam String email) {
+        return personService.isRegisteredMail(email);
+    }
 }
