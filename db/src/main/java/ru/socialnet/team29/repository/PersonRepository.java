@@ -43,13 +43,6 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .fetchOne();
   }
 
-  /**
-   * @deprecated Вместо этого метода предлагаются более подходящие методы </br>
-   * {@link PersonRepository#isExist(int)},
-   * {@link PersonRepository#findByIdList(List)}
-   * @param condition условие выборки
-   * @return список аккаунтов
-   */
   @Deprecated
   public List<PersonRecord> findAll(Condition condition) {
     return dsl.selectFrom(Person.PERSON)
@@ -92,29 +85,6 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .where(Person.PERSON.ID.equalIgnoreCase(id))
             .fetchOne()
             .getId();
-  }
-
-  /**
-   * Экзистенциональная проверка аккаунта по идентификатору
-   * @param id идентификатор
-   * @return Если существует, то true
-   */
-  public boolean isExist(int id) {
-    return dsl.selectFrom(Person.PERSON)
-            .where(Person.PERSON.ID.eq(id))
-            .fetchOne() != null;
-
-  }
-
-  /**
-   * Получение списка аккаунтов по списку идентификаторов
-   * @param ids список id
-   * @return список аккаунтов
-   */
-  public List<PersonRecord> findByIdList(List<Integer> ids) {
-    return dsl.selectFrom(Person.PERSON)
-            .where(Person.PERSON.ID.in(ids))
-            .fetch();
   }
 
   @Transactional(readOnly = true)
