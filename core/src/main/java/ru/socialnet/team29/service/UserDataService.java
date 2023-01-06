@@ -13,7 +13,6 @@ import ru.socialnet.team29.answers.ResponseUserRegister;
 import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
-import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.time.OffsetDateTime;
@@ -36,6 +35,9 @@ public class UserDataService {
     public CommonAnswer saveNewUserInDb(ContactConfirmationPayload payload) {
         if (!payload.getPassword1().equals(payload.getPassword2()) | payload.getCode().isBlank()) {
             return getAnswer("invalid_request", "Поля пароль и подтверждение пароля не совпадают, или не заполнено поле code.");
+        }
+        else if (isRegisteredMail(payload.getEmail())){
+            return getAnswer("invalid_request", "Такой адрес почты уже зарегистрирован!");
         } else {
             Person person = Person.builder()
                     .firstName(payload.getFirstName())
@@ -76,8 +78,8 @@ public class UserDataService {
         return responseUserRegister;
     }
 
-    public Person getPersonByEmail(String email) {
-        return feignInterface.getPersonByEmail(email);
+    public boolean isRegisteredMail(String email) {
+        return feignInterface.isRegisteredMail(email);
     }
 
     public Person getCurrentAccount() {
