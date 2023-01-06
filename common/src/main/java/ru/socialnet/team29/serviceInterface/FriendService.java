@@ -3,8 +3,10 @@ package ru.socialnet.team29.serviceInterface;
 import org.springframework.http.HttpStatus;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 
+import java.util.List;
 import java.util.Map;
 
 public interface FriendService {
@@ -61,4 +63,23 @@ public interface FriendService {
      * @return OK - в случае успеха
      */
     HttpStatus toSubscribe(Integer friendId);
+
+    /**
+     * Рекомендации
+     * @return List<RecommendationFriendsDto> список рекомендаций друзей
+     */
+    List<RecommendationFriendsDto> getRecommendations();
+
+    /**
+     * Блокировка друга
+     * @param friendId идентификатор друга
+     * @return OK - в случае успеха
+     */
+    HttpStatus blockFriend(Integer friendId);
+
+    /**
+     * Получение id заблокированных друзей
+     * @return информация о заблокированных друзьях
+     */
+    FriendSearchDto getIdsBlockedFriends();
 }

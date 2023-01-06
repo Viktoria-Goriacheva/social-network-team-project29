@@ -8,6 +8,7 @@ import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.mappers.FriendMapperImpl;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.enums.FriendshipStatus;
@@ -59,7 +60,7 @@ public class FriendService {
         boolean isExistsFriendship;
         FriendshipStatus statusRequest = FriendshipStatus.valueOf("REQUEST_FROM");
         try {
-            isExistsFriendship = friendRepository.getFriendshipStatusByIdAndFriendId(friendId, id).equals(statusRequest);
+            isExistsFriendship = friendRepository.getFriendshipStatusByIdAndFriendId(id, friendId).equals(statusRequest);
         } catch (NullPointerException ex) {
             log.info("Не найден друг с id(" + friendId + ") и статусом 'REQUEST_FROM'");
             return false;
@@ -125,7 +126,7 @@ public class FriendService {
     }
 
     public FriendSearchDto getAllFriendIds(Integer id) {
-        List<Integer> ids = friendRepository.getAllFriendIds(id);
+        List<Integer> ids = friendRepository.getAllFriendIds(id, FriendshipStatus.FRIEND);
         return FriendSearchDto.builder()
                 .ids(ids)
                 .statusCode("FRIEND")
@@ -143,5 +144,34 @@ public class FriendService {
             return friendRepository.insertFriendship(id, friendId, "SUBSCRIBED") > 0;
         }
         return false;
+    }
+
+    public List<RecommendationFriendsDto> getRecommendations(Integer id) {
+        List<Integer> recommendationFriendsIds = friendRepository.getRecommendations(id);
+        List<PersonRecord> personRecords = personService.findAll(Person.PERSON.ID.in(recommendationFriendsIds));
+        return friendMapper.PersonRecordsToRecommendationFriendsDto(personRecords);
+    }
+
+    public Boolean blockFriend(Integer id, Integer friendId) {
+        Boolean result = false;
+        if (friendsByIdExists(id, friendId)) {
+            FriendshipStatus statusBlocked = FriendshipStatus.valueOf("BLOCKED");
+            if (friendRepository.getFriendshipStatusByIdAndFriendId(id, friendId).equals(statusBlocked)) {
+                result = friendRepository.updateFriendship(id, friendId, "FRIEND") > 0;
+            } else {
+                result = friendRepository.updateFriendship(id, friendId, "BLOCKED") > 0;
+            }
+        } else {
+            result = friendRepository.insertFriendship(id, friendId, "BLOCKED") > 0;
+        }
+        return result;
+    }
+
+    public FriendSearchDto getIdsBlockedFriends(Integer id) {
+        List<Integer> blockedFriendIds = friendRepository.getAllFriendIds(id, FriendshipStatus.BLOCKED);
+        return FriendSearchDto.builder()
+                .ids(blockedFriendIds)
+                .statusCode("BLOCKED")
+                .build();
     }
 }

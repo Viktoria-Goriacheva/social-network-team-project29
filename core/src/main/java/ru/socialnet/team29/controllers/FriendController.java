@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.service.FriendServiceImpl;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
@@ -81,5 +83,30 @@ public class FriendController {
     @PostMapping("/friends/subscribe/{id}")
     public ResponseEntity<Void> toSubscribe(@PathVariable(value = "id") Integer friendId) {
         return new ResponseEntity<>(friendService.toSubscribe(friendId));
+    }
+
+    /**
+     * Рекомендации
+     */
+    @GetMapping("/friends/recommendations")
+    public ResponseEntity<List<RecommendationFriendsDto>> getRecommendations() {
+        return new ResponseEntity<>(friendService.getRecommendations(), HttpStatus.OK);
+    }
+
+    /**
+     * Блокировка друга
+     * @param friendId идентификатор друга
+     */
+    @PutMapping("/friends/block/{id}")
+    public ResponseEntity<Void> blockFriend(@PathVariable(value = "id") Integer friendId){
+        return new ResponseEntity<>(friendService.blockFriend(friendId));
+    }
+
+    /**
+     * Получение id заблокированных друзей
+     */
+    @GetMapping("/friends/blockFriendId")
+    public ResponseEntity<FriendSearchDto> getIdsBlockedFriends() {
+        return new ResponseEntity<>(friendService.getIdsBlockedFriends(), HttpStatus.OK);
     }
 }

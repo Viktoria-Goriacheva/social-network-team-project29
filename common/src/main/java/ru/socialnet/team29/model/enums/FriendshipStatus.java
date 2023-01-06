@@ -3,6 +3,8 @@ package ru.socialnet.team29.model.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 public enum FriendshipStatus {
@@ -12,7 +14,8 @@ public enum FriendshipStatus {
     BLOCKED(4, "BLOCKED"),
     REJECTING(5, "REJECTING"),
     SUBSCRIBED(6, "SUBSCRIBED"),
-    WATCHING(7, "WATCHING");
+    WATCHING(7, "WATCHING"),
+    NONE(8, "NONE");
 
     private Integer number;
     private String value;
@@ -29,7 +32,7 @@ public enum FriendshipStatus {
     }
 
     public static FriendshipStatus getEnum(String numberString) {
-        return FriendshipStatus.getEnum(getTypeEnum(Integer.parseInt(numberString)));
+        return FriendshipStatus.valueOf(getTypeEnum(Integer.parseInt(numberString)));
     }
 
     @Override

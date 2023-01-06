@@ -2,7 +2,8 @@ package ru.socialnet.team29.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.DSLContext;
+import org.jooq.*;
+import org.jooq.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,6 @@ import ru.socialnet.team29.model.enums.FriendshipStatus;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -92,21 +92,16 @@ public class FriendRepository {
             Integer id,
             String statusName,
             AnswerListFriendsForPerson.FriendPageable pageable) {
-        try {
-            var statusFRIEND = FriendshipStatus.valueOf(statusName);
-            Friendship friendship = Friendship.FRIENDSHIP;
-            return dsl.selectFrom(friendship)
-                    .where(
-                            friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString())
-                                    .and(friendship.SRC_PERSON_ID.eq(id.toString())))
-                    .orderBy(friendship.DST_PERSON_ID)
-                    .limit(pageable.getPageSize())
-                    .offset(pageable.getOffset())
-                    .fetchInto(FriendshipRecord.class);
-        } catch (NullPointerException exp) {
-            return null;
-        }
-
+        var statusFRIEND = FriendshipStatus.valueOf(statusName);
+        Friendship friendship = Friendship.FRIENDSHIP;
+        return dsl.selectFrom(friendship)
+                .where(
+                        friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString())
+                                .and(friendship.SRC_PERSON_ID.eq(id.toString())))
+                .orderBy(friendship.DST_PERSON_ID)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetchInto(FriendshipRecord.class);
     }
 
     /**
@@ -162,16 +157,26 @@ public class FriendRepository {
      * @param id идентификатор персоны
      * @return список идентификаторов друзей персоны
      */
-    public List<Integer> getAllFriendIds(Integer id) {
-        FriendshipStatus friendshipStatus = FriendshipStatus.valueOf("FRIEND");
+    public List<Integer> getAllFriendIds(Integer id, FriendshipStatus friendshipStatus) {
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
                         friendship.SRC_PERSON_ID.eq(id.toString())
                         .and(friendship.STATUS_ID.eq(String.valueOf(friendshipStatus.getNumber()))))
-                .fetch(friendship.DST_PERSON_ID)
-                .stream()
-                .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .fetch(frship -> Integer.parseInt(frship.getDstPersonId()));
+    }
+
+
+    public List<Integer> getRecommendations(Integer id) {
+        FriendshipStatus friendStatus = FriendshipStatus.FRIEND;
+        String sqlQuery = "select fr2.dst_person_id from socialnet.friendship as fr2 " +
+                "right join (" +
+                "select * from socialnet.friendship as fr " +
+                "where fr.src_person_id = {0} and fr.status_id = {1}" +
+                ") as fr3 " +
+                "on fr2.src_person_id = fr3.dst_person_id " +
+                "where fr2.status_id = {1} " +
+                "and fr2.dst_person_id <> {0}";
+        return (List<Integer>) dsl.resultQuery(sqlQuery, id.toString(), friendStatus.getNumber().toString()).fetch(0);
     }
 }
