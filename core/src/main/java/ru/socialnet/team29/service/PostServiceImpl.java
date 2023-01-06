@@ -60,6 +60,7 @@ public class PostServiceImpl implements PostService {
     PostDto oldPost = findPostById(postId);
     PostDto newPost = PostDto.builder()
             .id(postId)
+            .authorId(oldPost.getAuthorId())
             .title(postPayload.getTitle())
             .postText(postPayload.getPostText())
             .tags(postPayload.getTags())

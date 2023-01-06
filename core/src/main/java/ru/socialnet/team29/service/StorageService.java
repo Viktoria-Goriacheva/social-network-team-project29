@@ -9,14 +9,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.socialnet.team29.config.CloudinaryConfig;
+import ru.socialnet.team29.dto.StorageImageDto;
 import ru.socialnet.team29.exception.IoException;
 import ru.socialnet.team29.model.Person;
-import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class StorageService {
 
 
     @SneakyThrows
-    public String uploadFileToPost(MultipartFile imageFile) throws IoException {
+    public StorageImageDto uploadFileToPost(MultipartFile imageFile) throws IoException {
         log.info("Попытка загрузить фото в пост!");
         File uploadedFile = null;
         Cloudinary cloudinary = cloudinaryConfig.initCloudinary();
@@ -63,7 +64,9 @@ public class StorageService {
 
 
         log.info("Файл загружен");
-        return uploadResult.get("url").toString();
+        return StorageImageDto.builder()
+                .imagePath(uploadResult.get("url").toString())
+                .build();
 
     }
 
