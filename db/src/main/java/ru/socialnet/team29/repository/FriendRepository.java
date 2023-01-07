@@ -176,7 +176,9 @@ public class FriendRepository {
                 ") as fr3 " +
                 "on fr2.src_person_id = fr3.dst_person_id " +
                 "where fr2.status_id = {1} " +
-                "and fr2.dst_person_id <> {0}";
+                "and fr2.dst_person_id <> {0} " +
+                "and not fr2.dst_person_id in(select fr.dst_person_id from socialnet.friendship as fr " +
+                "where fr.src_person_id = {0} and fr.status_id = {1})";
         return (List<Integer>) dsl.resultQuery(sqlQuery, id.toString(), friendStatus.getNumber().toString()).fetch(0);
     }
 }

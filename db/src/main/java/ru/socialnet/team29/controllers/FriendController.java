@@ -23,7 +23,7 @@ public class FriendController {
         return friendService.addFriendRequest(id, friendId);
     }
 
-    @PutMapping("/friends/approve")
+    @GetMapping("/friends/approve")
     Boolean approveFriendship(@RequestParam Integer id, @RequestParam Integer friendId) {
         log.info("Получили запрос от core - Одобрить друга => " + friendId);
         return friendService.approveFriendship(id, friendId);
@@ -73,7 +73,7 @@ public class FriendController {
         return friendService.getRecommendations(id);
     };
 
-    @PutMapping("/friends/block")
+    @GetMapping("/friends/block")
     Boolean blockFriend(@RequestParam Integer id, @RequestParam Integer friendId) {
         log.info("Получили запрос от core - на блокировку друга id=" + friendId);
         return friendService.blockFriend(id, friendId);

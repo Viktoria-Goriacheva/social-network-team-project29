@@ -13,6 +13,7 @@ import ru.socialnet.team29.serviceInterface.PersonService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person findMe() {
         log.info("Запрос данных моего профиля");
-        return ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson();
+        return getPersonFromSecurityContext();
     }
 
     @Override
@@ -57,12 +58,15 @@ public class PersonServiceImpl implements PersonService {
     private Person mergePersonAndPayload(Person me, AccountUpdatePayload payload) {
         me.setFirstName(payload.getFirstName());
         me.setLastName(payload.getLastName());
-        me.setBirthDate(payload.getBirthDate());
         me.setAbout(payload.getAbout());
         me.setCountry(payload.getCountry());
         me.setCity(payload.getCity());
         me.setPhone(payload.getPhone());
-        me.setPhoto(payload.getPhoto());
+        try {
+            me.setBirthDate(OffsetDateTime.parse(payload.getBirthDate()));
+        } catch (DateTimeParseException ex) {
+            me.setBirthDate(null);
+        }
         return me;
     }
 

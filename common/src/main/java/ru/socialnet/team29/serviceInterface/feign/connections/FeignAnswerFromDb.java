@@ -1,15 +1,14 @@
 package ru.socialnet.team29.serviceInterface.feign.connections;
 
-import java.util.List;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
-import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
+
+import java.util.List;
 
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {

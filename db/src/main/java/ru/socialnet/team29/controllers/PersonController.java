@@ -54,12 +54,12 @@ public class PersonController {
         return personService.findByPageableTerm(pageable);
     }
 
-    @PostMapping("/person/online")
+    @GetMapping("/person/online")
     public void setOnline(@RequestParam String email) {
         personService.setOnline(email);
     }
 
-    @PostMapping("/person/offline")
+    @GetMapping("/person/offline")
     public void setOffline(@RequestParam int id) {
         personService.setOffline(id);
     }
