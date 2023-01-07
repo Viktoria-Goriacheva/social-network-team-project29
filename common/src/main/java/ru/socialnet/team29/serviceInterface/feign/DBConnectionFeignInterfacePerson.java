@@ -32,10 +32,10 @@ public interface DBConnectionFeignInterfacePerson {
     @GetMapping(value = "/persons")
     List<Person> getAllPersons(@RequestBody Pageable pageable);
 
-    @PostMapping(value = "/person/online")
+    @GetMapping(value = "/person/online")
     void setOnLine(@RequestParam String email);
 
-    @PostMapping(value = "/person/offline")
+    @GetMapping(value = "/person/offline")
     void setOffline(@RequestParam int id);
 
     @GetMapping(value = "/person/exist")

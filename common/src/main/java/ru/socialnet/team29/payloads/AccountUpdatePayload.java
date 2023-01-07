@@ -11,9 +11,8 @@ public class AccountUpdatePayload {
     private String firstName;
     private String lastName;
     private String phone;
-    private OffsetDateTime birthDate;
+    private String birthDate;
     private String about;
     private String country;
     private String city;
-    private String photo;
 }

@@ -19,7 +19,7 @@ public interface DBConnectionFeignInterface {
     @GetMapping("/friends/request")
     Boolean addFriendRequest(@RequestParam Integer id, @RequestParam Integer friendId);
 
-    @PutMapping("/friends/approve")
+    @GetMapping("/friends/approve")
     Boolean approveFriendship(@RequestParam Integer id, @RequestParam Integer friendId);
 
     @PostMapping("/friends")
@@ -46,7 +46,7 @@ public interface DBConnectionFeignInterface {
     @GetMapping("/friends/recommendations")
     List<RecommendationFriendsDto> getRecommendations(@RequestParam Integer id);
 
-    @PutMapping("/friends/block")
+    @GetMapping("/friends/block")
     Boolean blockFriend(@RequestParam Integer id, @RequestParam Integer friendId);
 
     @GetMapping("/friends/blockFriendId")

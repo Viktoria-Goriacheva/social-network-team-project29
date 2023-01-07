@@ -49,14 +49,14 @@ public class AuthController {
         log.info("Попытка входа {}", person.getEmail());
         MessageAnswer answer = userRegister.jwtLogin(person);
         loginService.setCookieToAnswer(response, answer);
-//        personService.setOnLine(person.getEmail());
+        personService.setOnLine(person.getEmail());
         return new ResponseEntity<>(new AnswerWithTwoTokens(answer.getMessage(), ""), HttpStatus.OK);
     }
 
     @PostMapping(value = "/logout")
     public ResponseUserRegister handlerLogout(HttpServletRequest request) {
         log.info("Попытка выхода  {}", SecurityContextHolder.getContext().getAuthentication().getName());
-//        personService.setOffLine(personService.getMyId());
+        personService.setOffLine(personService.getMyId());
         logoutService.logout(request);
         return new ResponseUserRegister("", System.currentTimeMillis(), new MessageAnswer("ok"));
     }
