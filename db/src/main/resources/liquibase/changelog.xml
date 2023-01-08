@@ -27,4 +27,5 @@
    <include file="structure/change_table_person2.xml" relativeToChangelogFile="true"/>
    <include file="structure/change_post_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/change_tables_to_timestamptz.xml" relativeToChangelogFile="true"/>
+   <include file="structure/change_like_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
