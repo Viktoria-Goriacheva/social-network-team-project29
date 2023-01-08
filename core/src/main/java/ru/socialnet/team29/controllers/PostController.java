@@ -49,4 +49,40 @@ public class PostController {
   ResponseEntity<Boolean> deletePost(@PathVariable(value = "id") Integer id) {
     return new ResponseEntity<>(postService.deletePost(id), HttpStatus.OK);
   }
+
+  /**
+   * Добавление лайка к посту
+   */
+  @PostMapping(value = "/{id}/like")
+  ResponseEntity<Void> addLikeToPost(@PathVariable(value = "id") Integer id) {
+    return new ResponseEntity<>(postService.addLikeToPost(id));
+  }
+
+  /**
+   * Удаление лайка от поста
+   */
+  @DeleteMapping(value = "/{id}/like")
+  ResponseEntity<Void> deleteLikeFromPost(@PathVariable(value = "id") Integer id) {
+    return new ResponseEntity<>(postService.deleteLikeFromPost(id));
+  }
+
+  /**
+   * Добавление лайка к комментарию
+   */
+  @PostMapping(value = "/{id}/comment/{commentId}/like")
+  ResponseEntity<Void> addLikeToPostComment(
+          @PathVariable(value = "id") Integer id,
+          @PathVariable(value = "commentId") Integer commentId) {
+    return new ResponseEntity<>(postService.addLikeToPostComment(id, commentId));
+  }
+
+  /**
+   * Удаление лайка комментария
+   */
+  @DeleteMapping(value = "/{id}/comment/{commentId}/like")
+  ResponseEntity<Void> deleteLikeFromPostComment(
+          @PathVariable(value = "id") Integer id,
+          @PathVariable(value = "commentId") Integer commentId) {
+    return new ResponseEntity<>(postService.deleteLikeFromPostComment(id, commentId));
+  }
 }

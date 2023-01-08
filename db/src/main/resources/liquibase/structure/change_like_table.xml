@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="change-like-table" author="Nedovizin">
+        <addColumn schemaName="socialnet" tableName="post_like">
+            <column name="comment_id" type="integer" remarks="идентификатор комментария поста"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

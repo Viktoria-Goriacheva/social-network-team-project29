@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.PagePostResponse;
+import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.model.Sort;
@@ -122,6 +124,92 @@ public class PostServiceImpl implements PostService {
         .build();
 
     return pagePostResponse;
+  }
+
+  @Override
+  public HttpStatus addLikeToPost(Integer id) {
+    if (id != null) {
+      log.info("Like to post id=" + id.toString());
+      Integer personId = personService.getIdPersonFromSecurityContext();
+      PostLikeDto postLikeDto = PostLikeDto.builder()
+              .postId(id)
+              .personId(personId)
+              .build();
+      boolean isAppendLike = feignInterface.addLikeToPost(postLikeDto);
+      if (!isAppendLike) {
+        log.info("The post is not liked");
+        return HttpStatus.BAD_REQUEST;
+      }
+    } else {
+      log.info("The post id=null");
+      return HttpStatus.BAD_REQUEST;
+    }
+    return HttpStatus.CREATED;
+  }
+
+  @Override
+  public HttpStatus deleteLikeFromPost(Integer id) {
+    if (id != null) {
+      log.info("Delete like from post id=" + id.toString());
+      int personId = personService.getIdPersonFromSecurityContext();
+      PostLikeDto postLikeDto = PostLikeDto.builder()
+              .postId(id)
+              .personId(personId)
+              .build();
+      boolean isRemovedLike = feignInterface.deleteLikeFromPost(postLikeDto);
+      if (!isRemovedLike) {
+        log.info("Like is not deleted from the post");
+        return HttpStatus.BAD_REQUEST;
+      }
+    } else {
+      log.info("The post id=null");
+      return HttpStatus.BAD_REQUEST;
+    }
+    return HttpStatus.CREATED;
+  }
+
+  @Override
+  public HttpStatus addLikeToPostComment(Integer id, Integer commentId) {
+    if (id != null && commentId != null) {
+      log.info("Like to post id=" + id.toString() + ", comment id=" + commentId.toString());
+      int personId = personService.getIdPersonFromSecurityContext();
+      PostLikeDto postLikeDto = PostLikeDto.builder()
+              .postId(id)
+              .personId(personId)
+              .commentId(commentId)
+              .build();
+      boolean isAppendLike = feignInterface.addLikeToPostComment(postLikeDto);
+      if (!isAppendLike) {
+        log.info("The comment is not liked");
+        return HttpStatus.BAD_REQUEST;
+      }
+    } else {
+      log.info("The post id=null or comment id=null");
+      return HttpStatus.BAD_REQUEST;
+    }
+    return HttpStatus.CREATED;
+  }
+
+  @Override
+  public HttpStatus deleteLikeFromPostComment(Integer id, Integer commentId) {
+    if (id != null) {
+      log.info("Delete like from post id=" + id.toString() + ", comment id=" + commentId.toString());
+      int personId = personService.getIdPersonFromSecurityContext();
+      PostLikeDto postLikeDto = PostLikeDto.builder()
+              .postId(id)
+              .personId(personId)
+              .commentId(commentId)
+              .build();
+      boolean isRemovedLike = feignInterface.deleteLikeFromPostComment(postLikeDto);
+      if (!isRemovedLike) {
+        log.info("Like is not deleted from the comment");
+        return HttpStatus.BAD_REQUEST;
+      }
+    } else {
+      log.info("The post id=null or comment id=null");
+      return HttpStatus.BAD_REQUEST;
+    }
+    return HttpStatus.CREATED;
   }
 
   private boolean setLast(int totalPage, int page) {

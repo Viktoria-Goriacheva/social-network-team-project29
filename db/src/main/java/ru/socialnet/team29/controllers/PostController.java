@@ -4,7 +4,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.model.PostDto;
+import ru.socialnet.team29.services.PostLikeService;
 import ru.socialnet.team29.services.PostService;
 
 @RestController
@@ -13,6 +15,7 @@ import ru.socialnet.team29.services.PostService;
 public class PostController {
 
   private final PostService postService;
+  private final PostLikeService postLikeService;
 
   @GetMapping("/posts")
   public List<PostDto> getPostsById(@RequestParam String email) {
@@ -42,5 +45,29 @@ public class PostController {
   public Boolean deletePost(@RequestParam Integer id) {
     log.info("Удаляем пост Id={}", id);
     return postService.deletePost(id);
+  }
+
+  @PostMapping(value = "/post/like")
+  Boolean addLikeToPost(@RequestBody PostLikeDto postLikeDto) {
+    log.info("Получили запрос от core - добавить лайк к посту id=" + postLikeDto.getPostId());
+    return postLikeService.addLikeToPost(postLikeDto);
+  }
+
+  @DeleteMapping(value = "/post/like")
+  Boolean deleteLikeFromPost(@RequestBody PostLikeDto postLikeDto) {
+    log.info("Получили запрос от core - убрать лайк с поста id=" + postLikeDto.getPostId());
+    return postLikeService.deleteLikeFromPost(postLikeDto);
+  }
+
+  @PostMapping(value = "/post/comment/like")
+  Boolean addLikeToPostComment(@RequestBody PostLikeDto postLikeDto) {
+    log.info("Получили запрос от core - добавить лайк к комменту (id=" + postLikeDto.getCommentId() + ") поста id=" + postLikeDto.getPostId());
+    return postLikeService.addLikeToPostComment(postLikeDto);
+  }
+
+  @DeleteMapping(value = "/post/comment/like")
+  Boolean deleteLikeFromPostComment(@RequestBody PostLikeDto postLikeDto) {
+    log.info("Получили запрос от core - убрать лайк с коммента (id=" + postLikeDto.getCommentId() + ") поста id=" + postLikeDto.getPostId());
+    return postLikeService.deleteLikeFromPostComment(postLikeDto);
   }
 }

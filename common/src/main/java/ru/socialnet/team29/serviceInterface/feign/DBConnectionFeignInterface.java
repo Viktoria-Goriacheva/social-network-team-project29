@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.Person;
@@ -63,4 +64,16 @@ public interface DBConnectionFeignInterface {
 
     @DeleteMapping(value = "/post")
     Boolean deletePost (@RequestParam Integer id);
+
+    @PostMapping(value = "/post/like")
+    Boolean addLikeToPost(@RequestBody PostLikeDto postLikeDto);
+
+    @DeleteMapping(value = "/post/like")
+    Boolean deleteLikeFromPost(@RequestBody PostLikeDto postLikeDto);
+
+    @PostMapping(value = "/post/comment/like")
+    Boolean addLikeToPostComment(@RequestBody PostLikeDto postLikeDto);
+
+    @DeleteMapping(value = "/post/comment/like")
+    Boolean deleteLikeFromPostComment(@RequestBody PostLikeDto postLikeDto);
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
@@ -92,6 +93,26 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public Boolean deletePost(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Boolean addLikeToPost(PostLikeDto postLikeDto) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteLikeFromPost(PostLikeDto postLikeDto) {
+        return null;
+    }
+
+    @Override
+    public Boolean addLikeToPostComment(PostLikeDto postLikeDto) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteLikeFromPostComment(PostLikeDto postLikeDto) {
         return null;
     }
 }
