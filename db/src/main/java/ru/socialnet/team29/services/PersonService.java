@@ -57,7 +57,6 @@ public class PersonService implements PersonInterfaceDB {
     @Override
     public String findEmailByPersonId(String id) {
         return String.valueOf(personRepository.findEmailByPersonId(id));
-        // todo метод возвращает не то, что нужно?
     }
 
 

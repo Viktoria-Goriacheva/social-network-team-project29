@@ -6,16 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.Notification;
+import ru.socialnet.team29.domain.tables.records.NotificationRecord;
 import ru.socialnet.team29.model.NotificationCommon;
 import ru.socialnet.team29.services.DslContextCustom;
 
 import java.util.List;
 
 @Repository
-public class NotificationRepository
+public class NotificationRepository implements CrudRepository<NotificationRecord>
 {
 
-    private static DSLContext dsl;
+    private DSLContext dsl;
 
     @Autowired
     public void setDsl(@Lazy DSLContext dsl) {
@@ -47,4 +48,23 @@ public class NotificationRepository
     }
 
 
+    @Override
+    public int insert(NotificationRecord notificationRecord) {
+        return 0;
+    }
+
+    @Override
+    public NotificationRecord findById(int id) {
+        return null;
+    }
+
+    @Override
+    public NotificationRecord update(NotificationRecord notificationRecord) {
+        return null;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
+    }
 }
