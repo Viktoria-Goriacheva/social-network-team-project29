@@ -2,7 +2,8 @@ package ru.socialnet.team29.controllers;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,15 @@ import ru.socialnet.team29.answers_interface.CommonAnswer;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.Person;
-import ru.socialnet.team29.payloads.AccountUpdatePayload;
+import ru.socialnet.team29.payloads.*;
+import ru.socialnet.team29.responses.RestPageImpl;
 import ru.socialnet.team29.service.EmailService;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.service.FriendServiceImpl;
 import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.PersonService;
+
+import java.util.List;
 
 import java.util.HashMap;
 
@@ -49,14 +53,14 @@ public class AccountController {
         return new ResponseEntity<>(personService.deleteMe(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Person> getProfileById(@PathVariable(value = "id") Integer id) {
+    @GetMapping(value = "/{id}")    // ok
+    public ResponseEntity<Person> getProfileById(@PathVariable int id) {
         return new ResponseEntity<>(personService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<PageableObject> getAllProfiles(@RequestParam Pageable pageable) {
-        return new ResponseEntity<>(personService.findAll(pageable), HttpStatus.OK);
+    @GetMapping // сделано, нужно проверить
+    public ResponseEntity<Page<Person>> getAllProfiles(@RequestBody PageRequest pageRequest) {
+        return new ResponseEntity<>(personService.findAll(pageRequest), HttpStatus.OK);
     }
 
     @PostMapping
@@ -64,8 +68,43 @@ public class AccountController {
         return new ResponseEntity<>(personService.saveNewProfile(person), HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<AnswerListFriendsForPerson<FriendForFront>> getFriendsByIdPerson(@RequestParam HashMap<String,String> params) {
-        return new ResponseEntity<>(friendService.getAllFriendsForPerson(params), HttpStatus.OK) ;
+    @GetMapping(value = "/search")
+    public ResponseEntity<RestPageImpl<Person>> searchProfile(
+            @RequestParam(defaultValue = "") String author,
+            @RequestParam(defaultValue = "") String firstName,
+            @RequestParam(defaultValue = "") String lastName,
+            @RequestParam(defaultValue = "") String city,
+            @RequestParam(defaultValue = "") String country,
+            @RequestParam(defaultValue = "0") int ageTo,
+            @RequestParam(defaultValue = "0") int ageFrom,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page) {
+        AccountSearchPayload searchPayload = AccountSearchPayload.builder()
+                .author(author)
+                .firstName(firstName)
+                .lastName(lastName)
+                .city(city)
+                .country(country)
+                .ageFrom(ageFrom)
+                .ageTo(ageTo)
+                .size(size)
+                .page(page)
+                .build();
+        return new ResponseEntity<>(personService.searchByPayload(searchPayload), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/searchByFilter") // неизвестно, где этот запрос используется, поэтому работает некорректно
+    public ResponseEntity<Page<Person>> searchByFilter(@RequestBody AccountSearchFilter searchFilter) {
+        return new ResponseEntity<>(personService.searchByFilter(searchFilter), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/ids") // список id всех аккаунтов
+    public ResponseEntity<List<Integer>> getProfileIds() {
+        return new ResponseEntity<>(personService.findAllIds(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/accountIds") // сделано, надо проверить
+    public ResponseEntity<Page<Person>> getProfilesByIds(@RequestBody Integer[] ids, PageRequest pageRequest) {
+        return new ResponseEntity<>(personService.findAllByIds(ids, pageRequest), HttpStatus.OK);
     }
 }

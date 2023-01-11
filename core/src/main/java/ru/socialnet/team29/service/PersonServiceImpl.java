@@ -2,18 +2,22 @@ package ru.socialnet.team29.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.payloads.AccountSearchFilter;
+import ru.socialnet.team29.payloads.AccountSearchPayload;
 import ru.socialnet.team29.payloads.AccountUpdatePayload;
+import ru.socialnet.team29.responses.RestPageImpl;
 import ru.socialnet.team29.security.CoreUserDetails;
 import ru.socialnet.team29.serviceInterface.PersonService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -50,24 +54,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person updateMe(AccountUpdatePayload payload) {
         log.info("Запрос на обновление данных профиля");
-        Person me = mergePersonAndPayload(findMe(), payload);
+        Person me = findMe();
+        BeanUtils.copyProperties(payload, me);
         me.setUpdatedOn(OffsetDateTime.now());
         return feignInterface.updatePerson(me);
-    }
-
-    private Person mergePersonAndPayload(Person me, AccountUpdatePayload payload) {
-        me.setFirstName(payload.getFirstName());
-        me.setLastName(payload.getLastName());
-        me.setAbout(payload.getAbout());
-        me.setCountry(payload.getCountry());
-        me.setCity(payload.getCity());
-        me.setPhone(payload.getPhone());
-        try {
-            me.setBirthDate(OffsetDateTime.parse(payload.getBirthDate()));
-        } catch (DateTimeParseException ex) {
-            me.setBirthDate(null);
-        }
-        return me;
     }
 
     @Override
@@ -88,9 +78,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PageableObject findAll(Pageable pageable) {
-        List<Person> allPersons = feignInterface.getAllPersons(pageable);
-        return new PageableObject();
+    public Page<Person> findAll(PageRequest pageRequest) {
+        return feignInterface.getAllPersons(pageRequest);
     }
 
     @Override
@@ -117,5 +106,26 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void setOffLine(int id) {
         feignInterface.setOffline(id);
+    }
+
+    @Override
+    public List<Integer> findAllIds() {
+        return feignInterface.getAllIds();
+    }
+
+    @Override
+    public Page<Person> findAllByIds(Integer[] ids, PageRequest pageRequest) {
+        return feignInterface.getAllPersonsByIds(Arrays.asList(ids), pageRequest);
+    }
+
+    @Override
+    public Page<Person> searchByFilter(AccountSearchFilter searchFilter) {
+        return feignInterface.getPersonsBySearchFilter(searchFilter);
+    }
+
+    @Override
+    public RestPageImpl<Person> searchByPayload(AccountSearchPayload searchPayload) {
+        log.info("запрос списка профилей по параметрам поиска: {}", searchPayload);
+        return feignInterface.getPersonsBySearchPayload(searchPayload);
     }
 }

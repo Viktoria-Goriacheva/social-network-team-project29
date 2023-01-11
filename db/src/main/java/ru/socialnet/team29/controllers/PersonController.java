@@ -2,12 +2,16 @@ package ru.socialnet.team29.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.payloads.AccountSearchFilter;
+import ru.socialnet.team29.payloads.AccountSearchPayload;
 import ru.socialnet.team29.services.PersonService;
 
 import java.util.List;
@@ -50,8 +54,8 @@ public class PersonController {
 
     @GetMapping("/persons")
     // параметр запроса
-    public List<Person> getAllPersons(@RequestBody Pageable pageable) {
-        return personService.findByPageableTerm(pageable);
+    public Page<Person> getAllPersons(@RequestBody PageRequest pageRequest) {
+        return personService.findByPageRequest(pageRequest);
     }
 
     @GetMapping("/person/online")
@@ -68,4 +72,25 @@ public class PersonController {
     boolean isRegisteredMail(@RequestParam String email) {
         return personService.isRegisteredMail(email);
     }
+
+    @GetMapping(value = "/person/accountIds")
+    Page<Person> getAllPersonsByIds(@RequestBody List<Integer> ids, PageRequest pageRequest) {
+        return personService.getPersonsByIds(ids, pageRequest);
+    }
+
+    @PostMapping(value = "/person/filter")
+    Page<Person> getPersonsBySearchFilter(AccountSearchFilter searchFilter) {
+        return personService.findByFilter(searchFilter);
+    }
+
+    @GetMapping(value = "person/ids")
+    List<Integer> getAllPersonIds() {
+        return personService.getAllPersonIds();
+    }
+
+    @PostMapping(value = "/person/search")
+    PageImpl<Person> getPersonsBySearchPayload(@RequestBody AccountSearchPayload searchPayload){
+        return personService.findBySearchPayload(searchPayload);
+    }
+
 }
