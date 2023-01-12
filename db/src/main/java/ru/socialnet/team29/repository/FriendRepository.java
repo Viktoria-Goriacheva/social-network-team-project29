@@ -10,10 +10,13 @@ import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.domain.tables.Friendship;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.model.enums.FriendshipStatus;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.jooq.impl.DSL.val;
 
 @Repository
 @Slf4j
@@ -83,24 +86,19 @@ public class FriendRepository {
 
     /**
      * Получение списка записей о друзьях из БД
-     * @param id идентификатор персоны
-     * @param statusName представление статуса дружбы
-     * @param pageable объект настройки пагинации FriendPageable
      * @return список персон согласно статусу дружбы
      */
-    public List<FriendshipRecord> getFriendsByIdPerson(
-            Integer id,
-            String statusName,
-            AnswerListFriendsForPerson.FriendPageable pageable) {
-        var statusFRIEND = FriendshipStatus.valueOf(statusName);
+    public List<FriendshipRecord> getFriendsByIdPerson(AnswerListFriendsForPerson<PersonSearchDto> params) {
+        var statusFRIEND = FriendshipStatus.valueOf(params.getContent().get(0).getStatusCode());
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
-                        friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString())
-                                .and(friendship.SRC_PERSON_ID.eq(id.toString())))
+                        friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString()).or(val(params.getContent().get(0).getStatusCode()).eq("NONE")),
+                        friendship.SRC_PERSON_ID.eq(params.getId().toString())
+                )
                 .orderBy(friendship.DST_PERSON_ID)
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
+                .limit(params.getPageable().getPageSize())
+                .offset(params.getPageable().getOffset())
                 .fetchInto(FriendshipRecord.class);
     }
 

@@ -28,5 +28,5 @@ public class FriendSearchDto {
     @Builder.Default
     private Integer ageFrom = 0;
     @Builder.Default
-    private String statusCode = "None";
+    private String statusCode = "NONE";
 }

@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
@@ -25,9 +26,7 @@ public interface DBConnectionFeignInterface {
 
     @PostMapping("/friends")
     AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(
-            @RequestParam Integer id,
-            @RequestParam String statusName,
-            @RequestBody AnswerListFriendsForPerson.FriendPageable pageable);
+            @RequestBody AnswerListFriendsForPerson<PersonSearchDto> params);
 
     @DeleteMapping("/friends")
     Boolean deleteFriendship(@RequestParam Integer id, @RequestParam Integer friendId);

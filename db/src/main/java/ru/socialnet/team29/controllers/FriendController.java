@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.services.FriendService;
@@ -30,11 +31,9 @@ public class FriendController {
     }
 
     @PostMapping("/friends")
-    AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(@RequestParam Integer id,
-                                                                    @RequestParam String statusName,
-                                                                    @RequestBody AnswerListFriendsForPerson.FriendPageable pageable) {
-        log.info("Получили запрос от core - получить всех друзей => " + id.toString() + " со статусом " + statusName);
-        return friendService.getFriendsByIdPerson(id, statusName, pageable);
+    AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(@RequestBody AnswerListFriendsForPerson<PersonSearchDto> params) {
+        log.info("Получили запрос от core - получить всех друзей => " + params.getId().toString());
+        return friendService.getFriendsByIdPerson(params);
     }
 
     @GetMapping("/friends/exists")
