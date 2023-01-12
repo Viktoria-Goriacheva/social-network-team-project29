@@ -10,9 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.socialnet.team29.domain.tables.Person;
+import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
+import ru.socialnet.team29.dto.PersonSearchDto;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+
+import static org.jooq.impl.DSL.val;
 
 
 @Repository
@@ -85,6 +90,28 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .where(Person.PERSON.ID.equalIgnoreCase(id))
             .fetchOne()
             .getId();
+  }
+
+  public List<PersonRecord> findByIdListAndFilter(List<Integer> ids, PersonSearchDto filter) {
+    Person person = Person.PERSON;
+    return dsl.selectFrom(person)
+            .where(
+                    person.ID.in(ids),
+                    (val(filter.getFirstName()).isNull())
+                            .or(person.FIRST_NAME.eq(filter.getFirstName())),
+                    (val(filter.getBirthDateFrom()).isNull())
+                            .or(person.BIRTH_DATE.ge(OffsetDateTime.parse(filter.getBirthDateFrom()))),
+                    (val(filter.getBirthDateTo()).isNull())
+                            .or(person.BIRTH_DATE.le(OffsetDateTime.parse(filter.getBirthDateTo()))),
+                    (val(filter.getCity()).isNull())
+                            .or(person.CITY.eq(filter.getCity())),
+                    (val(filter.getCountry()).isNull())
+                            .or(person.COUNTRY.eq(filter.getCountry()))
+            )
+            .orderBy(person.FIRST_NAME)
+            .limit(filter.getSize())
+            .offset(filter.getPage() - 1)
+            .fetchInto(PersonRecord.class);
   }
 
   @Transactional(readOnly = true)

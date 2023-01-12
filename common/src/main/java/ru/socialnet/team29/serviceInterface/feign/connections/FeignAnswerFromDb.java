@@ -4,8 +4,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
+import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
@@ -29,10 +31,8 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
     }
 
     @Override
-    public AnswerListFriendsForPerson getFriendsByIdPerson(
-            Integer id,
-            String statusName,
-            AnswerListFriendsForPerson.FriendPageable pageable) {
+    public AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(
+            AnswerListFriendsForPerson<PersonSearchDto> params) {
         return null;
     }
 

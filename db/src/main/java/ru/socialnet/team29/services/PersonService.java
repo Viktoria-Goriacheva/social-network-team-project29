@@ -6,6 +6,7 @@ import org.jooq.Condition;
 import org.jooq.exception.NoDataFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.interfaceDb.PersonInterfaceDB;
 import ru.socialnet.team29.repository.PersonRepository;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
@@ -108,6 +109,11 @@ public class PersonService implements PersonInterfaceDB {
         List<PersonRecord> result = new ArrayList<>();
         ids.forEach(id-> result.add(personRepository.findById(id)));
         return result;
+    }
+
+    public List<PersonRecord> findByIdListAndFilter(List<Integer> ids, PersonSearchDto filter) {
+        log.info("Запрос списка аккаунтов {} по фильтру", ids);
+        return personRepository.findByIdListAndFilter(ids, filter);
     }
 
     public boolean isExist(int id) {

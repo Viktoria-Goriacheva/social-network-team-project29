@@ -6,14 +6,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.answers_interface.CommonAnswer;
+import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.AccountUpdatePayload;
 import ru.socialnet.team29.service.EmailService;
 import ru.socialnet.team29.payloads.ContactConfirmationPayload;
+import ru.socialnet.team29.service.FriendServiceImpl;
 import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.PersonService;
+
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -21,6 +26,7 @@ import ru.socialnet.team29.serviceInterface.PersonService;
 public class AccountController {
     private final PersonService personService;
     private final EmailService mailService;
+    private final FriendServiceImpl friendService;
 
     @GetMapping("/me") // ok
     public ResponseEntity<Person> getProfile() {
@@ -56,5 +62,10 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<Integer> saveNewProfile(@RequestBody Person person) {
         return new ResponseEntity<>(personService.saveNewProfile(person), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<AnswerListFriendsForPerson<FriendForFront>> getFriendsByIdPerson(@RequestParam HashMap<String,String> params) {
+        return new ResponseEntity<>(friendService.getAllFriendsForPerson(params), HttpStatus.OK) ;
     }
 }
