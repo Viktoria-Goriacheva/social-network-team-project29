@@ -7,8 +7,13 @@ import lombok.Getter;
 @Getter
 public enum NotificationType {
     
-    Post(1, "POST"), POST_COMMENT(2, "POST_COMMENT"),COMMENT_COMMENT(3, "COMMENT_COMMENT"),
-    FRIEND_REQUEST(4, "FRIEND_REQUEST"),MESSAGE(5, "MESSAGE");
+    POST(1, "POST"),
+    POST_COMMENT(2, "POST_COMMENT"),
+    COMMENT_COMMENT(3, "COMMENT_COMMENT"),
+    FRIEND_REQUEST(4, "FRIEND_REQUEST"),
+    MESSAGE(5, "MESSAGE"),
+    FRIEND_BIRTHDAY(6, "FRIEND_BIRTHDAY"),
+    SEND_EMAIL_MESSAGE(7, "SEND_EMAIL_MESSAGE");
     private int number;
     private String value;
 

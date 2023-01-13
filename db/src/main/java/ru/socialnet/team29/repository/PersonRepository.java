@@ -43,7 +43,7 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .fetchOne();
   }
 
-  @Deprecated
+
   public List<PersonRecord> findAll(Condition condition) {
     return dsl.selectFrom(Person.PERSON)
             .where(condition)
@@ -80,11 +80,11 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .fetchOne();
   }
 
-  public Integer findEmailByPersonId(String id) { //todo вероятно должен возвращаться String email
+  public String findEmailByPersonId(String id) {
     return dsl.selectFrom(Person.PERSON)
             .where(Person.PERSON.ID.equalIgnoreCase(id))
             .fetchOne()
-            .getId();
+            .getEmail();
   }
 
   @Transactional(readOnly = true)

@@ -28,5 +28,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataBaseException.class)
+    public ResponseEntity<String> getCustomException(DataBaseException ex) {
+        String message = "Exception in class => " + ex.getClassException() + ": " + ex.getMessage() + ". " + ex.getException().getLocalizedMessage();
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
 
 }

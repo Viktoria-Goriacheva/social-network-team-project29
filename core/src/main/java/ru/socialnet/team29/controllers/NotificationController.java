@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.*;
 import ru.socialnet.team29.model.enums.NotificationType;
 import ru.socialnet.team29.payloads.AddNotificationPayload;
+import ru.socialnet.team29.payloads.ChangeNotificationSettingsPayload;
 import ru.socialnet.team29.service.PersonServiceImpl;
 import ru.socialnet.team29.serviceInterface.NotificationService;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -39,7 +41,7 @@ public class NotificationController {
         log.info("Получаем запрос от фронта на вывод всех уведомлений для  " + SecurityContextHolder.getContext().getAuthentication().getName());
         int id = personService.getIdPersonFromSecurityContext();
         List<NotificationForFront> listNotifications = notificationService.getAllNotificationsForPerson(id);
-        return  new ResponseEntity<>(new AnswerListAllNotificationsForPerson(LocalDateTime.now(),listNotifications), HttpStatus.OK) ;
+        return new ResponseEntity<>(new AnswerListAllNotificationsForPerson(LocalDateTime.now(), listNotifications), HttpStatus.OK);
     }
 
     @PostMapping(value = "/notifications")
@@ -48,6 +50,18 @@ public class NotificationController {
         payload.setNotificationTypeId(NotificationType.valueOf(payload.getNotificationType()).getNumber());
         return new ResponseEntity<>(notificationService.addNewNotification(payload),
                 HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/notifications/settings")
+    public ResponseEntity<DataNotificationSettings> getNotificationsSettings() {
+        DataNotificationSettings dataNotificationSettings = notificationService.getSettings();
+        return new ResponseEntity<>(dataNotificationSettings, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/notifications/settings")
+    public ResponseEntity<Integer> changeSettings(@RequestBody ChangeNotificationSettingsPayload payload){
+       int res = notificationService.changeNotificationSettingsStatus(payload);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 }
