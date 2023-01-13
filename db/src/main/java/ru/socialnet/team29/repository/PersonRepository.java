@@ -114,28 +114,6 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
             .fetchInto(PersonRecord.class);
   }
 
-  public List<PersonRecord> findByIdListAndFilter(List<Integer> ids, PersonSearchDto filter) {
-    Person person = Person.PERSON;
-    return dsl.selectFrom(person)
-            .where(
-                    person.ID.in(ids),
-                    (val(filter.getFirstName()).isNull())
-                            .or(person.FIRST_NAME.eq(filter.getFirstName())),
-                    (val(filter.getBirthDateFrom()).isNull())
-                            .or(person.BIRTH_DATE.ge(OffsetDateTime.parse(filter.getBirthDateFrom()))),
-                    (val(filter.getBirthDateTo()).isNull())
-                            .or(person.BIRTH_DATE.le(OffsetDateTime.parse(filter.getBirthDateTo()))),
-                    (val(filter.getCity()).isNull())
-                            .or(person.CITY.eq(filter.getCity())),
-                    (val(filter.getCountry()).isNull())
-                            .or(person.COUNTRY.eq(filter.getCountry()))
-            )
-            .orderBy(person.FIRST_NAME)
-            .limit(filter.getSize())
-            .offset(filter.getPage() - 1)
-            .fetchInto(PersonRecord.class);
-  }
-
   @Transactional(readOnly = true)
   public List<PersonRecord> findByPageableTerm(Pageable pageable) {
     return null;

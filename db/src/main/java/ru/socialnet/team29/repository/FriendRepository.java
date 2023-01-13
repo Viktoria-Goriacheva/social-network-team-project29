@@ -2,8 +2,7 @@ package ru.socialnet.team29.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.*;
-import org.jooq.Record;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -86,14 +85,15 @@ public class FriendRepository {
 
     /**
      * Получение списка записей о друзьях из БД
-     * @return список персон согласно статусу дружбы
+     * @param params параметры отбора
+     * @return список персон согласно статусу дружбы и параметрам отбора
      */
     public List<FriendshipRecord> getFriendsByIdPerson(AnswerListFriendsForPerson<PersonSearchDto> params) {
-        var statusFRIEND = FriendshipStatus.valueOf(params.getContent().get(0).getStatusCode());
+        FriendshipStatus friendshipStatus = FriendshipStatus.valueOf(params.getContent().get(0).getStatusCode());
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
-                        friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString()).or(val(params.getContent().get(0).getStatusCode()).eq("NONE")),
+                        friendship.STATUS_ID.eq(friendshipStatus.getNumber().toString()).or(val(params.getContent().get(0).getStatusCode()).eq("NONE")),
                         friendship.SRC_PERSON_ID.eq(params.getId().toString())
                 )
                 .orderBy(friendship.DST_PERSON_ID)
@@ -165,6 +165,11 @@ public class FriendRepository {
     }
 
 
+    /**
+     * Получить список идентификаторов рекомендованных друзей. Отбираются идентификаторы друзей друзей
+     * @param id идентификатор персоны
+     * @return список идентификаторов рекомендованных друзей
+     */
     public List<Integer> getRecommendations(Integer id) {
         FriendshipStatus friendStatus = FriendshipStatus.FRIEND;
         String sqlQuery = "select fr2.dst_person_id from socialnet.friendship as fr2 " +
