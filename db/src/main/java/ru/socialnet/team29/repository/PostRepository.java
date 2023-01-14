@@ -54,18 +54,11 @@ public class PostRepository implements CrudRepository<PostTableRecord> {
                 .execute() == 1;
     }
 
-    public List<PostTableRecord> findAllByAuthorId(Integer id) {
-        return dsl.selectFrom(PostTable.POST_TABLE)
-                .where(PostTable.POST_TABLE.AUTHOR_ID.eq(id))
-                .and(PostTable.POST_TABLE.IS_BLOCKED.eq(false))
-                .and(PostTable.POST_TABLE.IS_DELETE.eq(false))
-                .orderBy(PostTable.POST_TABLE.TIME.desc())
-                .fetch();
-    }
-
     public List<Integer> findPostIdsByAuthor(Integer authorId) {
         return dsl.selectFrom(PostTable.POST_TABLE)
                 .where(PostTable.POST_TABLE.AUTHOR_ID.eq(authorId))
+                .and(PostTable.POST_TABLE.IS_BLOCKED.eq(false))
+                .and(PostTable.POST_TABLE.IS_DELETE.eq(false))
                 .orderBy(PostTable.POST_TABLE.TIME.desc())
                 .fetch()
                 .getValues(PostTable.POST_TABLE.ID);

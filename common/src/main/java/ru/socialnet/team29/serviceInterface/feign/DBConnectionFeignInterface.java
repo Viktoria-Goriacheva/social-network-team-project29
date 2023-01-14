@@ -16,7 +16,7 @@ import ru.socialnet.team29.model.PostDto;
 public interface DBConnectionFeignInterface {
 
     @GetMapping(value = "/posts")
-    List<PostDto> getPostDto(@RequestParam String email);
+    List<PostDto> getPostDto(@RequestParam String email,@RequestParam Integer accountIds);
 
     @GetMapping("/friends/request")
     Boolean addFriendRequest(@RequestParam Integer id, @RequestParam Integer friendId);

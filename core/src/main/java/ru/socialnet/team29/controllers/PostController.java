@@ -20,13 +20,14 @@ public class PostController {
 
   @GetMapping
   public ResponseEntity<PagePostResponse> getPost(
-      @RequestParam(value = "withFriends", required = false, defaultValue = "true") boolean withFriends,
+      @RequestParam(value = "withFriends", required = false, defaultValue = "false") boolean withFriends,
       @RequestParam(value = "sort", required = false, defaultValue = "time,desc") String sort,
       @RequestParam(value = "isDelete", required = false, defaultValue = "false") boolean isDelete,
       @RequestParam(value = "size", required = false, defaultValue = "3") int size,
+      @RequestParam(value = "accountIds", required = false, defaultValue = "0") Integer accountIds,
       @RequestParam(value = "page", defaultValue = "1") int page) {
     return new ResponseEntity(
-        postService.getPosts(withFriends, sort, isDelete, size, page),
+        postService.getPosts(withFriends, sort, isDelete, size, accountIds, page),
         HttpStatus.OK);
   }
 

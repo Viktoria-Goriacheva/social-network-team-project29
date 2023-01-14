@@ -49,8 +49,8 @@ public class AccountController {
         return new ResponseEntity<>(personService.deleteMe(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")    // ?
-    public ResponseEntity<Person> getProfileById(@RequestParam Integer id) {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Person> getProfileById(@PathVariable(value = "id") Integer id) {
         return new ResponseEntity<>(personService.findById(id), HttpStatus.OK);
     }
 

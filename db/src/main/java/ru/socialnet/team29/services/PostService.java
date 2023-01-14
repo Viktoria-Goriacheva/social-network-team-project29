@@ -3,7 +3,9 @@ package ru.socialnet.team29.services;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,29 +29,46 @@ public class PostService {
   private final TagService tagService;
   private final Post2TagService post2TagService;
   private final PersonService personService;
+  private final FriendService friendService;
 
-  public List<PostDto> getPostsByAuthorEmail(String email) {
+  public List<PostDto> getPostsByAuthorEmail(String email, Integer accountIds) {
     Integer authorId = personService.getPersonByEmail(email).getId();
     List<PostDto> posts = new ArrayList<>();
-    List<Integer> ids = postRepository.findPostIdsByAuthor(authorId);
-    ids.forEach(id -> posts.add(getPostById(id)));
-    return posts;
+    List<Integer> ids;
+    List<Integer> idsFriend;
+    if (accountIds != 0) {
+      ids = postRepository.findPostIdsByAuthor(accountIds);
+      ids.forEach(id -> posts.add(getPostById(id)));
+    } else {
+      idsFriend = friendService.getIdsFriendsById(authorId);
+      idsFriend.add(authorId);
+      ids = idsFriend.stream().map(s -> postRepository.findPostIdsByAuthor(s)).collect(
+          ArrayList::new,
+          ArrayList::addAll,
+          ArrayList::addAll
+      );
+      ids.forEach(id -> posts.add(getPostById(id)));
+    }
+    return posts.stream().sorted(Comparator.comparing(PostDto::getTime).reversed()).collect(
+        Collectors.toList());
   }
 
   public Boolean addNewPost(PostDto postDto) {
     postDto.setId(postRepository.insert(postTableMapper.PostDtoToPostTableRecord(postDto)));
-    log.info("Добавлен новый пост id = {}",postDto.getId());
-    if (postDto.getTags() != null)
+    log.info("Добавлен новый пост id = {}", postDto.getId());
+    if (postDto.getTags() != null) {
       post2TagService.addPost2tags(postDto);
+    }
     postFileService.addImagePath(postDto);
-    return postDto.getId()>0;
+    return postDto.getId() > 0;
   }
 
   public PostDto getPostById(int postId) {
     checkPublishDate(postId);
     PostDto post = postTableMapper.PostTableRecordToPostDto(postRepository.findById(postId));
-    if (post.isDeleted())
-            return null;
+    if (post.isDeleted()) {
+      return null;
+    }
     post.setCommentsCount(commentService.getCountCommentsByPostId(postId));
     post.setTags(tagService.findAllTagsByPostId(postId));
     post.setLikeAmount(postLikeService.getCountLikeByPostId(postId));
@@ -69,15 +88,15 @@ public class PostService {
   }
 
   /**
-   * Проверка даты публикации поста, если публикация отложена.
-   * Если дата отложенной публикации в прошлом,
-   * то пост помечается как опубликованный
+   * Проверка даты публикации поста, если публикация отложена. Если дата отложенной публикации в
+   * прошлом, то пост помечается как опубликованный
+   *
    * @param id идентификатор поста
    */
   public void checkPublishDate(Integer id) {
     PostTableRecord post = postRepository.findById(id);
     if (post.getType().equals(PostType.QUEUED.name())
-            && post.getPublishdate().isBefore(OffsetDateTime.now())){
+        && post.getPublishdate().isBefore(OffsetDateTime.now())) {
       post.setType(PostType.POSTED.name());
       post.setPublishdate(null);
       postRepository.update(post);
