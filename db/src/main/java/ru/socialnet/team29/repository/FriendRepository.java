@@ -2,18 +2,20 @@ package ru.socialnet.team29.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.*;
-import org.jooq.Record;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.domain.tables.Friendship;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.model.enums.FriendshipStatus;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.jooq.impl.DSL.val;
 
 @Repository
 @Slf4j
@@ -83,24 +85,20 @@ public class FriendRepository {
 
     /**
      * Получение списка записей о друзьях из БД
-     * @param id идентификатор персоны
-     * @param statusName представление статуса дружбы
-     * @param pageable объект настройки пагинации FriendPageable
-     * @return список персон согласно статусу дружбы
+     * @param params параметры отбора
+     * @return список персон согласно статусу дружбы и параметрам отбора
      */
-    public List<FriendshipRecord> getFriendsByIdPerson(
-            Integer id,
-            String statusName,
-            AnswerListFriendsForPerson.FriendPageable pageable) {
-        var statusFRIEND = FriendshipStatus.valueOf(statusName);
+    public List<FriendshipRecord> getFriendsByIdPerson(AnswerListFriendsForPerson<PersonSearchDto> params) {
+        FriendshipStatus friendshipStatus = FriendshipStatus.valueOf(params.getContent().get(0).getStatusCode());
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
-                        friendship.STATUS_ID.eq(statusFRIEND.getNumber().toString())
-                                .and(friendship.SRC_PERSON_ID.eq(id.toString())))
+                        friendship.STATUS_ID.eq(friendshipStatus.getNumber().toString()).or(val(params.getContent().get(0).getStatusCode()).eq("NONE")),
+                        friendship.SRC_PERSON_ID.eq(params.getId().toString())
+                )
                 .orderBy(friendship.DST_PERSON_ID)
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
+                .limit(params.getPageable().getPageSize())
+                .offset(params.getPageable().getOffset())
                 .fetchInto(FriendshipRecord.class);
     }
 
@@ -167,6 +165,11 @@ public class FriendRepository {
     }
 
 
+    /**
+     * Получить список идентификаторов рекомендованных друзей. Отбираются идентификаторы друзей друзей
+     * @param id идентификатор персоны
+     * @return список идентификаторов рекомендованных друзей
+     */
     public List<Integer> getRecommendations(Integer id) {
         FriendshipStatus friendStatus = FriendshipStatus.FRIEND;
         String sqlQuery = "select fr2.dst_person_id from socialnet.friendship as fr2 " +

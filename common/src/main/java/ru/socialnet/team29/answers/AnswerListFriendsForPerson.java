@@ -3,6 +3,7 @@ package ru.socialnet.team29.answers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import ru.socialnet.team29.dto.PersonSearchDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AnswerListFriendsForPerson<T> {
     @Builder.Default
     private Integer totalPages = 0;
     private FriendPageable pageable;
+    private Integer id;
 
     @Data
     @AllArgsConstructor

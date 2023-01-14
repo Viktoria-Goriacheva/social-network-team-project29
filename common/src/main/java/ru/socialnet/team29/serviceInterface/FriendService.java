@@ -3,6 +3,7 @@ package ru.socialnet.team29.serviceInterface;
 import org.springframework.http.HttpStatus;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
 

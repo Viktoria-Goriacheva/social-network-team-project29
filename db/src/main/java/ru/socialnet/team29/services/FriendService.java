@@ -8,6 +8,7 @@ import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.dto.FriendSearchDto;
+import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.mappers.FriendMapperImpl;
 import ru.socialnet.team29.model.FriendForFront;
@@ -31,7 +32,7 @@ public class FriendService {
     private final FriendMapperImpl friendMapper;
 
     public Boolean addFriendRequest(Integer id, Integer friendId) {
-        boolean isExistsFriend = !personService.findAll(Person.PERSON.ID.eq(friendId)).isEmpty();
+        boolean isExistsFriend = personService.isExist(friendId);
         if (!isExistsFriend) {
             return false;
         }
@@ -53,7 +54,7 @@ public class FriendService {
     }
 
     public Boolean approveFriendship(Integer id, Integer friendId) {
-        boolean isExistsFriend = !personService.findAll(Person.PERSON.ID.eq(friendId)).isEmpty();
+        boolean isExistsFriend = personService.isExist(friendId);
         if (!isExistsFriend) {
             return false;
         }
@@ -74,24 +75,23 @@ public class FriendService {
         return newFriendshipId > 0;
     }
 
-    public AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(
-            Integer id,
-            String statusName,
-            AnswerListFriendsForPerson.FriendPageable pageable) {
-        List<FriendshipRecord> friendRecords =  friendRepository.getFriendsByIdPerson(id, statusName, pageable);
-        int totalFriendshipRecords = friendRepository.getCountOfFriends(id, statusName);
+    public AnswerListFriendsForPerson<FriendForFront> getFriendsByIdPerson(AnswerListFriendsForPerson<PersonSearchDto> params) {
+        String statusName = params.getContent().get(0).getStatusCode();
+        List<FriendshipRecord> friendRecords =  friendRepository.getFriendsByIdPerson(params);
+        int totalFriendshipRecords = friendRepository.getCountOfFriends(params.getId(), statusName);
         if (friendRecords == null) {
             return null;
         }
         List<PersonRecord> personRecords = new ArrayList<>();
         List<Integer> friendIds;
-        if (!statusName.equals("")) {
+        if (!statusName.equals("NONE")) {
             friendIds = friendRecords.stream()
                     .map(rec -> Integer.valueOf(rec.getDstPersonId())).toList();
-            personRecords = personService.findAll(Person.PERSON.ID.in(friendIds));
+            personRecords = personService.findByIdListAndFilter(friendIds, params.getContent().get(0));
         }
         var result = friendMapper.PersonRecordToFriendForFront(personRecords)
                 .stream().peek(friend -> friend.setStatusCode(statusName)).collect(Collectors.toList());
+        AnswerListFriendsForPerson.FriendPageable pageable = params.getPageable();
         int lastPageNumber = (int) Math.ceil(totalFriendshipRecords / pageable.getPageSize());
         return AnswerListFriendsForPerson.<FriendForFront>builder()
                 .totalElements(totalFriendshipRecords)
@@ -117,10 +117,6 @@ public class FriendService {
         return friendRepository.friendsByIdExists(id, friendId);
     }
 
-    public Integer getCountOfFriends(Integer id) {
-        return friendRepository.getCountOfFriends(id, "FRIEND");
-    }
-
     public Integer getCountOfRequestFrom(Integer id) {
         return friendRepository.getCountOfFriends(id, "REQUEST_FROM");
     }
@@ -134,7 +130,7 @@ public class FriendService {
     }
 
     public Boolean toSubscribe(Integer id, Integer friendId) {
-        boolean isExistsFriend = !personService.findAll(Person.PERSON.ID.eq(friendId)).isEmpty();
+        boolean isExistsFriend = personService.isExist(friendId);
         if (!isExistsFriend) {
             return false;
         }
@@ -148,7 +144,7 @@ public class FriendService {
 
     public List<RecommendationFriendsDto> getRecommendations(Integer id) {
         List<Integer> recommendationFriendsIds = friendRepository.getRecommendations(id);
-        List<PersonRecord> personRecords = personService.findAll(Person.PERSON.ID.in(recommendationFriendsIds));
+        List<PersonRecord> personRecords = personService.findByIdList(recommendationFriendsIds);
         return friendMapper.PersonRecordsToRecommendationFriendsDto(personRecords);
     }
 
