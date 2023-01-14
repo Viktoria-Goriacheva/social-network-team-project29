@@ -26,6 +26,7 @@ public class PostServiceImpl implements PostService {
 
   private final DBConnectionFeignInterface feignInterface;
   private final PersonService personService;
+  private static int newPage;
 
   @Override
   public Boolean addPost(PostPayload postPayload) {
@@ -90,7 +91,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public PagePostResponse getPosts(boolean withFriends, String sort, boolean isDelete,
-      int size, int page) {
+      int size, Integer accountIds, int page) {
     Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
         .ignoreCase(false).nullHandling("NATIVE").property("time").build();
     List<Sort> sortList = new ArrayList<>();
@@ -99,25 +100,25 @@ public class PostServiceImpl implements PostService {
         .unpaged(false)
         .paged(true)
         .sort(sortList)
-        .pageNumber(page)
+        .pageNumber(getPageNumber(page, accountIds))
         .pageSize(size)
-        .offset(page * size - 3)
+        .offset(getOffset(page, size, accountIds))
         .build();
     String emailAuth = SecurityContextHolder.getContext().getAuthentication().getName();
-    List<PostDto> postsDto = feignInterface.getPostDto(emailAuth);
+    List<PostDto> postsDto = feignInterface.getPostDto(emailAuth, accountIds);
     Integer totalElements = postsDto.size();
     Integer totalPage = getTotalPage(totalElements, size);
-    postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage);
+    postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage, accountIds);
 
     PagePostResponse pagePostResponse = PagePostResponse.builder()
         .content(postsDto)
         .totalElements(totalElements)
         .empty(setEmpty(totalElements))
-        .totalPages(totalPage + 1)
-        .number(page)
+        .totalPages(getResultTotalPage(totalPage, accountIds))
+        .number(getPageNumber(page, accountIds))
         .numberOfElements(postsDto.size())
-        .last(setLast(totalPage, page))
-        .first(setFirst(page))
+        .last(setLast(totalPage, page, accountIds))
+        .first(setFirst(page, accountIds))
         .size(size)
         .sort(sortList)
         .pageableObject(pageableObject)
@@ -212,18 +213,38 @@ public class PostServiceImpl implements PostService {
     return HttpStatus.CREATED;
   }
 
-  private boolean setLast(int totalPage, int page) {
-    if (page <= 1 && page == totalPage) {
+  private int getPageNumber(int page, Integer accountIds) {
+    if (accountIds == 0 && page == -1) {
+      return 1;
+    }
+    return page;
+  }
+
+  private int getOffset(int page, int size, Integer accountIds) {
+    if (accountIds == 0 && page == -1) {
+      return 0;
+    }
+    return page * size - size;
+  }
+
+  private boolean setLast(int totalPage, int page, Integer accountIds) {
+    if (accountIds == 0 && page == -1 && totalPage == 1) {
       return true;
     }
-    if ((page + 1) > totalPage) {
+    if (accountIds != 0 && page == 1 && page == totalPage) {
+      return true;
+    }
+    if (page == totalPage) {
       return true;
     }
     return false;
   }
 
-  private boolean setFirst(int page) {
-    if (page == 1) {
+  private boolean setFirst(int page, Integer accountIds) {
+    if (accountIds == 0 && page == -1) {
+      return true;
+    }
+    if (accountIds != 0 && page == 1) {
       return true;
     }
     return false;
@@ -243,18 +264,28 @@ public class PostServiceImpl implements PostService {
     return totalElement / size;
   }
 
+  private int getResultTotalPage(int totalPage, Integer accountIds) {
+    if (accountIds == 0) {
+      return totalPage + 1;
+    }
+    return totalPage + 1;
+  }
 
-  private List<PostDto> getCollectionsByOffsetLimit(int page, int size,
-      List<PostDto> postDtoList, int totalPage) {
-    int offset = page * size - 3;
+  private List<PostDto> getCollectionsByOffsetLimit(int oldPage, int size,
+      List<PostDto> postDtoList, int totalPage, Integer accountIds) {
+    int offset = getOffset(oldPage, size, accountIds);
+    newPage = oldPage;
+    if (accountIds == 0 && oldPage == -1) {
+      newPage = 1;
+    }
     if (postDtoList.size() <= size) {
       postDtoList = postDtoList.subList(0, postDtoList.size());
     } else {
-      if (page <= 1) {
+      if (newPage == 1) {
         postDtoList = postDtoList.subList(0, size);
-      } else if (page == totalPage) {
+      } else if (newPage == totalPage) {
         postDtoList = postDtoList.subList(offset, postDtoList.size());
-      } else if (page > 1 && page != totalPage) {
+      } else if (newPage > 1 && newPage != totalPage) {
         int rightBorder = offset + size;
         postDtoList = postDtoList.subList(offset, rightBorder);
       }
