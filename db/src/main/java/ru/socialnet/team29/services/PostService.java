@@ -42,7 +42,7 @@ public class PostService {
     } else {
       idsFriend = friendService.getIdsFriendsById(authorId);
       idsFriend.add(authorId);
-      ids = idsFriend.stream().map(s -> postRepository.findPostIdsByAuthor(s)).collect(
+      ids = idsFriend.stream().map(s -> postRepository.findPostIdsByAuthorWithFriends(s)).collect(
           ArrayList::new,
           ArrayList::addAll,
           ArrayList::addAll
@@ -66,7 +66,7 @@ public class PostService {
   public PostDto getPostById(int postId) {
     checkPublishDate(postId);
     PostDto post = postTableMapper.PostTableRecordToPostDto(postRepository.findById(postId));
-    if (post.isDeleted()) {
+    if (post.getIsDelete()) {
       return null;
     }
     post.setCommentsCount(commentService.getCountCommentsByPostId(postId));

@@ -1,15 +1,13 @@
 package ru.socialnet.team29.repository;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.jooq.impl.QOM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.socialnet.team29.domain.tables.PostTable;
 import ru.socialnet.team29.domain.tables.records.PostTableRecord;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -52,6 +50,16 @@ public class PostRepository implements CrudRepository<PostTableRecord> {
                 .set(PostTable.POST_TABLE.IS_DELETE, true)
                 .where(PostTable.POST_TABLE.ID.eq(id))
                 .execute() == 1;
+    }
+    public List<Integer> findPostIdsByAuthorWithFriends(Integer authorId) {
+        return dsl.selectFrom(PostTable.POST_TABLE)
+            .where(PostTable.POST_TABLE.AUTHOR_ID.eq(authorId))
+            .and(PostTable.POST_TABLE.IS_BLOCKED.eq(false))
+            .and(PostTable.POST_TABLE.IS_DELETE.eq(false))
+            .and(PostTable.POST_TABLE.TYPE.eq("POSTED"))
+            .orderBy(PostTable.POST_TABLE.TIME.desc())
+            .fetch()
+            .getValues(PostTable.POST_TABLE.ID);
     }
 
     public List<Integer> findPostIdsByAuthor(Integer authorId) {

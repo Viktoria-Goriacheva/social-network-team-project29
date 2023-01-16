@@ -33,21 +33,21 @@ public class PostServiceImpl implements PostService {
     log.info("Запрос от фронта - добавить пост title={}", postPayload.getTitle());
     int authorId = personService.getMyId();
     PostDto postDto = PostDto.builder()
-            .authorId(authorId)
-            .title(postPayload.getTitle())
-            .postText(postPayload.getPostText())
-            .tags(postPayload.getTags())
-            .imagePath(postPayload.getImagePath())
-            .time(OffsetDateTime.now())
-            .timeChanged(OffsetDateTime.now())
-            .publishDate(postPayload.getPublishDate())
-            .type(postPayload.getPublishDate()==null ? PostType.POSTED : PostType.QUEUED)
-            .isBlocked(false)
-            .isDeleted(false)
-            .commentsCount(0)
-            .likeAmount(0)
-            .myLike(false)
-            .build();
+        .authorId(authorId)
+        .title(postPayload.getTitle())
+        .postText(postPayload.getPostText())
+        .tags(postPayload.getTags())
+        .imagePath(postPayload.getImagePath())
+        .time(OffsetDateTime.now())
+        .timeChanged(OffsetDateTime.now())
+        .publishDate(postPayload.getPublishDate())
+        .type(postPayload.getPublishDate() == null ? PostType.POSTED : PostType.QUEUED)
+        .isBlocked(false)
+        .isDelete(false)
+        .commentsCount(0)
+        .likeAmount(0)
+        .myLike(false)
+        .build();
     return feignInterface.savePost(postDto);
   }
 
@@ -62,24 +62,24 @@ public class PostServiceImpl implements PostService {
     log.info("Запрос от фронта - обновить пост postId={}", postId);
     PostDto oldPost = findPostById(postId);
     PostDto newPost = PostDto.builder()
-            .id(postId)
-            .authorId(oldPost.getAuthorId())
-            .title(postPayload.getTitle())
-            .postText(postPayload.getPostText())
-            .tags(postPayload.getTags())
-            .imagePath(postPayload.getImagePath())
-            .time(oldPost.getTime())
-            .timeChanged(OffsetDateTime.now())
-            .publishDate(oldPost.getPublishDate())
-            .type(oldPost.getType())
-            .isBlocked(oldPost.isBlocked()) // не уверен, что посты с этими полями == true
-            .isDeleted(oldPost.isDeleted()) // будут вообще редактироваться
-            .commentsCount(oldPost.getCommentsCount())
-            .likeAmount(oldPost.getLikeAmount())
-            .myLike(oldPost.isMyLike())
-            .build();
+        .id(postId)
+        .authorId(oldPost.getAuthorId())
+        .title(postPayload.getTitle())
+        .postText(postPayload.getPostText())
+        .tags(postPayload.getTags())
+        .imagePath(postPayload.getImagePath())
+        .time(oldPost.getTime())
+        .timeChanged(OffsetDateTime.now())
+        .publishDate(oldPost.getPublishDate())
+        .type(oldPost.getType())
+        .isBlocked(oldPost.getIsBlocked()) // не уверен, что посты с этими полями == true
+        .isDelete(oldPost.getIsDelete()) // будут вообще редактироваться
+        .commentsCount(oldPost.getCommentsCount())
+        .likeAmount(oldPost.getLikeAmount())
+        .myLike(oldPost.isMyLike())
+        .build();
 
-     return feignInterface.updatePost(newPost);
+    return feignInterface.updatePost(newPost);
 
   }
 
@@ -231,6 +231,9 @@ public class PostServiceImpl implements PostService {
     if (accountIds == 0 && page == -1 && totalPage == 1) {
       return true;
     }
+    if (totalPage == 0) {
+      return true;
+    }
     if (accountIds != 0 && page == 1 && page == totalPage) {
       return true;
     }
@@ -265,8 +268,8 @@ public class PostServiceImpl implements PostService {
   }
 
   private int getResultTotalPage(int totalPage, Integer accountIds) {
-    if (accountIds == 0) {
-      return totalPage + 1;
+    if (accountIds != 0 && totalPage == 0) {
+      return 2;
     }
     return totalPage + 1;
   }
