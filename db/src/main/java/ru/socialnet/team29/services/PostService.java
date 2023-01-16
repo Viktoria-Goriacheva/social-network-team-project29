@@ -1,11 +1,8 @@
 package ru.socialnet.team29.services;
 
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,29 +25,18 @@ public class PostService {
   private final PostFileService postFileService;
   private final TagService tagService;
   private final Post2TagService post2TagService;
-  private final PersonService personService;
-  private final FriendService friendService;
 
-  public List<PostDto> getPostsByAuthorEmail(String email, Integer accountIds) {
-    Integer authorId = personService.getPersonByEmail(email).getId();
+  public List<PostDto> getPostsByAuthorEmail(Integer accountIds) {
     List<PostDto> posts = new ArrayList<>();
     List<Integer> ids;
-    List<Integer> idsFriend;
     if (accountIds != 0) {
       ids = postRepository.findPostIdsByAuthor(accountIds);
       ids.forEach(id -> posts.add(getPostById(id)));
     } else {
-      idsFriend = friendService.getIdsFriendsById(authorId);
-      idsFriend.add(authorId);
-      ids = idsFriend.stream().map(s -> postRepository.findPostIdsByAuthorWithFriends(s)).collect(
-          ArrayList::new,
-          ArrayList::addAll,
-          ArrayList::addAll
-      );
+      ids = postRepository.findPostIdsByAuthorWithPersons();
       ids.forEach(id -> posts.add(getPostById(id)));
     }
-    return posts.stream().sorted(Comparator.comparing(PostDto::getTime).reversed()).collect(
-        Collectors.toList());
+    return posts;
   }
 
   public Boolean addNewPost(PostDto postDto) {

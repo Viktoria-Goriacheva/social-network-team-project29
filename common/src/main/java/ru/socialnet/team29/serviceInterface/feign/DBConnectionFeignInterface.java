@@ -2,21 +2,25 @@ package ru.socialnet.team29.serviceInterface.feign;
 
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
 import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
-import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.model.PostDto;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
 
     @GetMapping(value = "/posts")
-    List<PostDto> getPostDto(@RequestParam String email,@RequestParam Integer accountIds);
+    List<PostDto> getPostDto(@RequestParam Integer accountIds);
 
     @GetMapping("/friends/request")
     Boolean addFriendRequest(@RequestParam Integer id, @RequestParam Integer friendId);

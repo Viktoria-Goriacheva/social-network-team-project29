@@ -104,8 +104,7 @@ public class PostServiceImpl implements PostService {
         .pageSize(size)
         .offset(getOffset(page, size, accountIds))
         .build();
-    String emailAuth = SecurityContextHolder.getContext().getAuthentication().getName();
-    List<PostDto> postsDto = feignInterface.getPostDto(emailAuth, accountIds);
+    List<PostDto> postsDto = feignInterface.getPostDto(accountIds);
     Integer totalElements = postsDto.size();
     Integer totalPage = getTotalPage(totalElements, size);
     postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage, accountIds);

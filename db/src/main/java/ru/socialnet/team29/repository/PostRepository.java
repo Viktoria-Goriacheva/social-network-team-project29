@@ -51,12 +51,11 @@ public class PostRepository implements CrudRepository<PostTableRecord> {
                 .where(PostTable.POST_TABLE.ID.eq(id))
                 .execute() == 1;
     }
-    public List<Integer> findPostIdsByAuthorWithFriends(Integer authorId) {
+    public List<Integer> findPostIdsByAuthorWithPersons() {
         return dsl.selectFrom(PostTable.POST_TABLE)
-            .where(PostTable.POST_TABLE.AUTHOR_ID.eq(authorId))
+            .where(PostTable.POST_TABLE.TYPE.eq("POSTED"))
             .and(PostTable.POST_TABLE.IS_BLOCKED.eq(false))
             .and(PostTable.POST_TABLE.IS_DELETE.eq(false))
-            .and(PostTable.POST_TABLE.TYPE.eq("POSTED"))
             .orderBy(PostTable.POST_TABLE.TIME.desc())
             .fetch()
             .getValues(PostTable.POST_TABLE.ID);
