@@ -23,8 +23,8 @@ public class PostDto {
   private String title;
   private PostType type;
   private String postText;
-  private boolean isBlocked;
-  private boolean isDeleted;
+  private Boolean isBlocked;
+  private Boolean isDelete;
   private Integer commentsCount;
   private List<String> tags;
   private Integer likeAmount;
