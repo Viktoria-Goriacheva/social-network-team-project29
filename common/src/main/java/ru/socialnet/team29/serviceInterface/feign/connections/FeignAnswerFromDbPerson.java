@@ -1,10 +1,14 @@
 package ru.socialnet.team29.serviceInterface.feign.connections;
 
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.payloads.AccountSearchFilter;
+import ru.socialnet.team29.payloads.AccountSearchPayload;
+import ru.socialnet.team29.responses.RestPageImpl;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.util.List;
@@ -42,7 +46,7 @@ public class FeignAnswerFromDbPerson implements DBConnectionFeignInterfacePerson
     }
 
     @Override
-    public List<Person> getAllPersons(Pageable pageable) {
+    public Page<Person> getAllPersons(PageRequest pageRequest) {
         return null;
     }
 
@@ -57,5 +61,25 @@ public class FeignAnswerFromDbPerson implements DBConnectionFeignInterfacePerson
     @Override
     public boolean isRegisteredMail(String email) {
         return false;
+    }
+
+    @Override
+    public Page<Person> getAllPersonsByIds(List<Integer> ids, PageRequest pageRequest) {
+        return null;
+    }
+
+    @Override
+    public Page<Person> getPersonsBySearchFilter(AccountSearchFilter searchFilter) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> getAllIds() {
+        return null;
+    }
+
+    @Override
+    public RestPageImpl<Person> getPersonsBySearchPayload(AccountSearchPayload searchPayload) {
+        return null;
     }
 }

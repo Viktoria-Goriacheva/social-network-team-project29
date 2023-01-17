@@ -4,17 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
 import org.jooq.exception.NoDataFoundException;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.interfaceDb.PersonInterfaceDB;
+import ru.socialnet.team29.payloads.AccountSearchFilter;
+import ru.socialnet.team29.payloads.AccountSearchPayload;
 import ru.socialnet.team29.repository.PersonRepository;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.mappers.PersonMapper;
 import ru.socialnet.team29.model.Person;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -92,22 +95,57 @@ public class PersonService implements PersonInterfaceDB {
     public Person findById(int id) {
         log.info("Запрос данных аккаунта id={}", id);
         PersonRecord person = personRepository.findById(id);
-        if (person != null && isLegalPerson(person))
-            return personMapper.PersonRecordToPerson(personRepository.findById(id));
+        if (person != null && isLegalPerson(person)) {
+            var result = personMapper.PersonRecordToPerson(personRepository.findById(id));
+             // todo добавить friendService.getFriendshipStatus(myId, personId);
+            // вот только откуда брать свой собственный id???????
+            // наверное нужно передавать из Core ещё и свой id.
+//            result.setStatusCode(friendService.getFriendshipStatus(myId, id).getValue());
+            return result;
+        }
         log.info("Аккаунт не найден, либо удален или заблокирован");
         return null;
     }
 
-    public List<Person> findByPageableTerm(Pageable pageable) {
-        log.info("Запрос списка аккаунтов {}", pageable.toString());
-        return personMapper.PersonRecordsToPersons(personRepository.findByPageableTerm(pageable));
+    public PageImpl<Person> findByPageRequest(PageRequest pageRequest) {
+        log.info("Запрос списка всех аккаунтов постранично: {}", pageRequest);
+        List<Person> content = personMapper.PersonRecordsToPersons(personRepository.findByPageRequest(pageRequest));
+        int total = personRepository.count();
+        return new PageImpl<>(content, pageRequest, total);
+    }
+
+    /**
+     *
+     * @param searchFilter фильтр поиска
+     * @return постраничный вывод аккаунтов
+     *
+     * у нас 3 группы поиска:
+     * - по имени/фамилии
+     * - по местоположению
+     * - по возрасту
+     * Поиск осуществляем по каждой группе отдельно, либо последовательно, включая conditions
+     * формируем conditions в сервисе, отдаем репозиторию, а репозиторий уже выбирает страницу.
+     * придется наверное без total делать пока что, чтобы 2 запроса не формировать.
+     * отбираем все результаты, получаем total, а потом формируем pageable object
+     * todo удалить
+     * @deprecated
+     */
+    @Deprecated
+    public Page<Person> findByFilter(AccountSearchFilter searchFilter) {
+        log.info("Запрос списка аккаунтов по фильтру поиска");
+        List<Person> content = personMapper.PersonRecordsToPersons(
+//          personRepository.findBySearchFilter(searchFilter)
+                findByIdList(getAllPersonIds())
+        );
+        PageRequest pageRequest = PageRequest.of(searchFilter.getPageNumber(), searchFilter.getPageSize());
+        long total = 100;
+        total = personRepository.count();
+        return new PageImpl<>(content, pageRequest, total);
     }
 
     public List<PersonRecord> findByIdList(List<Integer> ids) {
         log.info("Запрос списка аккаунтов {}", ids);
-        List<PersonRecord> result = new ArrayList<>();
-        ids.forEach(id-> result.add(personRepository.findById(id)));
-        return result;
+        return personRepository.findByIds(ids);
     }
 
     public List<PersonRecord> findByIdListAndFilter(List<Integer> ids, PersonSearchDto filter) {
@@ -122,6 +160,7 @@ public class PersonService implements PersonInterfaceDB {
 
     public void setOnline(String email) {
         var person = getPersonByEmail(email);
+        log.info("Пользователь {} онлайн", person.getEmail());
         person.setIsOnline(true);
         person.setLastOnlineTime(OffsetDateTime.now());
         personRepository.update(personMapper.PersonToPersonRecord(person));
@@ -129,6 +168,7 @@ public class PersonService implements PersonInterfaceDB {
 
     public void setOffline(int id) {
         var person = findById(id);
+        log.info("Пользователь {} оффлайн", person.getEmail());
         person.setIsOnline(false);
         person.setLastOnlineTime(OffsetDateTime.now());
         personRepository.update(personMapper.PersonToPersonRecord(person));
@@ -136,5 +176,51 @@ public class PersonService implements PersonInterfaceDB {
 
     public boolean isRegisteredMail(String email) {
         return personRepository.findPersonByEmail(email) != null;
+    }
+
+    public Page<Person> getPersonsByIds(List<Integer> ids, PageRequest pageRequest) {
+        List<Person> content = personMapper.PersonRecordsToPersons(personRepository.findPageByIds(ids, pageRequest));
+        long total = personRepository.findByIds(ids).size();
+        return new PageImpl<>(content, pageRequest, total);
+    }
+
+    public List<Integer> getAllPersonIds() {
+        return personRepository.findAllIds();
+    }
+
+    public PageImpl<Person> findBySearchPayload(AccountSearchPayload searchPayload) {
+        log.info("Запрос списка аккаунтов по параметрам поиска");
+        Condition condition = getConditionsFromSearchPayload(searchPayload);
+        PageRequest pageRequest = PageRequest.of(searchPayload.getPage(), searchPayload.getSize());
+        List<Person> content = personMapper.PersonRecordsToPersons(personRepository.findByCondition(condition, pageRequest));
+        var totalCount = personRepository.countByCondition(condition);
+        return new PageImpl<>(content, pageRequest, totalCount);
+    }
+
+    private Condition getConditionsFromSearchPayload(AccountSearchPayload searchPayload) {
+        Condition condition = (ru.socialnet.team29.domain.tables.Person.PERSON.IS_DELETED.isNull());
+        condition = condition.or(ru.socialnet.team29.domain.tables.Person.PERSON.IS_DELETED.isFalse());
+        String author = searchPayload.getAuthor();
+        String firstName = (author.isEmpty() ? searchPayload.getFirstName() : author);
+        String lastName = searchPayload.getLastName();
+        String country = searchPayload.getCountry();
+        String city = searchPayload.getCity();
+        log.info("Параметры поиска: Имя = '{}', Фамилия = '{}', Страна = '{}', Город = '{}'", firstName, lastName, country, city);
+        if (!firstName.isEmpty())
+            condition = condition.and(ru.socialnet.team29.domain.tables.Person.PERSON.FIRST_NAME.containsIgnoreCase(firstName));
+        if (!lastName.isEmpty())
+            condition = condition.and(ru.socialnet.team29.domain.tables.Person.PERSON.LAST_NAME.containsIgnoreCase(lastName));
+        if (!country.isEmpty())
+            condition = condition.and(ru.socialnet.team29.domain.tables.Person.PERSON.COUNTRY.containsIgnoreCase(searchPayload.getCountry()));
+        if (!city.isEmpty())
+            condition = condition.and(ru.socialnet.team29.domain.tables.Person.PERSON.CITY.containsIgnoreCase(city));
+
+        if ((searchPayload.getAgeFrom() != 0) || (searchPayload.getAgeTo() != 0)) {
+            OffsetDateTime bdFrom = OffsetDateTime.now().minusYears(searchPayload.getAgeTo());
+            OffsetDateTime bdTo = OffsetDateTime.now().minusYears(searchPayload.getAgeFrom());
+            log.info("Интервал возраста: {}, {}", bdFrom, bdTo);
+            condition = condition.and(ru.socialnet.team29.domain.tables.Person.PERSON.BIRTH_DATE.between(bdFrom, bdTo));
+        }
+        return condition;
     }
 }

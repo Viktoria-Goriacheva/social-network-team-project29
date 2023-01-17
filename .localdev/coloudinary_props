@@ -5,6 +5,7 @@ Run -> Edit Configurations... -> слева в Applications выбираем Soc
 -Dcloudinary.cloud-name=dbjq1kufj
 -Dcloudinary.api-key=813445639385638
 -Dcloudinary.api-secret=xiSz7HlLkmr1Gw4n5bpIyxYaIXA
+-Dserver.db.port=http://localhost:8081
 
 Apply -> OK.
 

@@ -6,12 +6,13 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
+import ru.socialnet.team29.payloads.AccountSearchFilter;
 import ru.socialnet.team29.dto.PersonSearchDto;
 
 import java.time.OffsetDateTime;
@@ -115,7 +116,15 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
   }
 
   @Transactional(readOnly = true)
-  public List<PersonRecord> findByPageableTerm(Pageable pageable) {
+  public List<PersonRecord> findByPageRequest(PageRequest pageRequest) {
+    return dsl.selectFrom(Person.PERSON)
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize())
+            .fetch();
+  }
+
+  public List<PersonRecord> findBySearchFilter(AccountSearchFilter searchFilter) {
+    // todo not finished yet
     return null;
   }
 
@@ -123,4 +132,40 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
     return dsl.fetchCount(Person.PERSON);
   }
 
+  public List<PersonRecord> findPageByIds(List<Integer> ids, PageRequest pageRequest) {
+    return dsl.selectFrom(Person.PERSON)
+            .where(Person.PERSON.ID.in(ids))
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize())
+            .fetch();
+  }
+
+  public List<PersonRecord> findByIds(List<Integer> ids) {
+    return dsl.selectFrom(Person.PERSON)
+            .where(Person.PERSON.ID.in(ids))
+            .fetch();
+  }
+
+  public List<Integer> findAllIds() {
+    return dsl.selectFrom(Person.PERSON)
+            .where(Person.PERSON.IS_DELETED.isNull())
+            .or(Person.PERSON.IS_DELETED.isFalse())
+            .fetch()
+            .getValues(Person.PERSON.ID);
+  }
+
+  public List<PersonRecord> findByCondition(Condition condition, PageRequest pageRequest) {
+    return dsl.selectFrom(Person.PERSON)
+            .where(condition)
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize())
+            .fetch();
+  }
+
+  public long countByCondition(Condition condition) {
+    return dsl.selectFrom(Person.PERSON)
+            .where(condition)
+            .fetch()
+            .size();
+  }
 }

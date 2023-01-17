@@ -12,7 +12,6 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 public class Person {
 
     private Integer id;
