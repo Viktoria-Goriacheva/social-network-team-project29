@@ -30,7 +30,7 @@ public class PersonService implements PersonInterfaceDB {
     @Override
     public Person getPersonByEmail(String email) {
         PersonRecord person = personRepository.findPersonByEmail(email);
-        if (person != null && isLegalPerson(person)) {
+        if (person != null) { // убрал проверку isLegal
             return personMapper.PersonRecordToPerson(person);
         } else {
             throw new NoDataFoundException("No users found such email");
@@ -114,22 +114,7 @@ public class PersonService implements PersonInterfaceDB {
         return new PageImpl<>(content, pageRequest, total);
     }
 
-    /**
-     *
-     * @param searchFilter фильтр поиска
-     * @return постраничный вывод аккаунтов
-     *
-     * у нас 3 группы поиска:
-     * - по имени/фамилии
-     * - по местоположению
-     * - по возрасту
-     * Поиск осуществляем по каждой группе отдельно, либо последовательно, включая conditions
-     * формируем conditions в сервисе, отдаем репозиторию, а репозиторий уже выбирает страницу.
-     * придется наверное без total делать пока что, чтобы 2 запроса не формировать.
-     * отбираем все результаты, получаем total, а потом формируем pageable object
-     * todo удалить
-     * @deprecated
-     */
+    // todo метод требует проверки от frontend
     @Deprecated
     public Page<Person> findByFilter(AccountSearchFilter searchFilter) {
         log.info("Запрос списка аккаунтов по фильтру поиска");
@@ -167,11 +152,11 @@ public class PersonService implements PersonInterfaceDB {
     }
 
     public void setOffline(int id) {
-        var person = findById(id);
+        var person = personRepository.findById(id);
         log.info("Пользователь {} оффлайн", person.getEmail());
         person.setIsOnline(false);
         person.setLastOnlineTime(OffsetDateTime.now());
-        personRepository.update(personMapper.PersonToPersonRecord(person));
+        personRepository.update(person);
     }
 
     public boolean isRegisteredMail(String email) {

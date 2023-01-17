@@ -2,39 +2,37 @@ package ru.socialnet.team29.controllers;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
-import ru.socialnet.team29.answers_interface.CommonAnswer;
-import ru.socialnet.team29.model.FriendForFront;
-import ru.socialnet.team29.model.PageableObject;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.*;
 import ru.socialnet.team29.responses.RestPageImpl;
 import ru.socialnet.team29.service.EmailService;
-import ru.socialnet.team29.payloads.ContactConfirmationPayload;
 import ru.socialnet.team29.service.FriendServiceImpl;
-import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.PersonService;
 
 import java.util.List;
 
 import java.util.HashMap;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/account")
 @RequiredArgsConstructor
 public class AccountController {
     private final PersonService personService;
     private final EmailService mailService;
-    private final FriendServiceImpl friendService;
 
     @GetMapping("/me") // ok
     public ResponseEntity<Person> getProfile() {
-        return ResponseEntity.ok(personService.findMe());
+        Person me = personService.findMe();
+        if (me == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(me);
     }
 
     @PutMapping(value = "/recovery")

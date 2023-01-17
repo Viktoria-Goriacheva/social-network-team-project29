@@ -17,6 +17,7 @@ import ru.socialnet.team29.serviceInterface.PersonService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterfacePerson;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,8 +48,10 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person findMe() {
-        log.info("Запрос данных моего профиля");
-        return getPersonFromSecurityContext();
+        var id = getIdPersonFromSecurityContext();
+        var result = findById(id);
+        log.info("PersonFromSecurityContext() = {}", result);
+        return result;
     }
 
     @Override
@@ -57,6 +60,11 @@ public class PersonServiceImpl implements PersonService {
         Person me = findMe();
         BeanUtils.copyProperties(payload, me);
         me.setUpdatedOn(OffsetDateTime.now());
+        try {
+            me.setBirthDate(OffsetDateTime.parse(payload.getBirthDate()));
+        } catch (DateTimeParseException ex){
+            me.setBirthDate(null);
+        }
         return feignInterface.updatePerson(me);
     }
 
@@ -66,9 +74,9 @@ public class PersonServiceImpl implements PersonService {
         int myId = getMyId();
         if (myId == 0)
             return "Unauthorized";
-        if (feignInterface.deletePerson(getMyId()))
+        if (feignInterface.deletePerson(myId))
             return "Successfully";
-        return "Account Not Found"; //todo throw Exceptions
+        return "Account Not Found";
     }
 
     @Override
@@ -85,9 +93,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Integer getMyId() {
         log.info("Запрос моего id");
-        int id = 0;
-//        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
-        id = ((CoreUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPerson().getId();
+        int id = getIdPersonFromSecurityContext();
         log.info("id = {}", id);
         return id;
     }
