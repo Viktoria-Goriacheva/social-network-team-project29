@@ -19,6 +19,7 @@ import ru.socialnet.team29.repository.NotificationRepository;
 import ru.socialnet.team29.repository.NotificationSettingsRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -72,12 +73,12 @@ public class NotificationService implements NotificationInterface {
 
     @Override
     public List<NotificationUnitSettings> getAllNotificationsSettingsByUserId(Integer userId) throws DataBaseException {
-       int sizeListNotificationType = NotificationType.values().length;
-        List<NotificationUnitSettings> unitSettingsList = new ArrayList<>(sizeListNotificationType);
+        int sizeListNotificationType = NotificationType.values().length;
+        List<NotificationUnitSettings> unitSettingsList = new LinkedList<>();
         List<PersonToNotificationSettingsRecord> settings;
         try {
-           settings = notificationSettingsRepository.getNotificationSettingsForCurrentUser(userId);
-        }catch (Exception ex){
+            settings = notificationSettingsRepository.getNotificationSettingsForCurrentUser(userId);
+        } catch (Exception ex) {
             throw new DataBaseException(ex, this.getClass().getSimpleName(), "Something wrong in dataBase during fetching notificationSettingsForCurrentUser");
         }
 
@@ -85,13 +86,13 @@ public class NotificationService implements NotificationInterface {
             NotificationUnitSettings unitSettings = new NotificationUnitSettings();
             unitSettings.setNotificationType(NotificationType.getTypeEnum(i));
             unitSettings.setEnable(false);
-            for (PersonToNotificationSettingsRecord item : settings) {
-               if(item.getNotificationTypeId() == i){
-                   unitSettings.setEnable(true);
-               }
-            }
             unitSettingsList.add(unitSettings);
         }
+
+        for (PersonToNotificationSettingsRecord item : settings) {
+            unitSettingsList.get(item.getNotificationTypeId() - 1).setEnable(true);
+        }
+
         return unitSettingsList;
     }
 
