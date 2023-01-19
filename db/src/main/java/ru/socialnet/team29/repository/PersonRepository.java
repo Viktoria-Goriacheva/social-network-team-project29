@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.socialnet.team29.domain.tables.Person;
-import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.payloads.AccountSearchFilter;
 import ru.socialnet.team29.dto.PersonSearchDto;

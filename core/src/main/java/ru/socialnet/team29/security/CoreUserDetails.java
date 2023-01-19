@@ -38,7 +38,7 @@ public class CoreUserDetails implements org.springframework.security.core.userde
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !person.getIsBlocked();
     }
 
     @Override
@@ -48,6 +48,6 @@ public class CoreUserDetails implements org.springframework.security.core.userde
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !person.getIsDeleted();
     }
 }

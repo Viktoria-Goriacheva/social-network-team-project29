@@ -18,9 +18,8 @@ public class CoreUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Person person;
         log.info(this.getClass().getSimpleName()+ ": " + "Отправляем запрос на БД " + username);
-        person = personService.findByEmail(username);
+        Person person = personService.findByEmail(username);
         return new CoreUserDetails(person) {
         };
     }
