@@ -1,8 +1,14 @@
 package ru.socialnet.team29.services;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,10 +31,42 @@ public class PostService {
   private final PostFileService postFileService;
   private final TagService tagService;
   private final Post2TagService post2TagService;
+  private final long startDate = -2208988800L;
 
-  public List<PostDto> getPostsByAuthorEmail(Integer accountIds) {
+  public List<PostDto> getPosts(Integer accountIds, String tags, long dateTo, long dateFrom,
+      String author) {
     List<PostDto> posts = new ArrayList<>();
     List<Integer> ids;
+    if (dateTo != 0) {
+      OffsetDateTime millisecondsFrom;
+      OffsetDateTime millisecondsTo = OffsetDateTime.now();
+      if (dateFrom != 0) {
+        millisecondsFrom = getTime(dateFrom);
+      } else {
+        millisecondsFrom = getTime(startDate);
+      }
+      ids = postRepository.search(millisecondsFrom, millisecondsTo, author);
+
+      if (tags != null
+          && tags.length() > 0) {
+        String[] tagArray = tags.split(",");
+        List<Integer> idPostsByTags = new ArrayList<>();
+        for (String tagName : tagArray) {
+          List<Integer> tag = postRepository.findPostIdsByTag(tagName);
+          if (!tag.isEmpty()) {
+            idPostsByTags.addAll(tag);
+          }
+        }
+        ids = ids.stream().filter(idPostsByTags::contains).collect(Collectors.toSet()).stream()
+            .toList();
+        ids.forEach(id -> posts.add(getPostById(id)));
+        posts.stream().sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
+            .collect(Collectors.toList());
+        return posts;
+      }
+      ids.forEach(id -> posts.add(getPostById(id)));
+      return posts;
+    }
     if (accountIds != 0) {
       ids = postRepository.findPostIdsByAuthor(accountIds);
       ids.forEach(id -> posts.add(getPostById(id)));
@@ -37,6 +75,18 @@ public class PostService {
       ids.forEach(id -> posts.add(getPostById(id)));
     }
     return posts;
+  }
+
+  private OffsetDateTime getTime(long time) {
+    OffsetDateTime seconds;
+    Instant instant = Instant.now();
+    ZoneId systemZone = ZoneId.systemDefault();
+    ZoneOffset currentOffsetForMyZone = systemZone.getRules().getOffset(instant);
+    LocalDateTime triggerTime =
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(time), TimeZone
+            .getDefault().toZoneId());
+    seconds = OffsetDateTime.of(triggerTime, currentOffsetForMyZone);
+    return seconds;
   }
 
   public Boolean addNewPost(PostDto postDto) {

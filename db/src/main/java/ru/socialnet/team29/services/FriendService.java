@@ -1,10 +1,12 @@
 package ru.socialnet.team29.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
-import ru.socialnet.team29.domain.tables.Person;
 import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.dto.FriendSearchDto;
@@ -14,10 +16,6 @@ import ru.socialnet.team29.mappers.FriendMapperImpl;
 import ru.socialnet.team29.model.FriendForFront;
 import ru.socialnet.team29.model.enums.FriendshipStatus;
 import ru.socialnet.team29.repository.FriendRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -169,8 +167,5 @@ public class FriendService {
                 .ids(blockedFriendIds)
                 .statusCode("BLOCKED")
                 .build();
-    }
-    public List<Integer> getIdsFriendsById(Integer id) {
-        return friendRepository.getAllFriendIds(id,FriendshipStatus.FRIEND);
     }
 }

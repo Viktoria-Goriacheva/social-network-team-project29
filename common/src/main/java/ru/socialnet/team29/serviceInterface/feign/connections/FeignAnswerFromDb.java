@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class FeignAnswerFromDb implements DBConnectionFeignInterface {
     @Override
-    public List<PostDto> getPostDto(@RequestParam Integer accountIds) {
+    public List<PostDto> getPostDto(@RequestParam Integer accountIds, String tags, long dateTo, long dateFrom, String author) {
         return null;
     }
 

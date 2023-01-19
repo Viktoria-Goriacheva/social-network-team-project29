@@ -1,12 +1,19 @@
 package ru.socialnet.team29.controllers;
 
-import jakarta.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.socialnet.team29.answers.AnswerWithTwoTokens;
 import ru.socialnet.team29.answers.MessageAnswer;
 import ru.socialnet.team29.answers.ResponseUserRegister;
@@ -23,9 +30,6 @@ import ru.socialnet.team29.service.UserDataService;
 import ru.socialnet.team29.serviceInterface.LoginService;
 import ru.socialnet.team29.serviceInterface.LogoutService;
 import ru.socialnet.team29.serviceInterface.PersonService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -88,5 +92,13 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PostMapping(value = "/change-password-link")
+    public ResponseEntity<HttpStatus> changePassword() {
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+    @PostMapping(value = "/change-email-link")
+    public ResponseEntity<HttpStatus> getEmail() {
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
