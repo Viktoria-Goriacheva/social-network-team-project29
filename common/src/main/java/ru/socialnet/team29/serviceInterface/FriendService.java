@@ -83,4 +83,6 @@ public interface FriendService {
      * @return информация о заблокированных друзьях
      */
     FriendSearchDto getIdsBlockedFriends();
+
+    List<Integer> getAllFriendsId(Integer idCurrentUser);
 }

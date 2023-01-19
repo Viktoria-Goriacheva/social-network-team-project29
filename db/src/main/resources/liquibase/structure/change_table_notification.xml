@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="change-table-notification" author="Pokhilko">
+        <preConditions onFail="MARK_RAN">
+                <tableExists schemaName="socialnet" tableName="notification"/>
+        </preConditions>
+        <addColumn schemaName="socialnet"
+                   tableName="notification">
+            <column name="content"
+                    type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

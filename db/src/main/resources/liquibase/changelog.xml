@@ -29,4 +29,5 @@
    <include file="structure/change_tables_to_timestamptz.xml" relativeToChangelogFile="true"/>
    <include file="structure/change_like_table.xml" relativeToChangelogFile="true"/>
    <include file="structure/create_table_person_to_notification_settings.xml" relativeToChangelogFile="true"/>
+   <include file="structure/change_table_notification.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

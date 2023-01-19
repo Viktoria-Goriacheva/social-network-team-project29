@@ -4,18 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
 import org.jooq.exception.NoDataFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.interfaceDb.PersonInterfaceDB;
+import ru.socialnet.team29.mappers.PersonMapper;
+import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.AccountSearchFilter;
 import ru.socialnet.team29.payloads.AccountSearchPayload;
 import ru.socialnet.team29.repository.PersonRepository;
-import ru.socialnet.team29.domain.tables.records.PersonRecord;
-import ru.socialnet.team29.mappers.PersonMapper;
-import ru.socialnet.team29.model.Person;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -27,10 +29,18 @@ public class PersonService implements PersonInterfaceDB {
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
 
+    @Autowired
+    public void setLaunchCheckBirthdate(@Lazy LaunchCheckBirthdate launchCheckBirthdate) {
+        this.launchCheckBirthdate = launchCheckBirthdate;
+    }
+
+    private LaunchCheckBirthdate launchCheckBirthdate;
+    private static int countUsers = 0;
+
     @Override
     public Person getPersonByEmail(String email) {
         PersonRecord person = personRepository.findPersonByEmail(email);
-        if (person != null) { // убрал проверку isLegal
+        if (person != null) {
             return personMapper.PersonRecordToPerson(person);
         } else {
             throw new NoDataFoundException("No users found such email");
@@ -63,13 +73,19 @@ public class PersonService implements PersonInterfaceDB {
         return String.valueOf(personRepository.findEmailByPersonId(id));
     }
 
+    @Override
+    public List<Integer> getPersonBirthDate() {
+        List<Integer> usersBirthdateToday = personRepository.getIdUsersBirthdateToday();
+        return usersBirthdateToday;
+    }
+
 
     /**
+     * @param condition условие выборки
+     * @return список аккаунтов
      * @deprecated Вместо этого метода предлагаются более подходящие методы </br>
      * {@link PersonService#isExist(int)},
      * {@link PersonService#findByIdList(List)}
-     * @param condition условие выборки
-     * @return список аккаунтов
      */
     @Deprecated
     public List<PersonRecord> findAll(Condition condition) {
@@ -78,6 +94,10 @@ public class PersonService implements PersonInterfaceDB {
 
     public int savePerson(Person person) {
         log.info("Сохраняем новый аккаунт {}", person.getEmail());
+        if (countUsers == 0) {
+            launchCheckBirthdate.refreshBirthdateFriends();
+        }
+        countUsers++;
         return personRepository.insert(personMapper.PersonToPersonRecord(person));
     }
 
@@ -97,7 +117,7 @@ public class PersonService implements PersonInterfaceDB {
         PersonRecord person = personRepository.findById(id);
         if (person != null && isLegalPerson(person)) {
             var result = personMapper.PersonRecordToPerson(personRepository.findById(id));
-             // todo добавить friendService.getFriendshipStatus(myId, personId);
+            // todo добавить friendService.getFriendshipStatus(myId, personId);
             // вот только откуда брать свой собственный id???????
             // наверное нужно передавать из Core ещё и свой id.
 //            result.setStatusCode(friendService.getFriendshipStatus(myId, id).getValue());
@@ -208,4 +228,6 @@ public class PersonService implements PersonInterfaceDB {
         }
         return condition;
     }
+
+
 }

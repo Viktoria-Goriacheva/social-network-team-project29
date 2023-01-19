@@ -169,4 +169,9 @@ public class FriendService {
                 .statusCode("BLOCKED")
                 .build();
     }
+
+
+    public List<Integer> getIdsFriendsById(Integer idCurrentUser) {
+       return friendRepository.getAllFriendIds(idCurrentUser, FriendshipStatus.FRIEND);
+    }
 }
