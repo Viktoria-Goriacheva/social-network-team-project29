@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.PagePostResponse;
 import ru.socialnet.team29.dto.PostLikeDto;
@@ -72,8 +71,8 @@ public class PostServiceImpl implements PostService {
         .timeChanged(OffsetDateTime.now())
         .publishDate(oldPost.getPublishDate())
         .type(oldPost.getType())
-        .isBlocked(oldPost.getIsBlocked()) // не уверен, что посты с этими полями == true
-        .isDelete(oldPost.getIsDelete()) // будут вообще редактироваться
+        .isBlocked(oldPost.getIsBlocked())
+        .isDelete(oldPost.getIsDelete())
         .commentsCount(oldPost.getCommentsCount())
         .likeAmount(oldPost.getLikeAmount())
         .myLike(oldPost.isMyLike())
@@ -90,7 +89,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public PagePostResponse getPosts(boolean withFriends, String sort, boolean isDelete,
+  public PagePostResponse getPosts(String tags, long dateTo, long dateFrom, String author, boolean withFriends, String sort, boolean isDelete,
       int size, Integer accountIds, int page) {
     Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
         .ignoreCase(false).nullHandling("NATIVE").property("time").build();
@@ -104,7 +103,7 @@ public class PostServiceImpl implements PostService {
         .pageSize(size)
         .offset(getOffset(page, size, accountIds))
         .build();
-    List<PostDto> postsDto = feignInterface.getPostDto(accountIds);
+    List<PostDto> postsDto = feignInterface.getPostDto(accountIds, tags, dateTo, dateFrom, author);
     Integer totalElements = postsDto.size();
     Integer totalPage = getTotalPage(totalElements, size);
     postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage, accountIds);
@@ -113,11 +112,11 @@ public class PostServiceImpl implements PostService {
         .content(postsDto)
         .totalElements(totalElements)
         .empty(setEmpty(totalElements))
-        .totalPages(getResultTotalPage(totalPage, accountIds))
+        .totalPages(getResultTotalPage(totalPage, accountIds, dateTo))
         .number(getPageNumber(page, accountIds))
         .numberOfElements(postsDto.size())
         .last(setLast(totalPage, page, accountIds))
-        .first(setFirst(page, accountIds))
+        .first(setFirst(page, accountIds, dateTo))
         .size(size)
         .sort(sortList)
         .pageableObject(pageableObject)
@@ -242,7 +241,10 @@ public class PostServiceImpl implements PostService {
     return false;
   }
 
-  private boolean setFirst(int page, Integer accountIds) {
+  private boolean setFirst(int page, Integer accountIds, long dateTo) {
+    if (dateTo != 0 && page == 1) {
+      return true;
+    }
     if (accountIds == 0 && page == -1) {
       return true;
     }
@@ -266,9 +268,12 @@ public class PostServiceImpl implements PostService {
     return totalElement / size;
   }
 
-  private int getResultTotalPage(int totalPage, Integer accountIds) {
+  private int getResultTotalPage(int totalPage, Integer accountIds, long dateTo) {
     if (accountIds != 0 && totalPage == 0) {
       return 2;
+    }
+    if (dateTo != 0) {
+      return totalPage;
     }
     return totalPage + 1;
   }
