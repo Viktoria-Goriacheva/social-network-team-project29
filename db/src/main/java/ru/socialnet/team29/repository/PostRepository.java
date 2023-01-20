@@ -91,6 +91,7 @@ public class PostRepository implements CrudRepository<PostTableRecord> {
     }
 
   public List<Integer> search(
+        String text,
         OffsetDateTime timeFrom,
         OffsetDateTime timeTo,
         String author){
@@ -98,6 +99,8 @@ public class PostRepository implements CrudRepository<PostTableRecord> {
             .innerJoin(Person.PERSON)
             .on(Person.PERSON.ID.eq(PostTable.POST_TABLE.AUTHOR_ID))
             .where(PostTable.POST_TABLE.TIME.between(timeFrom,timeTo))
+            .and(PostTable.POST_TABLE.TITLE.likeIgnoreCase("%" + text + "%")
+                .or(PostTable.POST_TABLE.POST_TEXT.likeIgnoreCase("%" + text + "%")))
             .and(PostTable.POST_TABLE.TYPE.eq("POSTED"))
             .and(PostTable.POST_TABLE.IS_BLOCKED.eq(false))
             .and(PostTable.POST_TABLE.IS_DELETE.eq(false))

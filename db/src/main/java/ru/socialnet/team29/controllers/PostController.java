@@ -18,9 +18,9 @@ public class PostController {
   private final PostLikeService postLikeService;
 
   @GetMapping("/posts")
-  public List<PostDto> getPostsById(@RequestParam String email , Integer accountIds, String tags, long dateTo, long dateFrom, String author) {
+  public List<PostDto> getPostsById(@RequestParam String email , Integer accountIds, String tags, long dateTo, long dateFrom, String author, String text) {
     log.info("Получили запрос на выдачу всех постов по id автора {}", accountIds);
-    return postService.getPosts(email, accountIds, tags, dateTo, dateFrom, author);
+    return postService.getPosts(email, accountIds, tags, dateTo, dateFrom, author, text);
   }
 
   @PostMapping("/post")

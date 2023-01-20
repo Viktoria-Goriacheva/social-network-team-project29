@@ -36,8 +36,7 @@ public class PostService {
   private final long startDate = -2208988800L;
 
   public List<PostDto> getPosts(String email, Integer accountIds, String tags, long dateTo,
-      long dateFrom,
-      String author) {
+      long dateFrom, String author, String text) {
     List<PostDto> posts = new ArrayList<>();
     List<Integer> ids;
     if (dateTo != 0) {
@@ -48,7 +47,7 @@ public class PostService {
       } else {
         millisecondsFrom = getTime(startDate);
       }
-      ids = postRepository.search(millisecondsFrom, millisecondsTo, author);
+      ids = postRepository.search(text, millisecondsFrom, millisecondsTo, author);
 
       if (tags != null
           && tags.length() > 0) {

@@ -92,7 +92,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public PagePostResponse getPosts(String tags, long dateTo, long dateFrom, String author, boolean withFriends, String sort, boolean isDelete,
+  public PagePostResponse getPosts(String tags, long dateTo, long dateFrom, String author, String text, boolean withFriends, String sort, boolean isDelete,
       int size, Integer accountIds, int page) {
     Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
         .ignoreCase(false).nullHandling("NATIVE").property("time").build();
@@ -107,7 +107,7 @@ public class PostServiceImpl implements PostService {
         .offset(getOffset(page, size, accountIds))
         .build();
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    List<PostDto> postsDto = feignInterface.getPostDto(email, accountIds, tags, dateTo, dateFrom, author);
+    List<PostDto> postsDto = feignInterface.getPostDto(email, accountIds, tags, dateTo, dateFrom, author, text);
     Integer totalElements = postsDto.size();
     Integer totalPage = getTotalPage(totalElements, size);
     postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage, accountIds);
