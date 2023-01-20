@@ -8,7 +8,7 @@ import ru.socialnet.team29.responses.dialog_response.MessageDto;
 @Mapper(componentModel = "spring")
 public interface MessageDtoMapper {
 
-    @Mapping(target = "time", expression = "java(messageTableRecords.getTime().toInstant().toEpochMilli())")
+    @Mapping(target = "time", expression = "java(messageTableRecords.getTime().getLong(java.time.temporal.ChronoField.INSTANT_SECONDS))")
     MessageDto MessageTableRecordsToMessageDto(MessageTableRecord messageTableRecords);
 
 }
