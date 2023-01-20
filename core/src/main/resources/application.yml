@@ -10,7 +10,8 @@ server:
   db:
     port: http://db-service:8081
 
-frontend:
+
+  frontend:
     host: http://frontend:8098
 
 spring:

@@ -7,11 +7,11 @@ services:
     hostname: postgres
     container_name: socialnet-db
     environment:
-      POSTGRES_DB: socialnet
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: passWd123
+     POSTGRES_DB: socialnet
+     POSTGRES_USER: admin
+     POSTGRES_PASSWORD: passWd123
     ports:
-      - "5455:5432"
+    - "5455:5432"
     restart: unless-stopped
     volumes:
       - postgres-team29-data:/var/lib/postgresql/data

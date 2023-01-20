@@ -82,6 +82,7 @@ public class AuthController {
     @PostMapping(value = "/password/recovery/")
     public ResponseEntity<HttpStatus> recoverPassword(@RequestBody EmailResponse emailResponse) throws Exception {
         log.info(emailResponse.getEmail() + " email from auth controller");
+
         mailService.generateResetTokenEmail(emailResponse.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
