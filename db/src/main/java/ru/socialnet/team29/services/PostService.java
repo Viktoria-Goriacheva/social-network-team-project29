@@ -17,6 +17,7 @@ import ru.socialnet.team29.domain.tables.records.PostTableRecord;
 import ru.socialnet.team29.mappers.PostTableMapper;
 import ru.socialnet.team29.model.PostDto;
 import ru.socialnet.team29.model.enums.PostType;
+import ru.socialnet.team29.repository.PersonRepository;
 import ru.socialnet.team29.repository.PostRepository;
 
 @Service
@@ -31,9 +32,11 @@ public class PostService {
   private final PostFileService postFileService;
   private final TagService tagService;
   private final Post2TagService post2TagService;
+  private final PersonRepository personRepository;
   private final long startDate = -2208988800L;
 
-  public List<PostDto> getPosts(Integer accountIds, String tags, long dateTo, long dateFrom,
+  public List<PostDto> getPosts(String email, Integer accountIds, String tags, long dateTo,
+      long dateFrom,
       String author) {
     List<PostDto> posts = new ArrayList<>();
     List<Integer> ids;
@@ -59,20 +62,20 @@ public class PostService {
         }
         ids = ids.stream().filter(idPostsByTags::contains).collect(Collectors.toSet()).stream()
             .toList();
-        ids.forEach(id -> posts.add(getPostById(id)));
+        ids.forEach(id -> posts.add(getPostById(id, email)));
         posts.stream().sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
             .collect(Collectors.toList());
         return posts;
       }
-      ids.forEach(id -> posts.add(getPostById(id)));
+      ids.forEach(id -> posts.add(getPostById(id, email)));
       return posts;
     }
     if (accountIds != 0) {
       ids = postRepository.findPostIdsByAuthor(accountIds);
-      ids.forEach(id -> posts.add(getPostById(id)));
+      ids.forEach(id -> posts.add(getPostById(id, email)));
     } else {
       ids = postRepository.findPostIdsByAuthorWithPersons();
-      ids.forEach(id -> posts.add(getPostById(id)));
+      ids.forEach(id -> posts.add(getPostById(id, email)));
     }
     return posts;
   }
@@ -99,7 +102,8 @@ public class PostService {
     return postDto.getId() > 0;
   }
 
-  public PostDto getPostById(int postId) {
+  public PostDto getPostById(int postId, String email) {
+    int authorId = personRepository.findPersonByEmail(email).getId();
     checkPublishDate(postId);
     PostDto post = postTableMapper.PostTableRecordToPostDto(postRepository.findById(postId));
     if (post.getIsDelete()) {
@@ -108,7 +112,7 @@ public class PostService {
     post.setCommentsCount(commentService.getCountCommentsByPostId(postId));
     post.setTags(tagService.findAllTagsByPostId(postId));
     post.setLikeAmount(postLikeService.getCountLikeByPostId(postId));
-    post.setMyLike(postLikeService.getMyLikeByPostId(postId, post.getAuthorId()));
+    post.setMyLike(postLikeService.getMyLikeByPostId(postId, authorId));
     post.setImagePath(postFileService.findByPostId(postId).getImagePath());
     return post;
   }

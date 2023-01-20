@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.socialnet.team29.answers.PagePostResponse;
 import ru.socialnet.team29.dto.PostLikeDto;
@@ -51,15 +52,16 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public PostDto findPostById(Integer id) {
+  public PostDto findPostById(Integer id, String email) {
     log.info("Запрос от фронта - найти пост id={}", id);
-    return feignInterface.getPostById(id);
+    return feignInterface.getPostById(id, email);
   }
 
   @Override
   public Boolean updatePost(Integer postId, PostPayload postPayload) {
     log.info("Запрос от фронта - обновить пост postId={}", postId);
-    PostDto oldPost = findPostById(postId);
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    PostDto oldPost = findPostById(postId, email);
     PostDto newPost = PostDto.builder()
         .id(postId)
         .authorId(oldPost.getAuthorId())
@@ -103,7 +105,8 @@ public class PostServiceImpl implements PostService {
         .pageSize(size)
         .offset(getOffset(page, size, accountIds))
         .build();
-    List<PostDto> postsDto = feignInterface.getPostDto(accountIds, tags, dateTo, dateFrom, author);
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    List<PostDto> postsDto = feignInterface.getPostDto(email, accountIds, tags, dateTo, dateFrom, author);
     Integer totalElements = postsDto.size();
     Integer totalPage = getTotalPage(totalElements, size);
     postsDto = getCollectionsByOffsetLimit(page, size, postsDto, totalPage, accountIds);

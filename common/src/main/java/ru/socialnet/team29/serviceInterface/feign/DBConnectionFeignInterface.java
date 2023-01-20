@@ -21,6 +21,7 @@ public interface DBConnectionFeignInterface {
 
     @GetMapping(value = "/posts")
     List<PostDto> getPostDto(
+        @RequestParam String email,
         @RequestParam Integer accountIds,
         @RequestParam String tags,
         @RequestParam long dateTo,
@@ -65,7 +66,7 @@ public interface DBConnectionFeignInterface {
     Boolean savePost (@RequestBody PostDto postDto);
 
     @GetMapping(value = "/post")
-    PostDto getPostById(@RequestParam Integer id);
+    PostDto getPostById(@RequestParam Integer id, @RequestParam String email);
 
     @PutMapping(value = "/post")
     Boolean updatePost (@RequestBody PostDto postDto);
