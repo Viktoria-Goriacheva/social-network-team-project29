@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.socialnet.team29.answers.PagePostResponse;
 import ru.socialnet.team29.model.PostDto;
@@ -42,7 +43,8 @@ public class PostController {
 
   @GetMapping(value = "/{id}")
   ResponseEntity<PostDto> findById(@PathVariable(value = "id") Integer id) {
-    return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    return new ResponseEntity<>(postService.findPostById(id, email), HttpStatus.OK);
   }
 
   @PutMapping(value = "/{id}")

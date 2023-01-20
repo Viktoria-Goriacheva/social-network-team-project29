@@ -8,7 +8,7 @@ import ru.socialnet.team29.payloads.PostPayload;
 public interface PostService {
 
   Boolean addPost(PostPayload postPayload);
-  PostDto findPostById(Integer id);
+  PostDto findPostById(Integer id, String email);
   Boolean updatePost(Integer id, PostPayload postPayload);
   Boolean deletePost(Integer id);
   PagePostResponse getPosts(String tags, long dateTo, long dateFrom, String author, boolean withFriends, String sort, boolean isDelete,
