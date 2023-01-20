@@ -25,6 +25,7 @@ public class PostController {
       @RequestParam(value = "dateTo", required = false, defaultValue = "0") long dateTo,
       @RequestParam(value = "dateFrom", required = false, defaultValue = "0") long dateFrom,
       @RequestParam(value = "author", required = false, defaultValue = "") String author,
+      @RequestParam(value = "text", required = false, defaultValue = "") String text,
       @RequestParam(value = "withFriends", required = false, defaultValue = "false") boolean withFriends,
       @RequestParam(value = "sort") String sort,
       @RequestParam(value = "isDelete") boolean isDelete,
@@ -32,7 +33,7 @@ public class PostController {
       @RequestParam(value = "accountIds", required = false, defaultValue = "0") Integer accountIds,
       @RequestParam(value = "page", defaultValue = "1") int page) {
     return new ResponseEntity(
-        postService.getPosts(tags, dateTo, dateFrom, author, withFriends, sort, isDelete, size, accountIds, page),
+        postService.getPosts(tags, dateTo, dateFrom, author, text, withFriends, sort, isDelete, size, accountIds, page),
         HttpStatus.OK);
   }
 

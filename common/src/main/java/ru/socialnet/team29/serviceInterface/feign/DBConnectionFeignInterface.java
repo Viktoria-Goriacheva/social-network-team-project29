@@ -22,6 +22,15 @@ import java.util.Map;
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
 
+    @GetMapping(value = "/posts")
+    List<PostDto> getPostDto(
+        @RequestParam String email,
+        @RequestParam Integer accountIds,
+        @RequestParam String tags,
+        @RequestParam long dateTo,
+        @RequestParam long dateFrom,
+        @RequestParam String author,
+        @RequestParam String text);
     /* MESSAGES */
 
     @PostMapping(value = "/message")
@@ -74,17 +83,6 @@ public interface DBConnectionFeignInterface {
 
     @GetMapping("/friends/blockFriendId")
     FriendSearchDto getIdsBlockedFriends(@RequestParam Integer id);
-
-    /* POSTS */
-
-    @GetMapping(value = "/posts")
-    List<PostDto> getPostDto(
-            @RequestParam String email,
-            @RequestParam Integer accountIds,
-            @RequestParam String tags,
-            @RequestParam long dateTo,
-            @RequestParam long dateFrom,
-            @RequestParam String author);
 
     @PostMapping(value = "/post")
     Boolean savePost (@RequestBody PostDto postDto);

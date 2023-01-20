@@ -11,8 +11,9 @@ public interface PostService {
   PostDto findPostById(Integer id, String email);
   Boolean updatePost(Integer id, PostPayload postPayload);
   Boolean deletePost(Integer id);
-  PagePostResponse getPosts(String tags, long dateTo, long dateFrom, String author, boolean withFriends, String sort, boolean isDelete,
-       int size, Integer accountIds, int page);
+  PagePostResponse getPosts(String tags, long dateTo, long dateFrom,
+      String author, String text, boolean withFriends, String sort, boolean isDelete,
+      int size, Integer accountIds, int page);
 
   HttpStatus addLikeToPost(Integer id);
 
