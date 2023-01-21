@@ -93,7 +93,8 @@ public class FriendRepository {
         Friendship friendship = Friendship.FRIENDSHIP;
         return dsl.selectFrom(friendship)
                 .where(
-                        friendship.STATUS_ID.eq(friendshipStatus.getNumber().toString()).or(val(params.getContent().get(0).getStatusCode()).eq("NONE")),
+                        friendship.STATUS_ID.eq(friendshipStatus.getNumber().toString())
+                                .or(val(friendshipStatus.getValue()).eq("NONE")),
                         friendship.SRC_PERSON_ID.eq(params.getId().toString())
                 )
                 .orderBy(friendship.DST_PERSON_ID)
@@ -144,8 +145,8 @@ public class FriendRepository {
         return dsl.select()
             .from(friendship)
             .where(
-                    friendship.SRC_PERSON_ID.eq(id.toString())
-                    .and(friendship.STATUS_ID.eq(String.valueOf(friendshipStatus.getNumber()))))
+                    friendship.SRC_PERSON_ID.eq(id.toString()),
+                    friendship.STATUS_ID.eq(String.valueOf(friendshipStatus.getNumber())))
             .fetch()
             .size();
     }

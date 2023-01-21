@@ -99,9 +99,10 @@ public class PersonRepository implements CrudRepository<PersonRecord>{
                     person.ID.in(ids),
                     (val(filter.getFirstName()).isNull())
                             .or(person.FIRST_NAME.containsIgnoreCase(filter.getFirstName())),
-                    person.BIRTH_DATE.between(
-                            OffsetDateTime.parse(filter.getBirthDateFrom()),
-                            OffsetDateTime.parse(filter.getBirthDateTo())),
+                    person.BIRTH_DATE.isNull().or(
+                            person.BIRTH_DATE.between(
+                                    OffsetDateTime.parse(filter.getBirthDateFrom()),
+                                    OffsetDateTime.parse(filter.getBirthDateTo()))),
                     (val(filter.getCity()).isNull())
                             .or(person.CITY.eq(filter.getCity())),
                     (val(filter.getCountry()).isNull())
