@@ -87,19 +87,20 @@ public class FriendService {
                     .map(rec -> Integer.valueOf(rec.getDstPersonId())).toList();
             personRecords = personService.findByIdListAndFilter(friendIds, params.getContent().get(0));
         }
-        var result = friendMapper.PersonRecordToFriendForFront(personRecords)
+        var friendsFoFront = friendMapper.PersonRecordToFriendForFront(personRecords)
                 .stream().peek(friend -> friend.setStatusCode(statusName)).collect(Collectors.toList());
         AnswerListFriendsForPerson.FriendPageable pageable = params.getPageable();
         int lastPageNumber = (int) Math.ceil(totalFriendshipRecords / pageable.getPageSize());
         return AnswerListFriendsForPerson.<FriendForFront>builder()
                 .totalElements(totalFriendshipRecords)
                 .totalPages(lastPageNumber)
-                .content(result)
+                .content(friendsFoFront)
                 .pageable(pageable)
                 .first(pageable.getPageNumber() == 1)
                 .last(pageable.getPageNumber() == lastPageNumber)
                 .empty(totalFriendshipRecords == 0)
-                .size(result.size())
+                .size(friendsFoFront.size())
+                .id(params.getId())
                 .build();
     }
 
