@@ -20,5 +20,6 @@ public class NotificationCommon
     private int personId;
     private int entityId;
     private String contact;
+    private String content;
 
 }

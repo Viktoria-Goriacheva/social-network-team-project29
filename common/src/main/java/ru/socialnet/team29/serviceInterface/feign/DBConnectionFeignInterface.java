@@ -1,6 +1,8 @@
 package ru.socialnet.team29.serviceInterface.feign;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +16,11 @@ import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
-import ru.socialnet.team29.responses.dialog_response.*;
 import ru.socialnet.team29.model.PostDto;
-
-import java.util.Map;
+import ru.socialnet.team29.responses.dialog_response.MessageDatum;
+import ru.socialnet.team29.responses.dialog_response.MessageDto;
+import ru.socialnet.team29.responses.dialog_response.ShortDialogResponse;
+import ru.socialnet.team29.responses.dialog_response.UnreadCount;
 
 @FeignClient(name = "db", url = "${server.db.port}")
 public interface DBConnectionFeignInterface {
@@ -85,16 +88,16 @@ public interface DBConnectionFeignInterface {
     FriendSearchDto getIdsBlockedFriends(@RequestParam Integer id);
 
     @PostMapping(value = "/post")
-    Boolean savePost (@RequestBody PostDto postDto);
+    Boolean savePost(@RequestBody PostDto postDto);
 
     @GetMapping(value = "/post")
     PostDto getPostById(@RequestParam Integer id, @RequestParam String email);
 
     @PutMapping(value = "/post")
-    Boolean updatePost (@RequestBody PostDto postDto);
+    Boolean updatePost(@RequestBody PostDto postDto);
 
     @DeleteMapping(value = "/post")
-    Boolean deletePost (@RequestParam Integer id);
+    Boolean deletePost(@RequestParam Integer id);
 
     /* LIKES */
 
@@ -109,4 +112,7 @@ public interface DBConnectionFeignInterface {
 
     @DeleteMapping(value = "/post/comment/like")
     Boolean deleteLikeFromPostComment(@RequestBody PostLikeDto postLikeDto);
+
+    @GetMapping(value = "/friends/integer/id")
+    List<Integer> getListIdsAllFriendsCurrentUser(@RequestParam Integer idCurrentUser);
 }

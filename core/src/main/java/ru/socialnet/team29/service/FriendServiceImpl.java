@@ -10,6 +10,8 @@ import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.RecommendationFriendsDto;
 import ru.socialnet.team29.model.FriendForFront;
+import ru.socialnet.team29.model.enums.NotificationType;
+import ru.socialnet.team29.payloads.AddNotificationPayload;
 import ru.socialnet.team29.serviceInterface.FriendService;
 import ru.socialnet.team29.serviceInterface.feign.DBConnectionFeignInterface;
 
@@ -25,6 +27,7 @@ import java.util.Map;
 public class FriendServiceImpl implements FriendService {
     private final DBConnectionFeignInterface feignInterfaceFriend;
     private final PersonServiceImpl personService;
+    private final NotificationServiceImpl notificationService;
 
     @Override
     public HttpStatus addFriendRequest(Integer friendId) {
@@ -35,6 +38,15 @@ public class FriendServiceImpl implements FriendService {
             if (!isAdded) {
                 log.info("The friend is not added");
                 return HttpStatus.BAD_REQUEST;
+            } else {
+                AddNotificationPayload payload = AddNotificationPayload.builder()
+                        .authorId(String.valueOf(id))
+                        .userId(String.valueOf(friendId))
+                        .notificationType(NotificationType.FRIEND_REQUEST.getValue())
+                        .content("Вас добавили в друзья. Проверьте кто бы это мог быть?")
+                        .NotificationTypeId(NotificationType.FRIEND_REQUEST.getNumber())
+                        .build();
+                notificationService.addNewNotification(payload);
             }
         } else {
             log.info("Add friend id=null");
@@ -200,5 +212,10 @@ public class FriendServiceImpl implements FriendService {
         log.info("Получаем запрос от фронта на выдачу всех id заблокированных друзей для " + SecurityContextHolder.getContext().getAuthentication().getName());
         int id = personService.getIdPersonFromSecurityContext();
         return feignInterfaceFriend.getIdsBlockedFriends(id);
+    }
+
+    @Override
+    public List<Integer> getAllFriendsId(Integer idCurrentUser) {
+        return feignInterfaceFriend.getListIdsAllFriendsCurrentUser(idCurrentUser);
     }
 }

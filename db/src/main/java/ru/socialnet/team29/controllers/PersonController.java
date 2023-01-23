@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.socialnet.team29.model.Person;
 import ru.socialnet.team29.payloads.AccountSearchFilter;
 import ru.socialnet.team29.payloads.AccountSearchPayload;
+import ru.socialnet.team29.services.FriendService;
 import ru.socialnet.team29.services.PersonService;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class PersonController {
     private final PersonService personService;
+    private final FriendService friendService;
 
     @GetMapping("/person")
     public Person getPersonByEmail(@RequestParam("email") String email){
@@ -91,6 +93,11 @@ public class PersonController {
     @PostMapping(value = "/person/search")
     PageImpl<Person> getPersonsBySearchPayload(@RequestBody AccountSearchPayload searchPayload){
         return personService.findBySearchPayload(searchPayload);
+    }
+
+    @GetMapping(value = "/friends/integer/id")
+    List<Integer> getListIdsAllFriendsCurrentUser(@RequestParam Integer idCurrentUser){
+     return friendService.getIdsFriendsById(idCurrentUser);
     }
 
 }
