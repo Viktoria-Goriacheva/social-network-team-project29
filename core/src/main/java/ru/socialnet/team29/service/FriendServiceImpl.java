@@ -85,7 +85,7 @@ public class FriendServiceImpl implements FriendService {
                 .firstName(params.getOrDefault("firstName", null))
                 .statusCode(params.getOrDefault("statusCode", "NONE"))
                 .page(Integer.parseInt(params.getOrDefault("page", "1")))
-                .size(Integer.parseInt(params.getOrDefault("size", "20")))
+//                .size(Integer.parseInt(params.getOrDefault("size", "20")))
                 .build();
 
         if (personSearchDto.getAgeFrom() > 0) {

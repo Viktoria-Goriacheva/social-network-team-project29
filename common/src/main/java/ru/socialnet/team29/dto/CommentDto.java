@@ -23,6 +23,7 @@ public class CommentDto {
     private String commentText;
     private Integer postId;
     private Boolean isBlocked;
+    @JsonProperty(value = "likeAmount")
     private Integer likes;
     private Boolean myLike;
     private List<CommentDto> subComments;

@@ -42,9 +42,9 @@ public class CommentController {
     }
 
     @GetMapping("/comment")
-    public List<CommentDto> getCommentsById(@RequestParam Integer postId) {
+    public List<CommentDto> getCommentsById(@RequestParam Integer postId, @RequestParam Integer personId) {
         log.info("Получили запрос на выдачу всех коментариев по id поста {}", postId);
-        return commentService.getCommentByPostId(postId);
+        return commentService.getCommentByPostId(postId, personId);
     }
 
 

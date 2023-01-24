@@ -10,13 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.socialnet.team29.domain.tables.records.FriendshipRecord;
 import ru.socialnet.team29.domain.tables.records.PersonRecord;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.interfaceDb.PersonInterfaceDB;
 import ru.socialnet.team29.mappers.PersonMapper;
 import ru.socialnet.team29.model.Person;
+import ru.socialnet.team29.model.enums.FriendshipStatus;
 import ru.socialnet.team29.payloads.AccountSearchFilter;
 import ru.socialnet.team29.payloads.AccountSearchPayload;
+import ru.socialnet.team29.repository.FriendRepository;
 import ru.socialnet.team29.repository.PersonRepository;
 
 import java.time.OffsetDateTime;
@@ -28,6 +31,7 @@ import java.util.List;
 public class PersonService implements PersonInterfaceDB {
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
+    private final FriendRepository friendRepository;
 
     @Autowired
     public void setLaunchCheckBirthdate(@Lazy LaunchCheckBirthdate launchCheckBirthdate) {
@@ -112,19 +116,31 @@ public class PersonService implements PersonInterfaceDB {
         return personRepository.delete(id);
     }
 
-    public Person findById(int id) {
+    /**
+     * Поиск персоны с идентификатором id. Для установления дружеских отношений можно указать meId, иначе
+     * statusCode будет None
+     * @param meId идетификатор текущего пользователя
+     * @param id идентификатор интересующей персоны
+     * @return объект интересующей персоны
+     */
+    public Person findById(Integer meId, Integer id) {
         log.info("Запрос данных аккаунта id={}", id);
         PersonRecord person = personRepository.findById(id);
         if (person != null && isLegalPerson(person)) {
             var result = personMapper.PersonRecordToPerson(personRepository.findById(id));
-            // todo добавить friendService.getFriendshipStatus(myId, personId);
-            // вот только откуда брать свой собственный id???????
-            // наверное нужно передавать из Core ещё и свой id.
-//            result.setStatusCode(friendService.getFriendshipStatus(myId, id).getValue());
+            result.setStatusCode(getFriendshipStatus(meId, id).getValue());
             return result;
         }
         log.info("Аккаунт не найден, либо удален или заблокирован");
         return null;
+    }
+
+    public FriendshipStatus getFriendshipStatus(Integer myId, Integer personId) {
+        FriendshipRecord friendshipRecord = friendRepository.getFriendshipStatus(myId, personId);
+        if (friendshipRecord != null) {
+            return FriendshipStatus.getEnum(friendshipRecord.getStatusId());
+        }
+        return  FriendshipStatus.NONE;
     }
 
     public PageImpl<Person> findByPageRequest(PageRequest pageRequest) {
@@ -160,7 +176,7 @@ public class PersonService implements PersonInterfaceDB {
 
     public boolean isExist(int id) {
         log.info("Запрос на существование профиля id={}", id);
-        return findById(id) != null;
+        return findById(0, id) != null;
     }
 
     public void setOnline(String email) {

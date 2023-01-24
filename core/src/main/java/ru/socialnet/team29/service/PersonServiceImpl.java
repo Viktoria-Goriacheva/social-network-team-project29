@@ -82,7 +82,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person findById(Integer id) {
         log.info("Запрос данных профиля id={}", id);
-        return feignInterface.getPersonById(id);
+        var meId = getIdPersonFromSecurityContext();
+        return feignInterface.getPersonById(meId, id);
     }
 
     @Override

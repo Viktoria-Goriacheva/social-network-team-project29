@@ -21,9 +21,14 @@ public class PostLikeRepository implements CrudRepository<PostLikeRecord> {
   public void setDsl(@Lazy DSLContext dsl) {
     this.dsl = dsl;
   }
+
   public Integer getCountLikeByPostId(Integer id) {
     return dsl.fetchCount(DSL.selectFrom(PostLike.POST_LIKE)
-        .where(PostLike.POST_LIKE.POST_ID.eq(id)));
+        .where(
+            PostLike.POST_LIKE.POST_ID.eq(id),
+            PostLike.POST_LIKE.COMMENT_ID.isNull()
+        )
+    );
   }
 
   /**
@@ -34,7 +39,12 @@ public class PostLikeRepository implements CrudRepository<PostLikeRecord> {
    */
   public boolean getMyLikeByPostId(Integer postId, Integer personId) {
     return dsl.fetchExists(DSL.selectFrom(PostLike.POST_LIKE)
-        .where(PostLike.POST_LIKE.POST_ID.eq(postId), PostLike.POST_LIKE.PERSON_ID.eq(personId)));
+        .where(
+                PostLike.POST_LIKE.POST_ID.eq(postId),
+                PostLike.POST_LIKE.COMMENT_ID.isNull(),
+                PostLike.POST_LIKE.PERSON_ID.eq(personId)
+        )
+    );
   }
 
   /**
@@ -89,5 +99,22 @@ public class PostLikeRepository implements CrudRepository<PostLikeRecord> {
                     post.COMMENT_ID.eq(postLike.getCommentId()).or(post.COMMENT_ID.isNull().and(val(postLike.getCommentId()).isNull()))
             )
             .execute();
+  }
+
+  public Integer getCountLikeByCommentId(int id) {
+    return dsl.fetchCount(DSL.selectFrom(PostLike.POST_LIKE)
+            .where(
+                    PostLike.POST_LIKE.COMMENT_ID.eq(id)
+            )
+    );
+  }
+
+  public boolean getMyLikeByCommentId(Integer id, Integer personId) {
+    return dsl.fetchExists(DSL.selectFrom(PostLike.POST_LIKE)
+            .where(
+                    PostLike.POST_LIKE.COMMENT_ID.eq(id),
+                    PostLike.POST_LIKE.PERSON_ID.eq(personId)
+            )
+    );
   }
 }
