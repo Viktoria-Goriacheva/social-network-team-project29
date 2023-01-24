@@ -27,7 +27,7 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final PostTableMapper postTableMapper;
-  private final CommentService commentService;
+  private final CommentsService commentService;
   private final PostLikeService postLikeService;
   private final PostFileService postFileService;
   private final TagService tagService;

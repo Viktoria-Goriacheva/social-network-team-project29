@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
+import ru.socialnet.team29.dto.CommentDto;
 import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
@@ -115,4 +116,22 @@ public interface DBConnectionFeignInterface {
 
     @GetMapping(value = "/friends/integer/id")
     List<Integer> getListIdsAllFriendsCurrentUser(@RequestParam Integer idCurrentUser);
+
+    /* COMMENTS */
+    @PostMapping(value = "/saveComment")
+    CommentDto saveComment(@RequestBody CommentDto commentDto);
+
+    @PutMapping(value = "/update")
+    CommentDto updateComments(@RequestBody CommentDto commentDto);
+    @DeleteMapping(value = "/delete")
+    Boolean deleteCommentById(@RequestBody Integer commentId);
+
+    @GetMapping(value = "/getCommentIdByPostId")
+    Integer getCommentIdByPostId(@RequestParam Integer postId);
+
+    @GetMapping(value = "/oneComment")
+    CommentDto getCommentById(@RequestParam Integer commentId);
+
+    @GetMapping(value = "/comment")
+    List<CommentDto> getCommentDto(@RequestParam Integer postId);
 }
