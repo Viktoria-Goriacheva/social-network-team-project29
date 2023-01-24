@@ -1,0 +1,1 @@
+delete from socialnet.person where id > 9999
