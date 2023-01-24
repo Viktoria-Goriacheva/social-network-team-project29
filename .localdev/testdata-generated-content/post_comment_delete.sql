@@ -1,0 +1,1 @@
+delete from socialnet.post_comment where id > 9999
