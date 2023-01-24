@@ -3,6 +3,7 @@ package ru.socialnet.team29.serviceInterface.feign.connections;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.socialnet.team29.answers.AnswerListFriendsForPerson;
+import ru.socialnet.team29.dto.CommentDto;
 import ru.socialnet.team29.dto.FriendSearchDto;
 import ru.socialnet.team29.dto.PersonSearchDto;
 import ru.socialnet.team29.dto.PostLikeDto;
@@ -156,6 +157,37 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
 
     @Override
     public List<Integer> getListIdsAllFriendsCurrentUser(Integer idCurrentUser) {
+        return null;
+    }
+
+    /* COMMENTS */
+    @Override
+    public CommentDto saveComment(CommentDto commentDto) {
+        return null;
+    }
+
+    @Override
+    public CommentDto updateComments(CommentDto commentDto) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteCommentById(Integer commentDto) {
+        return null;
+    }
+
+    @Override
+    public Integer getCommentIdByPostId(Integer id) {
+        return null;
+    }
+
+    @Override
+    public CommentDto getCommentById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<CommentDto> getCommentDto(Integer commentIds) {
         return null;
     }
 
