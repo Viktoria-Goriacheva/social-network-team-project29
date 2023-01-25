@@ -19,13 +19,21 @@ public class PostLikeService {
         return postLikeRepository.getCountLikeByPostId(id);
     }
 
+    public Integer getCountLikeByCommentId(int id) {
+        return postLikeRepository.getCountLikeByCommentId(id);
+    }
+
     /**
      * @param id идентификатор поста
      * @param authorId идентификатор автора поста
      * @return лайк автора своему посту
      */
-    public boolean getMyLikeByPostId(int id, Integer authorId) {
+    public boolean getMyLikeByPostId(Integer id, Integer authorId) {
         return postLikeRepository.getMyLikeByPostId(id, authorId);
+    }
+
+    public boolean getMyLikeByCommentId(Integer id, Integer personId) {
+        return postLikeRepository.getMyLikeByCommentId(id, personId);
     }
 
     public Boolean addLikeToPost(PostLikeDto postLikeDto) {

@@ -133,5 +133,5 @@ public interface DBConnectionFeignInterface {
     CommentDto getCommentById(@RequestParam Integer commentId);
 
     @GetMapping(value = "/comment")
-    List<CommentDto> getCommentDto(@RequestParam Integer postId);
+    List<CommentDto> getCommentDto(@RequestParam Integer postId, @RequestParam Integer personId);
 }

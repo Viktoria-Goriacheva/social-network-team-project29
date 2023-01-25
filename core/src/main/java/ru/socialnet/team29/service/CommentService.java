@@ -70,6 +70,7 @@ public class CommentService {
     }
 
     public PagePostResponseForComment getAllComment(int postId, int size, int page, String sort) {
+        Integer meId = personService.getIdPersonFromSecurityContext();
         Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
                 .ignoreCase(false).nullHandling("NATIVE").property("time").build();
         List<Sort> sortList = new ArrayList<>();
@@ -83,7 +84,7 @@ public class CommentService {
                 .pageSize(size)
                 .offset(getOffset(page, size, postId))
                 .build();
-        List<CommentDto> commentDtoList = feignInterface.getCommentDto(postId);
+        List<CommentDto> commentDtoList = feignInterface.getCommentDto(postId, meId);
 
         int totalElements = commentDtoList.size();
         int totalPage = getTotalPage(totalElements, size);
@@ -105,6 +106,7 @@ public class CommentService {
     }
 
     public PagePostResponseForComment getSubcomment(Integer postid, Integer commentId, Integer page, Integer size) {
+        Integer meId = personService.getIdPersonFromSecurityContext();
         Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
                 .ignoreCase(false).nullHandling("NATIVE").property("time").build();
         List<Sort> sortList = new ArrayList<>();
@@ -118,7 +120,7 @@ public class CommentService {
                 .pageSize(size)
                 .offset(getOffset(page, size, postid))
                 .build();
-        List<CommentDto> commentDtoList = feignInterface.getCommentDto(postid);
+        List<CommentDto> commentDtoList = feignInterface.getCommentDto(postid, meId);
         var comments = commentDtoList.stream()
                 .filter(i -> Objects.equals(i.getParentId(), commentId))
                 .toList();

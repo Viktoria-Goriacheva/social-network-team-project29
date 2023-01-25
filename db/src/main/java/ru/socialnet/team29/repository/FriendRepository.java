@@ -182,7 +182,16 @@ public class FriendRepository {
                 "where fr2.status_id = {1} " +
                 "and fr2.dst_person_id <> {0} " +
                 "and not fr2.dst_person_id in(select fr.dst_person_id from socialnet.friendship as fr " +
-                "where fr.src_person_id = {0} and fr.status_id = {1})";
+                "where fr.src_person_id = {0})";
         return (List<Integer>) dsl.resultQuery(sqlQuery, id.toString(), friendStatus.getNumber().toString()).fetch(0);
+    }
+
+    public FriendshipRecord getFriendshipStatus(Integer id, Integer friendId) {
+        Friendship friendship = Friendship.FRIENDSHIP;
+        return dsl.selectFrom(friendship)
+                .where(
+                        friendship.SRC_PERSON_ID.eq(id.toString()),
+                        friendship.DST_PERSON_ID.eq(friendId.toString()))
+                .fetchOne();
     }
 }

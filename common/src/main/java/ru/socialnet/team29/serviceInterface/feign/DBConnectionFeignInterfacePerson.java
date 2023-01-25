@@ -31,7 +31,7 @@ public interface DBConnectionFeignInterfacePerson {
     Boolean deletePerson(@RequestParam int id);
 
     @GetMapping(value = "/person/{id}")
-    Person getPersonById(@RequestParam int id);
+    Person getPersonById(@RequestParam Integer meId, @RequestParam Integer id);
 
     @GetMapping(value = "/persons")
     Page<Person> getAllPersons(@RequestBody PageRequest pageRequest);

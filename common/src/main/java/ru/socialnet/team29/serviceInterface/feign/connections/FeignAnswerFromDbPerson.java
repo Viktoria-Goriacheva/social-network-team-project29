@@ -41,7 +41,7 @@ public class FeignAnswerFromDbPerson implements DBConnectionFeignInterfacePerson
     }
 
     @Override
-    public Person getPersonById(int id) {
+    public Person getPersonById(Integer meId, Integer id) {
         return null;
     }
 

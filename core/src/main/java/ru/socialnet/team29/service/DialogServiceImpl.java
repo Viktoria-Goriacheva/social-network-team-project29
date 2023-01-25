@@ -46,7 +46,7 @@ public class DialogServiceImpl {
         listMessages
             .forEach(lm -> {
                 Long recipientId = lm.getRecipientId();
-                Person recipient = feignInterfacePerson.getPersonById(Math.toIntExact(recipientId));
+                Person recipient = feignInterfacePerson.getPersonById(Math.toIntExact(idPerson), Math.toIntExact(recipientId));
                 Integer unreadCount = (unreadMessages.containsKey(recipientId)) ? unreadMessages.get(recipientId).getCount() : 0;
                 listDialogs.add(new DialogData(lm.getId(), unreadCount, recipient, lm));
             });

@@ -187,7 +187,7 @@ public class FeignAnswerFromDb implements DBConnectionFeignInterface {
     }
 
     @Override
-    public List<CommentDto> getCommentDto(Integer commentIds) {
+    public List<CommentDto> getCommentDto(Integer commentIds, Integer personId) {
         return null;
     }
 

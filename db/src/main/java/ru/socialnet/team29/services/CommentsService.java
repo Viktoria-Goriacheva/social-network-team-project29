@@ -16,19 +16,20 @@ import java.util.List;
 public class CommentsService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final PostLikeService postLikeService;
 
     public Integer getCountCommentsByPostId(int id) {
         return commentRepository.getCountCommentsByPostId(id);
     }
 
-    public CommentDto addNewComment(CommentDto commentDto){
+    public CommentDto addNewComment(CommentDto commentDto) {
         log.info("Добавлен новый комментарий {}", commentDto.getCommentText());
-        return commentMapper.postCommentRecordToCommentDto( commentRepository.insert(commentMapper.CommentDtoToPostCommentRecord(commentDto)));
+        return commentMapper.postCommentRecordToCommentDto(commentRepository.insert(commentMapper.CommentDtoToPostCommentRecord(commentDto)));
     }
 
     public CommentDto updateComment(CommentDto commentDto) {
         log.info("Обновление комментария с id = {}", commentDto.getId());
-        return commentMapper.postCommentRecordToCommentDto( commentRepository.update(commentMapper.CommentDtoToPostCommentRecord(commentDto)));
+        return commentMapper.postCommentRecordToCommentDto(commentRepository.update(commentMapper.CommentDtoToPostCommentRecord(commentDto)));
     }
 
     public Boolean deleteById(Integer id) {
@@ -44,17 +45,22 @@ public class CommentsService {
         return comment;
     }
 
-    public CommentDto findByCommentId(Integer commentId){
+    public CommentDto findByCommentId(Integer commentId) {
         log.info("Получение комментария с ID = {}", commentId);
         return commentMapper.postCommentRecordToCommentDto(commentRepository.findById(commentId));
     }
 
-    public List<CommentDto> getCommentByPostId(Integer postId) {
-         List<CommentDto> comments = new ArrayList<>();
+    public List<CommentDto> getCommentByPostId(Integer postId, Integer personId) {
+        List<CommentDto> comments = new ArrayList<>();
         List<Integer> posts;
         if (postId != 0) {
             posts = commentRepository.findCommentByPostId(postId);
-            posts.forEach(id -> comments.add(getCommentById(id)));
+            posts.forEach(id -> {
+                CommentDto comment = getCommentById(id);
+                comment.setLikes(postLikeService.getCountLikeByCommentId(id));
+                comment.setMyLike(postLikeService.getMyLikeByCommentId(comment.getId(), personId));
+                comments.add(comment);
+            });
             return comments;
         } return null;
     }

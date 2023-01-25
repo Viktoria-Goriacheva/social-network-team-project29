@@ -50,8 +50,8 @@ public class PersonController {
     }
 
     @GetMapping("/person/{id}")
-    public Person getPersonById(@RequestParam int id) {
-        return personService.findById(id);
+    public Person getPersonById(@RequestParam Integer meId, @RequestParam Integer id) {
+        return personService.findById(meId, id);
     }
 
     @GetMapping("/persons")

@@ -90,7 +90,7 @@ public class FriendService {
         var friendsFoFront = friendMapper.PersonRecordToFriendForFront(personRecords)
                 .stream().peek(friend -> friend.setStatusCode(statusName)).collect(Collectors.toList());
         AnswerListFriendsForPerson.FriendPageable pageable = params.getPageable();
-        int lastPageNumber = (int) Math.ceil(totalFriendshipRecords / pageable.getPageSize());
+        int lastPageNumber = (int) Math.ceil((float)totalFriendshipRecords / pageable.getPageSize());
         return AnswerListFriendsForPerson.<FriendForFront>builder()
                 .totalElements(totalFriendshipRecords)
                 .totalPages(lastPageNumber)
@@ -169,7 +169,6 @@ public class FriendService {
                 .statusCode("BLOCKED")
                 .build();
     }
-
 
     public List<Integer> getIdsFriendsById(Integer idCurrentUser) {
        return friendRepository.getAllFriendIds(idCurrentUser, FriendshipStatus.FRIEND);
