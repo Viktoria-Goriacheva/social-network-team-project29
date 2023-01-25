@@ -48,8 +48,7 @@ public class CommentController {
             @PathVariable(value = "id") Integer id,
             @PathVariable(value = "comment_id") Integer commentId,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "size", required = false, defaultValue = "1") Integer size,
-            String sort) {
-        return new ResponseEntity<>(commentService.getSubcomment(id, commentId, page, size, sort), HttpStatus.OK);
+            @RequestParam(value = "size", required = false, defaultValue = "1") Integer size) {
+        return new ResponseEntity<>(commentService.getSubcomment(id, commentId, page, size), HttpStatus.OK);
     }
 }

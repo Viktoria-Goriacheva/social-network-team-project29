@@ -39,13 +39,14 @@ public class CommentsService {
     public CommentDto getCommentById(Integer commentId) {
         log.info("Получение комментария с id = {}", commentId);
         CommentDto comment = commentMapper.postCommentRecordToCommentDto(commentRepository.findById(commentId));
+        comment.setCommentType(comment.getParentId() == 0? "POST":"COMMENT");
+        comment.setMyLike(false);
         return comment;
     }
 
     public CommentDto findByCommentId(Integer commentId){
         log.info("Получение комментария с ID = {}", commentId);
-        CommentDto commentDto = commentMapper.postCommentRecordToCommentDto(commentRepository.findById(commentId));
-        return commentDto;
+        return commentMapper.postCommentRecordToCommentDto(commentRepository.findById(commentId));
     }
 
     public List<CommentDto> getCommentByPostId(Integer postId) {
@@ -59,8 +60,7 @@ public class CommentsService {
     }
 
     public List<Integer> getCommentIdByPostId(Integer postId) {
-        List<Integer> comment = commentRepository.getCommentIdByPostId(postId);
-        return comment;
+        return commentRepository.getCommentIdByPostId(postId);
     }
 
 }
