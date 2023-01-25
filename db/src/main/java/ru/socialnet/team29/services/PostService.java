@@ -39,7 +39,7 @@ public class PostService {
       long dateFrom, String author, String text) {
     List<PostDto> posts = new ArrayList<>();
     List<Integer> ids;
-    if (dateTo != 0) {
+    if (dateTo != 0 || tags.length() > 0) {
       OffsetDateTime millisecondsFrom;
       OffsetDateTime millisecondsTo = OffsetDateTime.now();
       if (dateFrom != 0) {

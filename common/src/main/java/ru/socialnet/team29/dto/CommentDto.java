@@ -19,7 +19,6 @@ public class CommentDto {
     private OffsetDateTime time;
 
     private Integer authorId;
-
     private Integer parentId;
     private String commentText;
     private Integer postId;

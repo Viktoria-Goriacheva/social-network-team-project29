@@ -29,16 +29,16 @@ public class CommentService {
         Integer author = personService.getIdPersonFromSecurityContext();
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         PostDto post = postService.findPostById(postId,email);
+
         CommentDto comment = CommentDto.builder()
-                .commentType(CommentType.POST.name())
                 .time(OffsetDateTime.now())
                 .authorId(author)
-                .parentId(parentId)
+                .parentId(parentId == null? 0:parentId)
                 .commentText(commentText)
                 .postId(post.getId())
                 .isBlocked(false)
                 .myLike(false)
-                .likes(post.getLikeAmount())
+                .likes(post.getCommentsCount())
                 .subComments(new ArrayList<>())
                 .build();
         log.info("Сохранение нового комментария {}", comment);
@@ -49,7 +49,7 @@ public class CommentService {
         CommentDto oldDto = feignInterface.getCommentById(commentId);
         CommentDto newDto = CommentDto.builder()
                 .id(oldDto.getId())
-                .commentType(CommentType.POST.name())
+                .commentType("POST")
                 .time(oldDto.getTime())
                 .authorId(oldDto.getAuthorId())
                 .parentId(oldDto.getParentId())
@@ -104,7 +104,7 @@ public class CommentService {
                 .build();
     }
 
-    public PagePostResponseForComment getSubcomment(Integer postid, Integer commentId, Integer page, Integer size, String sort) {
+    public PagePostResponseForComment getSubcomment(Integer postid, Integer commentId, Integer page, Integer size) {
         Sort sorter = Sort.builder().ascending(false).descending(true).direction("DESC")
                 .ignoreCase(false).nullHandling("NATIVE").property("time").build();
         List<Sort> sortList = new ArrayList<>();
@@ -168,13 +168,6 @@ public class CommentService {
             return true;
         }
         return false;
-    }
-
-    private int getResultTotalPage(int totalPage, Integer postId) {
-        if (postId != 0 && totalPage == 0) {
-            return 0;
-        }
-        return totalPage;
     }
 
     private boolean setLast(int totalPage, int page, Integer postId) {
